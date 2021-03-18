@@ -1,5 +1,5 @@
 import asyncio
-import SCP_control as osu
+import OSU_control as osu
 
 from clu import AMQPActor, command_parser
 
@@ -46,10 +46,10 @@ async def close(command):
     return
 
 
-class ShutterActor(AMQPActor):
+class OsuActor(AMQPActor):
     def __init__(self):
             super().__init__(
-            name="shutter_actor",
+            name="osu_actor",
             user="guest",
             password="guest",
             host="localhost",
@@ -59,7 +59,7 @@ class ShutterActor(AMQPActor):
 
 
 async def run_actor():
-    actor = await ShutterActor().start()
+    actor = await OsuActor().start()
     await actor.run_forever()
 
 
