@@ -1,6 +1,6 @@
-import SCP_control as sc
+import OSU_control as osu
 from pymodbus3.client.sync import ModbusTcpClient as mbc
-desi=sc.Controller()
+desi=osu.Controller()
 print(desi.controller_status['wago'])
 print(desi.sensors)
 
