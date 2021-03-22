@@ -124,6 +124,10 @@ class Controller():
             '40004' : -1., 
             '40005' : -273., 		# IEB internal temp
             '40006' : -1.,
+            '40009' : -273.,
+            '40010' : -273.,
+            '40011' : -273.,
+            '40012' : -273.,
             'updated' : datetime.datetime.utcnow().isoformat()
           } 
         # some variables for the exposure logic
@@ -967,10 +971,8 @@ class Controller():
         # RH then T.
   
         rhtAddr = 0
-        rhtRHKeys = ['40004',
-                       '40002']
-        rhtTKeys  = ['40003',
-                       '40001']
+        rhtRHKeys = ['40002','40004','40006']
+        rhtTKeys  = ['40001','40003','40005']
         numRHT  = len(rhtTKeys)
 
         # The RH and T measured is a linear function of the decimal
@@ -990,8 +992,7 @@ class Controller():
         # the WAGO modbus at address 40009 (logical address 8)
     
         rtdAddr = 8
-        rtdKeys = ['40005',
-                   '40006']
+        rtdKeys = ['40009','40010','40011','40012']
         numRTDs = len(rtdKeys)
     
         # Get a WAGO client handle and connect (port 502 is implicit
