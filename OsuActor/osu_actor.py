@@ -57,8 +57,12 @@ async def telemetry(command):
                 "rhtRH1(40002)":desi.sensors['40002'],
                 "rhtT2(40003)":desi.sensors['40003'],
                 "rhtRH2(40004)":desi.sensors['40004'],
-                "rtd1(40005)":desi.sensors['40005'],
-                "rtd2(40006)":desi.sensors['40006']
+                "rhtT3(40005)":desi.sensors['40005'],
+                "rhtRH3(40006)":desi.sensors['40006'],
+                "rtd1(40009)":desi.sensors['40009'],
+                "rtd2(40010)":desi.sensors['40010'],
+                "rtd3(40011)":desi.sensors['40011'],
+                "rtd4(40012)":desi.sensors['40012']
                 })
         wagoClient = mbc(desi.wagoHost)
         rd = wagoClient.read_holding_registers(0,12)
