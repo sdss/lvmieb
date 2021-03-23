@@ -59,9 +59,10 @@ class OsuActor(AMQPActor):
 
 
 async def run_actor():
+#    acor = await OsuActor().stop()
     actor = await OsuActor().start()
     await actor.run_forever()
-
+#    await actor.stop()
 
 asyncio.run(run_actor())
 
