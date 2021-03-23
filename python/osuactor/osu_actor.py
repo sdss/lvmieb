@@ -1,13 +1,11 @@
 import asyncio
-import .actor.commands.OSU_control as osu
+import OSU_control as osu
 
 from pymodbus3.client.sync import ModbusTcpClient as mbc
 from clu import AMQPActor, command_parser
 
-desi=osu.Controller()
-desi.controller_status['exp_shutter_power'] = 'ON'
-#desi.controller_status['exp_shutter_seal'] = 'DEFLATED'
 
+desi= osu.Controller()
 
 @command_parser.command()
 async def open(command):
@@ -15,18 +13,8 @@ async def open(command):
 
     command.info(text="Opening the shutter!")
     # Here we would implement the actual communication
-    #desi=osu.Controller()
-    #print(desi.controller_status)
-    #desi.controller_status['exp_shutter_power'] = 'ON'
-    #print(desi.controller_status)
-    desi.controller_status['exp_shutter_seal'] = 'DEFLATED'
-    desi.exp_shutter('open')
-
-    #print(desi.controller_status)
-    # with the shutter hardware.
-    command.finish(shutter="open")
-
-    return
+    await desi.exp_shutter('open')
+    return command.finish(shutter="open")
 
 
 @command_parser.command()
@@ -35,22 +23,14 @@ async def close(command):
 
     command.info(text="Closing the shutter!")
     # Here we would implement the actual communication
-    #desi=osu.Controller()
-    #print(desi.controller_status)
-    #desi.controller_status['exp_shutter_power'] = 'ON'
-    #print(desi.controller_status)
-    desi.controller_status['exp_shutter_seal'] = 'DEFLATED'
-    desi.exp_shutter('close')
-    # with the shutter hardware.
-    command.finish(shutter="closed")
-
-    return
+    await desi.exp_shutter('close')
+    return command.finish(shutter="closed")
 
 @command_parser.command()
 async def telemetry(command):
 
-    wago_status2, reply = desi.getWAGOPower()
-    wago_status1, reply = desi.getWAGOEnv()
+    wago_status2, reply = await desi.getWAGOPower()
+    wago_status1, reply = await desi.getWAGOEnv()
     if wago_status1 and wago_status2:
         command.info(text="Temperature & Humidity is:",status={
                 "rhtT1(40001)":desi.sensors['40001'],
@@ -72,8 +52,7 @@ async def telemetry(command):
         return command.fail(text=f"ERROR: Did not read sensors/powers")
 
     return command.finish()
-
-
+                                             
 class OsuActor(AMQPActor):
     def __init__(self):
             super().__init__(
@@ -87,10 +66,8 @@ class OsuActor(AMQPActor):
 
 
 async def run_actor():
-#    acor = await OsuActor().stop()
     actor = await OsuActor().start()
     await actor.run_forever()
-#    await actor.stop()
 
 asyncio.run(run_actor())
 
