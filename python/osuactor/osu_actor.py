@@ -1,5 +1,5 @@
 import asyncio
-import .actor.commands.OSU_control as osu
+import OSU_control as osu
 
 from pymodbus3.client.sync import ModbusTcpClient as mbc
 from clu import AMQPActor, command_parser
@@ -52,8 +52,7 @@ async def telemetry(command):
         return command.fail(text=f"ERROR: Did not read sensors/powers")
 
     return command.finish()
-
-
+                                             
 class OsuActor(AMQPActor):
     def __init__(self):
             super().__init__(
