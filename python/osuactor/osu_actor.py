@@ -1,5 +1,5 @@
 import asyncio
-import OSU_control as osu
+import .actor.commands.OSU_control as osu
 
 from pymodbus3.client.sync import ModbusTcpClient as mbc
 from clu import AMQPActor, command_parser
