@@ -73,12 +73,12 @@ class Controller():
             'updated' : datetime.datetime.utcnow().isoformat()
           } 
         self.sensors = {
-            '40001' : -273., 
-            '40002' : -1., 
-            '40003' : -273., 
-            '40004' : -1., 
-            '40005' : -273., 		# IEB internal temp
-            '40006' : -1.,
+            '40001' : -1., 
+            '40002' : -273., 
+            '40003' : -1., 
+            '40004' : -273., 
+            '40005' : -1., 		# IEB internal temp
+            '40006' : -273.,
             '40009' : -273.,
             '40010' : -273.,
             '40011' : -273.,
@@ -206,8 +206,8 @@ class Controller():
         # RH then T.
   
         rhtAddr = 0
-        rhtRHKeys = ['40002','40004','40006']
-        rhtTKeys  = ['40001','40003','40005']
+        rhtRHKeys = ['40001','40003','40005']
+        rhtTKeys  = ['40002','40004','40006']
         numRHT  = len(rhtTKeys)
 
         # The RH and T measured is a linear function of the decimal
