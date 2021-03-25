@@ -11,6 +11,7 @@
      Minor Update: 9 Jan 2020 (added option to flash illuminator with SSR)
 """
 #pycharm test
+#pycharm test_CK
 # Time until motor controller is ready to run commands after powered on
 SclPowerSleep = 15.
 
