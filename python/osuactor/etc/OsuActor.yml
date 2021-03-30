@@ -13,5 +13,4 @@ controllers:
 actor:
     name: OsuActor
     host: localhost
-    port: 5672
-~              
+    port: 5672              
