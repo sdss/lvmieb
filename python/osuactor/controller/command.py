@@ -15,7 +15,7 @@ import warnings
 
 from typing import AsyncGenerator, Optional
 
-__all__ = ["ArchonCommand", "ArchonCommandStatus", "ArchonCommandReply"]
+__all__ = ["OsuCommand", "OsuCommandStatus", "OsuCommandReply"]
 
 
 class OsuCommandStatus(enum.Enum):
@@ -64,7 +64,7 @@ class OsuCommand(asyncio.Future):
         self._expected_replies = expected_replies
 
         #: List of str or bytes: List of replies received for this command.
-        self.replies: list[ArchonCommandReply] = []
+        self.replies: list[OsuCommandReply] = []
 
         #: .OsuCommandStatus: The status of the command.
         self.status = OsuCommandStatus.RUNNING
@@ -90,7 +90,7 @@ class OsuCommandReply:
 
     Raise
     -----
-    .ArchonError
+    .OsuError
         Raised if the reply cannot be parsed.
     """
 
@@ -120,8 +120,8 @@ class OsuCommandReply:
 
     def __str__(self) -> str:
         if isinstance(self.reply, bytes):
-            raise ArchonError("The reply is binary and cannot be converted to string.")
+            raise OsuError("The reply is binary and cannot be converted to string.")
         return self.reply
 
     def __repr__(self):
-        return f"<ArchonCommandReply ({self.raw_reply})>"
+        return f"<OsuCommandReply ({self.raw_reply})>"
