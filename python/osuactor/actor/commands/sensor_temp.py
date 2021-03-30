@@ -1,3 +1,5 @@
+#We will not use this code no more. Please just use this code for reference _ CK
+
 """
 import OSU_control as osu
 from pymodbus3.client.sync import ModbusTcpClient as mbc

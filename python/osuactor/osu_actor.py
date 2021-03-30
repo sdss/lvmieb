@@ -1,3 +1,5 @@
+#We don't need this code no more. Please just use this as reference_CK
+
 """
 import asyncio
 import OSU_control as osu

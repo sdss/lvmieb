@@ -7,8 +7,8 @@
 controllers:
     sp1:
         host: 10.7.45.27
-        port: 7776
-
+        port: 7776 #changged by CK 2021/03/30
+#added by CK 2021/03/30
 timeouts:
     controller_connect: 1
 

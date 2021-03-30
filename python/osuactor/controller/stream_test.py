@@ -1,3 +1,5 @@
+#this code is for example _CK 2021/03/30
+
 import asyncio
 
 async def send_message(message):

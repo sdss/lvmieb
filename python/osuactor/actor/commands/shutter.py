@@ -6,6 +6,9 @@
 # @Filename: shutter.py
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 
+
+#We will not use this code no more. Please use this code just for reference _CK
+
 """
 import asyncio
 import OSU_control as osu

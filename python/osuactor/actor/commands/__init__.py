@@ -40,7 +40,7 @@ files = [
 
 for file_ in files:
     modname = file_[0:-3].replace("/", ".")
-    mod = importlib.import_module("osuactor.actor.commands." + modname)
+    mod = importlib.import_module("osuactor.actor.commands." + modname) #changged by CK 2021/03/30
 
 os.chdir(cwd)
 

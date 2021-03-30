@@ -13,15 +13,15 @@ import os
 import warnings
 from contextlib import suppress
 
-from osuactor import __version__
-from osuactor.controller.command import OsuCommand
-from osuactor.controller.controller import OsuController
+from osuactor import __version__  #added by CK 2021/03/30
+from osuactor.controller.command import OsuCommand #changed by CK 2021/03/30
+from osuactor.controller.controller import OsuController #changed by CK 2021/03/30
 from clu.actor import AMQPActor
 
-from .commands import parser as osu_command_parser
+from .commands import parser as osu_command_parser #added by CK 2021/03/30
 
 
-__all__ = ["OsuActor"]
+__all__ = ["OsuActor"] #changed by CK 2021/03/30
 
 class OsuActor(AMQPActor):
     """OSU Spectrograph controller actor.
@@ -35,7 +35,7 @@ class OsuActor(AMQPActor):
 
 ######################## Mingyeong code #############################
      
-    #parser = Osu_command_parser
+    parser = osu_command_parser
 
     def __init__(
         self,
@@ -58,7 +58,10 @@ class OsuActor(AMQPActor):
         self.password = "guest"
         self.host = "localhost"
         self.port = 5672
-    
+   
+########################################################################
+#Changgon changed the under part 2021/03/30
+
     async def start(self):
         """Start the actor and connect the controllers."""
 
@@ -76,7 +79,7 @@ class OsuActor(AMQPActor):
         await super().start()
 
        # self._status_jobs = [
-        #    asyncio.create_task(self._report_status(controller))
+        #    asyncio.create_task(self._report_status(controller))   #need to be added after the hardware status commands are defined _CK 2021/03/30
          #   for controller in self.controllers.values()
         #]
 
