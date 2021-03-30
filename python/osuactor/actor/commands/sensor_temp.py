@@ -1,3 +1,4 @@
+"""
 import OSU_control as osu
 from pymodbus3.client.sync import ModbusTcpClient as mbc
 desi=osu.Controller()
@@ -25,4 +26,4 @@ else:
 ############################################################
 
 print(desi.sensors)
-
+"""

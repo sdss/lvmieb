@@ -1,11 +1,9 @@
 #!/usr/bin/env python
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 #
-# @Author: José Sánchez-Gallego
-# @Date: Dec 1, 2017
-# @Filename: cli.py
-# @License: BSD 3-Clause
-# @Copyright: José Sánchez-Gallego
+# @Date: 2020-10-26
+# @Filename: __main__.py
+# @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 
 import os
 

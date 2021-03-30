@@ -6,6 +6,8 @@
 # @Filename: expose.py
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 
+"""
+
 import asyncio
 import OSU_control as osu
 
@@ -43,4 +45,4 @@ async def telemetry(command):
 
     return command.finish()
 
-
+"""

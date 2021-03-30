@@ -13,6 +13,8 @@ import os
 import warnings
 from contextlib import suppress
 
+from osuactor.controller.command import OsuCommand
+from osuactor.controller.controller import OsuController
 from clu.actor import AMQPActor
 
 __all__ = ["OsuActor"]
