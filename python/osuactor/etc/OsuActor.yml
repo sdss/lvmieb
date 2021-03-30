@@ -9,6 +9,9 @@ controllers:
         host: 10.7.45.27
         port: 7776
 
+timeouts:
+    controller_connect: 1
+
 # Actor configuration for the AMQPActor class
 actor:
     name: OsuActor

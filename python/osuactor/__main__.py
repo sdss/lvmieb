@@ -13,7 +13,7 @@ from clu.tools import cli_coro
 
 from sdsstools.daemonizer import DaemonGroup
 
-from osuactor.actor.actor import OsuActor
+from osuactor.actor.actor import OsuActor as OsuActorInstance
 
 
 @click.group(cls=DefaultGroup, default="actor", default_if_no_args=True)
@@ -45,7 +45,7 @@ async def actor(ctx):
     default_config_file = os.path.join(os.path.dirname(__file__), "etc/OsuActor.yml")
     config_file = ctx.obj["config_file"] or default_config_file
 
-    osuactor_obj = OsuActor.from_config(config_file)
+    osuactor_obj = OsuActorInstance.from_config(config_file)
 
     if ctx.obj["verbose"]:
         osuactor_obj.log.fh.setLevel(0)
