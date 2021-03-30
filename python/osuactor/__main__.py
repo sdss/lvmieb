@@ -45,14 +45,14 @@ async def actor(ctx):
     default_config_file = os.path.join(os.path.dirname(__file__), "etc/OsuActor.yml")
     config_file = ctx.obj["config_file"] or default_config_file
 
-    archon_obj = ArchonActor.from_config(config_file)
+    osuactor_obj = OsuActor.from_config(config_file)
 
     if ctx.obj["verbose"]:
-        archon_obj.log.fh.setLevel(0)
-        archon_obj.log.sh.setLevel(0)
+        osuactor_obj.log.fh.setLevel(0)
+        osuactor_obj.log.sh.setLevel(0)
 
-    await archon_obj.start()
-    await archon_obj.run_forever()
+    await osuactor_obj.start()
+    await osuactor_obj.run_forever()
 
 
 if __name__ == "__main__":
