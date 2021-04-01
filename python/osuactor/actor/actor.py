@@ -48,13 +48,15 @@ class OsuActor(AMQPActor):
 
         self.parser_args = [self.controllers]
 
+        """
         if "schema" not in kwargs:
             kwargs["schema"] = os.path.join(
                     os.path.dirname(__file__),
-                    "../etc/archon.json",
+                    "../etc/OsuActor.json",
                     )
+        """
 
-       #self.name = "OsuActor"
+        self.name = "OsuActor"
         super().__init__(*args, **kwargs)
 
         self.observatory = os.environ.get("OBSERVATORY", "LCO")
@@ -62,10 +64,10 @@ class OsuActor(AMQPActor):
 
         self._exposing: bool = False
 
-        #self.user = "guest"
-        #self.password = "guest"
-        #self.host = "localhost"
-        #self.port = 5672
+        self.user = "guest"
+        self.password = "guest"
+        self.host = "localhost"
+        self.port = 5672
    
 ########################################################################
 #Changgon changed the under part 2021/03/30
@@ -127,7 +129,7 @@ class OsuActor(AMQPActor):
         """check if the actor can take a new exposure"""
         return self._exposing
 
-"""
+    """
     async def _fetch_log(self, controller: OsuController):
         """Fetch the lof and outputs new messages"""
         while True:
@@ -151,5 +153,4 @@ class OsuActor(AMQPActor):
                         controller=controller.name,
                         status=status.name,
                         )
-                    )
-"""
+    """
