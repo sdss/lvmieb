@@ -120,12 +120,14 @@ class OsuActor(AMQPActor):
             instance.controllers = {c.name: c for c in controllers}
             instance.parser_args = [instance.controllers]  # Need to refresh this
         return instance
-#####################add by MY 2021.04.01###############################################3
+
+####################add by MY 2021.04.01###############################################3
 
     def can_expose(self) -> bool:
         """check if the actor can take a new exposure"""
         return self._exposing
 
+"""
     async def _fetch_log(self, controller: OsuController):
         """Fetch the lof and outputs new messages"""
         while True:
@@ -140,7 +142,7 @@ class OsuActor(AMQPActor):
                             )
                             continue
                         await asyncio.sleep(1)
-"""
+
     async def _report_status(self, controller: OsuController):
         """Reports the status of the controller."""
         async for status in controller.yeild_status():
