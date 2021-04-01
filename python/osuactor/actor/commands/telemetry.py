@@ -1,3 +1,6 @@
+#We have to change this code to interact with controller.py _CK
+#Please refer to open.py and close.py
+
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
@@ -5,6 +8,8 @@
 # @Date: 2021-03-22
 # @Filename: expose.py
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+
+"""
 
 import asyncio
 import OSU_control as osu
@@ -43,4 +48,4 @@ async def telemetry(command):
 
     return command.finish()
 
-
+"""

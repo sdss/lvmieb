@@ -1,3 +1,6 @@
+# We don't need this code no more. Please just refer to the code only _CK
+
+
 #!/usr/bin/env python
 """
   spectro_controller.py 

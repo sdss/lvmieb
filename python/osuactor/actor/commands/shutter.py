@@ -6,6 +6,10 @@
 # @Filename: shutter.py
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 
+
+#We will not use this code no more. Please use this code just for reference _CK
+
+"""
 import asyncio
 import OSU_control as osu
 
@@ -19,7 +23,6 @@ desi.controller_status['exp_shutter_power'] = 'ON'
 
 @command_parser.command()
 async def open(command):
-    """Open the shutter."""
 
     command.info(text="Opening the shutter!")
     # Here we would implement the actual communication
@@ -39,7 +42,6 @@ async def open(command):
 
 @command_parser.command()
 async def close(command):
-    """Close the shutter."""
 
     command.info(text="Closing the shutter!")
     # Here we would implement the actual communication
@@ -53,4 +55,4 @@ async def close(command):
     command.finish(shutter="closed")
 
     return
-
+"""
