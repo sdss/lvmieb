@@ -13,7 +13,8 @@ from . import parser
 @parser.command()
 async def open(command: Command, controller: OsuController):
 
+    command.info(text="Opening the shutter!")
+    
+    await controller.send_message("open")
 
-
-
-    return True
+    return command.finish(shutter="open")

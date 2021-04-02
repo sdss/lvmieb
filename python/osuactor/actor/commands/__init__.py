@@ -26,7 +26,6 @@ parser.add_command(ping)
 parser.add_command(version)
 parser.add_command(help_)
 
-
 # Autoimport all modules in this directory so that they are added to the parser.
 
 exclusions = ["__init__.py"]

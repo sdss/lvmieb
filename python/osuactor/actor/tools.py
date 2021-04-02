@@ -6,7 +6,7 @@
 # @Filename: tools.py
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 #add by MY, 2021-04-01
-
+"""
 from __future__ import annotations
 
 import asyncio
@@ -40,7 +40,7 @@ controller_list = click.option(
 
 
 def parallel_controllers(check=True):
-    """A decarator that executes the same command for multiple controllers.
+    """#A decarator that executes the same command for multiple controllers.
     When decorated with `.parallel_controllers`, the command gets an additional option
     ``controllers`` which allows to pass a list of controllers. If not controllers are
     passed, all the available controllers are used.
@@ -60,7 +60,7 @@ def parallel_controllers(check=True):
     Your replies to the users must indicate to what controller they refer. If you want
     to force all the concurrent tasks to fail, raise an exception.
     """
-
+"""
     def decorator(f):
         @functools.wraps(f)
         @controller_list
@@ -104,10 +104,10 @@ def parallel_controllers(check=True):
         return functools.update_wrapper(wrapper, f)
 
     return decorator
-
-
+"""
+"""
 def error_controller(command: Command, controller: OsuController, message: str):
-    """Issues a ``error_controller`` message."""
+    #Issues a ``error_controller`` message.
     command.error(
         text={
             "controller": controller.name,
@@ -115,25 +115,25 @@ def error_controller(command: Command, controller: OsuController, message: str):
         }
     )
     return False
-
-
+"""
+"""
 def check_controller(command: Command, controller: OsuController) -> bool:
-    """Performs sanity check in the controller.
+    Performs sanity check in the controller.
     Outputs error messages if a problem is found. Return `False` if the controller
     is not in a valid state.
     """
-    if not controller.is_connected():
+"""    if not controller.is_connected():
         error_controller(command, controller, "Controller not connected.")
         return False
 
     return True
-
-
+"""
+"""
 @contextmanager
 def open_with_lock(
     filename: PathLike, mode: str = "r"
 ) -> Generator[IO[Any], None, None]:
-    """Opens a file and adds an advisory lock on it.
+    """"""Opens a file and adds an advisory lock on it.
     Parameters
     ----------
     filename
@@ -144,7 +144,7 @@ def open_with_lock(
     ------
     BlockingIOError
         If the file is already locked.
-    """
+    """"""
     # Open the file in read-only mode first to see if it's already locked.
     fd = open(filename, "r")
     fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -156,3 +156,5 @@ def open_with_lock(
         fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
         yield fd
         fcntl.flock(fd, fcntl.LOCK_UN)
+
+"""
