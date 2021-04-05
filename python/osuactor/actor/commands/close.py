@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from clu.command import Command
 
+import asyncio
+
 #from osuactor.controller import controller
 from osuactor.controller.controller import OsuController
 
@@ -13,10 +15,21 @@ from . import parser
 
 
 @parser.command()
-async def close(command: Command, controller: OsuController):
+async def close(command: Command, controllers: dict[str, OsuController]):
 
-    command.info(text="Closing the shutter!")
+#when closing multiple shutters asynchronously_CK    
+    tasks = []
 
-    controller.send_message('close')
-    
-    return command.finish(shutter="closed")
+    for controller_name in controllers:
+        tasks.append(controllers[controller_name].send_message("close"))
+
+    command.info(text="Closing all shutters")
+    await asyncio.gather(*tasks)
+    return command.finish(shutter="close")
+
+#when opening shutters sequently_CK
+"""    
+    for controller_name in controllers:
+        command.info(text=f"Closing the shutter in controller {controller_name}!")
+        await controllers[controller_name].send_message("close")
+"""

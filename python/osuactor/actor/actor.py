@@ -48,14 +48,14 @@ class OsuActor(AMQPActor):
 
         connect_timeout = self.config["timeouts"]["controller_connect"]
 
-        for controller in self.controllers.values():
-            try:
-                await asyncio.wait_for(controller.start(), timeout=connect_timeout)
-            except asyncio.TimeoutError:
-                warnings.warn(
-                    f"Timeout out connecting to {controller.name!r}.",
-                    OsuActorUserWarning,
-                )
+#        for controller in self.controllers.values():
+#            try:
+#                await asyncio.wait_for(controller.start(), timeout=connect_timeout)
+#            except asyncio.TimeoutError:
+#                warnings.warn(
+#                    f"Timeout out connecting to {controller.name!r}.",
+#                    OsuActorUserWarning,
+#                )
 
         await super().start()
 
