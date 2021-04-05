@@ -1,5 +1,3 @@
-#added by CK 2021/03/30
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
@@ -7,7 +5,7 @@
 # @Date: 2021-01-20
 # @Filename: command.py
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
-
+"""
 from __future__ import annotations
 
 import asyncio
@@ -21,7 +19,7 @@ __all__ = ["OsuCommand", "OsuCommandStatus", "OsuCommandReply"]
 
 
 class OsuCommandStatus(enum.Enum):
-    """Status of an OsuController command."""
+    """"""Status of an OsuController command.""""""
 
     DONE = enum.auto()
     FAILED = enum.auto()
@@ -30,7 +28,7 @@ class OsuCommandStatus(enum.Enum):
 
 
 class OsuCommand(asyncio.Future):
-    """Tracks the status and replies to a command sent to the OSU controller.
+    """"""Tracks the status and replies to a command sent to the OSU controller.
 
     ``OsuCommand`` is a `~asyncio.Future` and can be awaited, at which point the
     command will have completed or failed.
@@ -48,7 +46,7 @@ class OsuCommand(asyncio.Future):
     timeout
         Time without receiving a reply after which the command will be timed out.
         `None` disables the timeout.
-    """
+    """"""
 
     def __init__(
         self,
@@ -77,7 +75,7 @@ class OsuCommand(asyncio.Future):
             )
 
 class OsuCommandReply:
-    """A reply received from the Archon to a given command.
+    """"""A reply received from the Archon to a given command.
 
     When ``str(Osu_command_reply)`` is called, the reply (without the reply code or
     command id) is returned, except when the reply is binary in which case an error
@@ -94,7 +92,7 @@ class OsuCommandReply:
     -----
     .OsuError
         Raised if the reply cannot be parsed.
-    """
+    """"""
 
     def __init__(self, raw_reply: bytes, command: OsuCommand):
         parsed = REPLY_RE.match(raw_reply)
@@ -127,3 +125,6 @@ class OsuCommandReply:
 
     def __repr__(self):
         return f"<OsuCommandReply ({self.raw_reply})>"
+
+
+        """
