@@ -1,3 +1,6 @@
+#We don't need this code no more. Please just use this as reference_CK
+
+"""
 import asyncio
 import OSU_control as osu
 
@@ -9,7 +12,6 @@ desi= osu.Controller()
 
 @command_parser.command()
 async def open(command):
-    """Open the shutter."""
 
     command.info(text="Opening the shutter!")
     # Here we would implement the actual communication
@@ -19,7 +21,6 @@ async def open(command):
 
 @command_parser.command()
 async def close(command):
-    """Close the shutter."""
 
     command.info(text="Closing the shutter!")
     # Here we would implement the actual communication
@@ -70,4 +71,4 @@ async def run_actor():
     await actor.run_forever()
 
 asyncio.run(run_actor())
-
+"""
