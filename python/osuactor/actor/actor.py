@@ -38,7 +38,7 @@ class OsuActor(AMQPActor):
     ):
         self.controllers = {c.name: c for c in controllers}
         self.parser_args = [self.controllers]
-
+#        super().new_user()
         super().__init__(*args, **kwargs)
 
 #Changgon changed the under part 2021/03/30
@@ -48,14 +48,14 @@ class OsuActor(AMQPActor):
 
         connect_timeout = self.config["timeouts"]["controller_connect"]
 
-#        for controller in self.controllers.values():
-#            try:
-#                await asyncio.wait_for(controller.start(), timeout=connect_timeout)
-#            except asyncio.TimeoutError:
-#                warnings.warn(
-#                    f"Timeout out connecting to {controller.name!r}.",
-#                    OsuActorUserWarning,
-#                )
+        for controller in self.controllers.values():
+            try:
+                await asyncio.wait_for(controller.start(), timeout=connect_timeout)
+            except asyncio.TimeoutError:
+                warnings.warn(
+                    f"Timeout out connecting to {controller.name!r}.",
+                    OsuActorUserWarning,
+                )
 
         await super().start()
 

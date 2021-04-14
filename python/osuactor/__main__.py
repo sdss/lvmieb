@@ -8,10 +8,10 @@
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 
 import os
-
+import asyncio
 import click
 from click_default_group import DefaultGroup
-from clu.tools import cli_coro
+from clu.tools import cli_coro as cli_coro_osu
 
 from sdsstools.daemonizer import DaemonGroup
 
@@ -39,21 +39,23 @@ def OsuActor(ctx, config_file, verbose):
     ctx.obj = {"verbose": verbose, "config_file": config_file}
 
 
-@OsuActor.group(cls=DaemonGroup, prog="actor", workdir=os.getcwd())
+@OsuActor.group(cls=DaemonGroup, prog="osu_actor", workdir=os.getcwd())
 @click.pass_context
-@cli_coro
+@cli_coro_osu
 async def actor(ctx):
     """Runs the actor."""
+    
     default_config_file = os.path.join(os.path.dirname(__file__), "etc/OsuActor.yml")
     config_file = ctx.obj["config_file"] or default_config_file
 
     osuactor_obj = OsuActorInstance.from_config(config_file)
-
     if ctx.obj["verbose"]:
         osuactor_obj.log.fh.setLevel(0)
         osuactor_obj.log.sh.setLevel(0)
-
+#    await osuactor_obj.new_user(config_file)
+#    await osuactor_obj.new_user(os.path.join(os.path.dirname(__file__), "etc/OsuActor.yml"))
     await osuactor_obj.start()
+#    await asyncio.to_thread(osuactor_obj.start())
     await osuactor_obj.run_forever()
 
 

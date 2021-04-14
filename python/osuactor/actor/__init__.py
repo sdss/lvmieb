@@ -7,4 +7,4 @@
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 
 from .actor import OsuActor
-#from .commands import parser
+from .commands import parser
