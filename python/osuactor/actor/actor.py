@@ -73,7 +73,7 @@ class OsuActor(AMQPActor):
 
     @classmethod
     def from_config(cls, config, *args, **kwargs):
-        """Creates an actor from a configuration file."""
+        #Creates an actor from a configuration file.
         instance = super(OsuActor, cls).from_config(config, *args, **kwargs)
         assert isinstance(instance, OsuActor)
         if "controllers" in instance.config:
