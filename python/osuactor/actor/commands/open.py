@@ -16,9 +16,10 @@ async def open(command: Command, controllers: dict[str, OsuController]):
 #when opening multiple shutters asynchronously_CK    
     tasks = []
 
-    for controller_name in controllers:
-        tasks.append(controllers[controller_name].send_message("open"))
-
+    for shutter in controllers:
+        if controllers[shutter].name == 'shutter':
+            tasks.append(controllers[shutter].send_command("open"))
+            
     command.info(text="Opening all shutters")
     await asyncio.gather(*tasks)
     return command.finish(shutter="open")

@@ -22,6 +22,8 @@ __all__ = ["OsuController"]
 
 # Exposure Shutter Commands:
 
+devList = ["shutter","hartmann_left","hartmann_right"]
+
 expCmds = {"init":"QX1","home":"QX2","open":"QX3","close":"QX4",
 
            "flash":"QX5","inflate":"QX6","deflate":"QX7", "on":"QX8",
@@ -37,10 +39,11 @@ class OsuController(Device):
         self.__status_event = asyncio.Event()
 
 
-    async def send_message(self, message, SelectTimeout=0.5):
+    async def send_command(self, command, SelectTimeout=0.5):
+
         self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
         
-        c_message = expCmds[message]
+        c_message = expCmds[command]
 
         sclHead = chr(0)+chr(7)
         sclTail = chr(13)

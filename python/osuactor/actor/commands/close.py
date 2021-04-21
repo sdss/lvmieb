@@ -18,14 +18,17 @@ from . import parser
 async def close(command: Command, controllers: dict[str, OsuController]):
 
 #when closing multiple shutters asynchronously_CK    
+
     tasks = []
 
-    for controller_name in controllers:
-        tasks.append(controllers[controller_name].send_message("close"))
+    for shutter in controllers:
+        if controllers[shutter].name == 'shutter':
+            tasks.append(controllers[shutter].send_command("close"))
 
     command.info(text="Closing all shutters")
     await asyncio.gather(*tasks)
     return command.finish(shutter="close")
+
 
 #when opening shutters sequently_CK
 """    
