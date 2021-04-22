@@ -9,43 +9,42 @@
 # @Filename: expose.py
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 
-"""
+
+#added by CK 2021/03/30                                                                                                                                                                                                     
+from __future__ import annotations
 
 import asyncio
-import OSU_control as osu
 
-from pymodbus3.client.sync import ModbusTcpClient as mbc
-from clu import AMQPActor, command_parser
+from clu.command import Command
 
-desi=osu.Controller()
-desi.controller_status['exp_shutter_power'] = 'ON'
-#desi.controller_status['exp_shutter_seal'] = 'DEFLATED'
+from osuactor.controller.controller import OsuController
+from osuactor.exceptions import OsuActorError
 
-@command_parser.command()
-async def telemetry(command):
+from . import parser
 
-    wago_status2, reply = desi.getWAGOPower()
-    wago_status1, reply = desi.getWAGOEnv()
-    if wago_status1 and wago_status2:
-        command.info(text="Temperature & Humidity is:",status={
-                "rhtT1(40001)":desi.sensors['40001'],
-                "rhtRH1(40002)":desi.sensors['40002'],
-                "rhtT2(40003)":desi.sensors['40003'],
-                "rhtRH2(40004)":desi.sensors['40004'],
-                "rhtT3(40005)":desi.sensors['40005'],
-                "rhtRH3(40006)":desi.sensors['40006'],
-                "rtd1(40009)":desi.sensors['40009'],
-                "rtd2(40010)":desi.sensors['40010'],
-                "rtd3(40011)":desi.sensors['40011'],
-                "rtd4(40012)":desi.sensors['40012']
+@parser.command()
+async def telemetry(command: Command, controllers: dict[str, OsuController]):
+
+    for shutter in controllers:
+        if controllers[shutter].name == 'shutter':
+            try:
+                wago_status1, reply = controllers[shutter].getWAGOEnv()
+                if wago_status1:
+                    command.info(text="Temperature & Humidity is:",status={
+                "rhtT1(40001)":controllers[shutter].sensors['40001'],
+                "rhtRH1(40002)":controllers[shutter].sensors['40002'],
+                "rhtT2(40003)":controllers[shutter].sensors['40003'],
+                "rhtRH2(40004)":controllers[shutter].sensors['40004'],
+                "rhtT3(40005)":controllers[shutter].sensors['40005'],
+                "rhtRH3(40006)":controllers[shutter].sensors['40006'],
+                "rtd1(40009)":controllers[shutter].sensors['40009'],
+                "rtd2(40010)":controllers[shutter].sensors['40010'],
+                "rtd3(40011)":controllers[shutter].sensors['40011'],
+                "rtd4(40012)":controllers[shutter].sensors['40012']
                 })
-        wagoClient = mbc(desi.wagoHost)
-        rd = wagoClient.read_holding_registers(0,12)
-        print(rd.registers)
-
-    else:
-        return command.fail(text=f"ERROR: Did not read sensors/powers")
+                else:
+                    return command.fail(text=f"ERROR: Did not read sensors/powers")
+            except:
+                return command.fail(text = f"Did not read sensors/powers")
 
     return command.finish()
-
-"""

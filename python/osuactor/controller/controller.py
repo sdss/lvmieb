@@ -18,6 +18,9 @@ from typing import Any, Callable, Iterable, Optional
 import numpy
 from clu.device import Device
 
+from pymodbus.client.asynchronous.tcp import AsyncModbusTCPClient as ModbusClient
+from pymodbus.client.asynchronous import schedulers
+
 __all__ = ["OsuController"]
 
 
@@ -43,6 +46,21 @@ class OsuController(Device):
     def __init__(self, host: str, port: int, name: str = ""):
         Device.__init__(self, host, port)
         self.name = name #must use it!!_C
+        
+        self.sensors = {
+            'rhtT1(40001)' : -273., 		# Temperatures in C
+            'rhtRH1(40002)' : -1., 	# Humidity in percent
+            'rhtT2(40003)' : -273.,
+            'rhtRH2(40004)' : -1.,
+            'rhtT3(40005)' : -273.,
+            'rhtRH3(40006)' : -1.,
+            'rtd1(40009)' : -273., 		# IEB internal temp
+            'rtd2(40010)' : -273.,		# Bench temp near NIR camera
+            'rtd3(40011)' : -273., 		# Bench temp near collimator
+            'rtd4(40012)' : -273., 		# Bench temp near cryostats
+        #    'updated' : datetime.datetime.utcnow().isoformat()
+          }
+          
 
         self.__status_event = asyncio.Event()
 
@@ -140,3 +158,74 @@ class OsuController(Device):
                 if sclReply[:2] == 'IS':
                     return True, sclReply
 
+    async def getWAGOEnv(self):
+        wagoClient = ModbusClient(schedulers.ASYNC_IO, port=502)
+        if not wagoClient.connect():
+            raise OsuActorError(f"Cannot connect to WAGO at %s" %(self.host))
+            return False
+
+        rd = wagoClient.read_holding_registers(8, 3)
+        
+        for i in range(numRTDs):
+            self.sensors[rtdKeys[i]] = round(ptRTD2C(float(rd.registers[i])), 2)
+
+        # Read the E+E RH/T sensors and convert to physical units.
+
+        rd = wagoClient.read_holding_registers(rhtAddr,2*numRHT)
+        for i in range(numRHT):
+            self.sensors[rhtRHKeys[i]] = round(RH0 + RHs*float(rd.registers[2*i]), 2)
+            self.sensors[rhtTKeys[i]] = round(T0 + Ts*float(rd.registers[2*i+1]), 2)
+
+
+
+
+#---------------------------------------------------------------------------
+#
+# WAGO I/O convenience functions
+#
+#---------------------------------------------------------------------------
+
+#----------------------------------------------------------------
+#
+# ptRTD2C - convert RTD ADU to degrees C
+#
+# inputs:
+#    rawRTD = raw RTD ADU readout from the WAGO unit
+# returns:
+#    temperature in degrees C
+#
+# This function converts RTD output to degrees C for 
+# a WAGO 750-461/753-461 2-Channel Analog RTD module
+#
+
+def ptRTD2C(rawRTD):
+    tempRes = 0.1   # module resolution is 0.1C per ADU
+    tempMax = 850.0 # maximum temperature for a Pt RTD in deg C
+    wrapT = tempRes*((2.0**16)-1) # ADU wrap at <0C to 2^16-1
+
+    temp = tempRes*rawRTD
+    if temp > tempMax:
+        temp -= wrapT
+
+    return temp
+
+#----------------------------------------------------------------
+#
+# wagoDOReg - WAGO Digital Output register datum converter
+#
+# input: 
+#   rd = register datum (integer 0..255)
+#   numOut = number of outputs (default: 8)
+# output:
+#   numOut-element list of booleans, True=On, False=Off
+#
+# Translates an 8-bit unsigned integer register datum returned by a
+# WAGO digital output unit into True/False state flags
+#
+#----------------------------------------------------------------
+
+def wagoDOReg(rd,numOut=8):
+    testOut = []
+    for i in range(numOut):
+        testOut.append((rd & 2**i) == 2**i)
+    return testOut
