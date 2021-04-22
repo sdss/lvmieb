@@ -23,7 +23,10 @@ async def close(command: Command, controllers: dict[str, OsuController]):
 
     for shutter in controllers:
         if controllers[shutter].name == 'shutter':
-            tasks.append(controllers[shutter].send_command("close"))
+            try:
+                tasks.append(controllers[shutter].send_command("close"))
+            except OsuActorError as err:
+                return command.fail(error=str(err))
 
     command.info(text="Closing all shutters")
     await asyncio.gather(*tasks)

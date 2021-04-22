@@ -17,9 +17,12 @@ async def open(command: Command, controllers: dict[str, OsuController]):
     tasks = []
 
     for shutter in controllers:
-        if controllers[shutter].name == 'shutter':
-            tasks.append(controllers[shutter].send_command("open"))
-            
+       if controllers[shutter].name == 'shutter':
+            try:
+                tasks.append(controllers[shutter].send_command("open"))
+            except OsuActorError as err:
+                return command.fail(error=str(err))
+
     command.info(text="Opening all shutters")
     await asyncio.gather(*tasks)
     return command.finish(shutter="open")
