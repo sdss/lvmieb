@@ -25,9 +25,16 @@ __all__ = ["OsuActor"]                             #changed by CK 2021/03/30
 
 class OsuActor(AMQPActor):
     """OSU Spectrograph controller actor.
+
     In addition to the normal arguments and keyword parameters for
     `~clu.actor.AMQPActor`, the class accepts the following parameters.
+
+    parameters
+    ----------
+    controllers
+        The list of '.OsuController' instances to manage.
     """ 
+
     parser = osu_command_parser
 
     def __init__(
@@ -73,7 +80,8 @@ class OsuActor(AMQPActor):
 
     @classmethod
     def from_config(cls, config, *args, **kwargs):
-        #Creates an actor from a configuration file.
+        """Creates an actor from a configuration file."""
+
         instance = super(OsuActor, cls).from_config(config, *args, **kwargs)
         
         assert isinstance(instance, OsuActor)
