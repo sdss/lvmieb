@@ -2,7 +2,7 @@ Commands
 =============
 
 open
-========
+------
 
 .. automodule:: osuactor.actor.commands.open
    :members:
@@ -10,7 +10,7 @@ open
    :show-inheritance:
 
 close
-========
+-------
 
 .. automodule:: osuactor.actor.commands.close
    :members:
@@ -18,7 +18,7 @@ close
    :show-inheritance:
 
 telemetry
-==========
+-----------
 
 .. automodule:: osuactor.actor.commands.telemetry
    :members:

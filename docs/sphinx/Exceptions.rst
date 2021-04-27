@@ -1,6 +1,10 @@
 Exceptions
 ==========================
 
+Exceptions
+-------------
+
+
 .. automodule:: osuactor.exceptions
    :members:
    :undoc-members:
