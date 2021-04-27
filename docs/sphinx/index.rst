@@ -18,10 +18,10 @@ Contents
   :maxdepth: 2
 
 
-   Osuactor
-   Controller
-   Commands
-   Exceptions
+  Osuactor
+  Controller
+  Commands
+  Exceptions
 
 
 Indices and tables
