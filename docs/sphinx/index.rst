@@ -10,3 +10,23 @@ OsuActor's documentation
   :start-line: 2
 
 
+
+Contents
+--------
+
+.. toctree::
+  :maxdepth: 2
+
+
+   Osuactor
+   Controller
+   Commands
+   Exceptions
+
+
+Indices and tables
+------------------
+
+* :ref:`genindex`
+* :ref:`modindex`
+~
