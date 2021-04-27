@@ -18,8 +18,9 @@ from typing import Any, Callable, Iterable, Optional
 import numpy
 from clu.device import Device
 
-from pymodbus.client.asynchronous.tcp import AsyncModbusTCPClient as ModbusClient
-from pymodbus.client.asynchronous import schedulers
+from pymodbus.client.sync import ModbusTcpClient as ModbusClient
+#from pymodbus.client.asynchronous.tcp import AsyncModbusTCPClient as ModbusClient
+#from pymodbus.client.asynchronous import schedulers
 
 __all__ = ["OsuController"]
 
@@ -57,7 +58,7 @@ class OsuController(Device):
             'rtd1(40009)' : -273., 		# IEB internal temp
             'rtd2(40010)' : -273.,		# Bench temp near NIR camera
             'rtd3(40011)' : -273., 		# Bench temp near collimator
-            'rtd4(40012)' : -273., 		# Bench temp near cryostats
+            'rtd4(40012)' : -273. 		# Bench temp near cryostats
         #    'updated' : datetime.datetime.utcnow().isoformat()
           }
           
@@ -159,22 +160,57 @@ class OsuController(Device):
                     return True, sclReply
 
     async def getWAGOEnv(self):
-        wagoClient = ModbusClient(schedulers.ASYNC_IO, port=502)
+
+        rtdAddr = 8
+
+        rtdKeys = ['rtd1(40009)',
+                   'rtd2(40010)',
+                   'rtd3(40011)',
+                   'rtd4(40012)']
+        numRTDs = len(rtdKeys)
+
+        rhtRHKeys = ['rhtRH1(40002)',
+                     'rhtRH2(40004)',
+                     'rhtRH3(40006)']
+        rhtTKeys = ['rhtT1(40001)',
+                    'rhtT2(40003)',
+                    'rhtT3(40005)']
+        numRHT = len(rhtTKeys)
+        rhtAddr = 8
+
+        RH0 = 0.0
+        RHs = 100.0/32767.0
+        T0 = -30.0
+        Ts = RHs
+ 
+        wagoClient = ModbusClient(self.host)
+
+#        self.loop, wagoClient = await ModbusClient(schedulers.ASYNC_IO, host = self.host, loop=self.loop)
+        
         if not wagoClient.connect():
             raise OsuActorError(f"Cannot connect to WAGO at %s" %(self.host))
             return False
-
-        rd = wagoClient.read_holding_registers(8, 3)
         
-        for i in range(numRTDs):
-            self.sensors[rtdKeys[i]] = round(ptRTD2C(float(rd.registers[i])), 2)
-
+        try:
+            rd = wagoClient.read_holding_registers(rtdAddr, numRTDs)
+            for i in range(4):
+                self.sensors[rtdKeys[i]] = round(ptRTD2C(float(rd.registers[i])), 2)
+        except:
+            raise OsuActorError(f"Failed to have the rtd data")
+            return False
         # Read the E+E RH/T sensors and convert to physical units.
 
-        rd = wagoClient.read_holding_registers(rhtAddr,2*numRHT)
-        for i in range(numRHT):
-            self.sensors[rhtRHKeys[i]] = round(RH0 + RHs*float(rd.registers[2*i]), 2)
-            self.sensors[rhtTKeys[i]] = round(T0 + Ts*float(rd.registers[2*i+1]), 2)
+        try:
+            rd = wagoClient.read_holding_registers(rhtAddr,2*numRHT)
+            for i in range(3):
+                self.sensors[rhtRHKeys[i]] = round(RH0 + RHs*float(rd.registers[2*i]), 2)
+                self.sensors[rhtTKeys[i]] = round(T0 + Ts*float(rd.registers[2*i+1]), 2)
+        except:
+            raise OsuActorError(f"Failed to have the rht data")
+            return False
+        
+        wagoClient.close()
+        return True
 
 
 

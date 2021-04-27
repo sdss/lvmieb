@@ -28,23 +28,23 @@ async def telemetry(command: Command, controllers: dict[str, OsuController]):
     for shutter in controllers:
         if controllers[shutter].name == 'shutter':
             try:
-                wago_status1, reply = controllers[shutter].getWAGOEnv()
+                wago_status1 = await controllers[shutter].getWAGOEnv()
                 if wago_status1:
                     command.info(text="Temperature & Humidity is:",status={
-                "rhtT1(40001)":controllers[shutter].sensors['40001'],
-                "rhtRH1(40002)":controllers[shutter].sensors['40002'],
-                "rhtT2(40003)":controllers[shutter].sensors['40003'],
-                "rhtRH2(40004)":controllers[shutter].sensors['40004'],
-                "rhtT3(40005)":controllers[shutter].sensors['40005'],
-                "rhtRH3(40006)":controllers[shutter].sensors['40006'],
-                "rtd1(40009)":controllers[shutter].sensors['40009'],
-                "rtd2(40010)":controllers[shutter].sensors['40010'],
-                "rtd3(40011)":controllers[shutter].sensors['40011'],
-                "rtd4(40012)":controllers[shutter].sensors['40012']
+                "rhtT1(40001)":controllers[shutter].sensors['rhtT1(40001)'],
+                "rhtRH1(40002)":controllers[shutter].sensors['rhtRH1(40002)'],
+                "rhtT2(40003)":controllers[shutter].sensors['rhtT2(40003)'],
+                "rhtRH2(40004)":controllers[shutter].sensors['rhtRH2(40004)'],
+                "rhtT3(40005)":controllers[shutter].sensors['rhtT3(40005)'],
+                "rhtRH3(40006)":controllers[shutter].sensors['rhtRH3(40006)'],
+                "rtd1(40009)":controllers[shutter].sensors['rtd1(40009)'],
+                "rtd2(40010)":controllers[shutter].sensors['rtd2(40010)'],
+                "rtd3(40011)":controllers[shutter].sensors['rtd3(40011)'],
+                "rtd4(40012)":controllers[shutter].sensors['rtd4(40012)']
                 })
                 else:
                     return command.fail(text=f"ERROR: Did not read sensors/powers")
-            except:
-                return command.fail(text = f"Did not read sensors/powers")
+            except OsuActorError as err:
+                return command.fail(error=str(err))
 
     return command.finish()
