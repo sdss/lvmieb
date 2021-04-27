@@ -3,6 +3,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
+# @Author: Changging Kim, Mingyeong Yang, Taeeun Kim
 # @Date: 2020-10-26
 # @Filename: __main__.py
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)

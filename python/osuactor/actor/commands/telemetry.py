@@ -4,12 +4,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# @Author: Mingyeong YANG (mingyeong@khu.ac.kr)
+# @Author: Changgon Kim, Mingyeong YANG, Taeeun Kim
 # @Date: 2021-03-22
-# @Filename: expose.py
+# @Filename: telemetry.py
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
-
-
 #added by CK 2021/03/30                                                                                                                                                                                                     
 from __future__ import annotations
 
@@ -24,6 +22,7 @@ from . import parser
 
 @parser.command()
 async def telemetry(command: Command, controllers: dict[str, OsuController]):
+    """Returns the status of wago sensor."""
 
     for shutter in controllers:
         if controllers[shutter].name == 'shutter':

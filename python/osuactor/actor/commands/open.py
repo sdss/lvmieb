@@ -1,4 +1,12 @@
-#added by CK 2021/03/30
+#!/usr/bin/env python                                                                                   
+# -*- coding: utf-8 -*-
+#
+# @Author: Changgon Kim, Mingyeong Yang, Taeeun Kim
+# @Date: 2021-03-22
+# @Filename: actor.py
+# @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+# added by CK 2021/03/30
+
 from __future__ import annotations
 
 import asyncio
@@ -12,6 +20,7 @@ from . import parser
 
 @parser.command()
 async def open(command: Command, controllers: dict[str, OsuController]):
+    """open the shutter."""
 
 #when opening multiple shutters asynchronously_CK    
     tasks = []

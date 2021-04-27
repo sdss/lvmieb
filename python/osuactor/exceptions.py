@@ -3,10 +3,10 @@
 #
 # Licensed under a 3-clause BSD license.
 #
-# @Author: Brian Cherinka
-# @Date:   2017-12-05 12:01:21
-# @Last modified by:   Brian Cherinka
-# @Last Modified time: 2017-12-05 12:19:32
+# @Author: Changgon Kim, Mingeyong Yang, Taeeun Kim
+# @Date:    2021-04-26 17:14
+# @Last modified by:   Changgon Kim
+# @Last Modified time: 
 
 from __future__ import print_function, division, absolute_import
 
