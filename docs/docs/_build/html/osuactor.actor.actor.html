@@ -8,6 +8,7 @@
     <title>osuactor.actor.actor module &#8212; osuactor  documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
@@ -32,8 +33,58 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="osuactor-actor-actor-module">
-<h1>osuactor.actor.actor module<a class="headerlink" href="#osuactor-actor-actor-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-osuactor.actor.actor">
+<span id="osuactor-actor-actor-module"></span><h1>osuactor.actor.actor module<a class="headerlink" href="#module-osuactor.actor.actor" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="osuactor.actor.actor.OsuActor">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.actor.actor.</span></code><code class="sig-name descname"><span class="pre">OsuActor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controllers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tuple</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/actor/actor.html#OsuActor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.actor.actor.OsuActor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">clu.actor.AMQPActor</span></code></p>
+<p>OSU Spectrograph controller actor.
+In addition to the normal arguments and keyword parameters for
+<cite>~clu.actor.AMQPActor</cite>, the class accepts the following parameters.</p>
+<dl class="py method">
+<dt id="osuactor.actor.actor.OsuActor.from_config">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">from_config</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/actor/actor.html#OsuActor.from_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.actor.actor.OsuActor.from_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a configuration file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config</strong> – A configuration dictionary or the path to a YAML configuration
+file. If the file contains a section called <code class="docutils literal notranslate"><span class="pre">'actor'</span></code> or
+<code class="docutils literal notranslate"><span class="pre">'client'</span></code>, that section will be used instead of the whole
+file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="osuactor.actor.actor.OsuActor.log">
+<code class="sig-name descname"><span class="pre">log</span></code><em class="property"><span class="pre">:</span> <span class="pre">SDSSLogger</span></em><a class="headerlink" href="#osuactor.actor.actor.OsuActor.log" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="osuactor.actor.actor.OsuActor.name">
+<code class="sig-name descname"><span class="pre">name</span></code><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#osuactor.actor.actor.OsuActor.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="osuactor.actor.actor.OsuActor.parser">
+<code class="sig-name descname"><span class="pre">parser</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;CluGroup</span> <span class="pre">parser&gt;</span></em><a class="headerlink" href="#osuactor.actor.actor.OsuActor.parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="osuactor.actor.actor.OsuActor.start">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">start</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/actor/actor.html#OsuActor.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.actor.actor.OsuActor.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the actor and connect the controllers.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="osuactor.actor.actor.OsuActor.stop">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">stop</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/actor/actor.html#OsuActor.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.actor.actor.OsuActor.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cancels queues and closes the connection.</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -60,7 +111,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="osuactor.actor.html">osuactor.actor package</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="osuactor.actor.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="osuactor.actor.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="osuactor.actor.html#module-contents">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="osuactor.actor.html#module-osuactor.actor">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="osuactor.controller.html">osuactor.controller package</a></li>

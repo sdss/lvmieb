@@ -8,6 +8,7 @@
     <title>osuactor.actor.commands.status module &#8212; osuactor  documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
@@ -32,8 +33,17 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="osuactor-actor-commands-status-module">
-<h1>osuactor.actor.commands.status module<a class="headerlink" href="#osuactor-actor-commands-status-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-osuactor.actor.commands.status">
+<span id="osuactor-actor-commands-status-module"></span><h1>osuactor.actor.commands.status module<a class="headerlink" href="#module-osuactor.actor.commands.status" title="Permalink to this headline">¶</a></h1>
+<p>from __future__ import annotations</p>
+<p>from clu.command import Command</p>
+<p>from osuactor.controller.controller import OsuController
+from osuactor.exceptions import OsuActorError</p>
+<p>from ..tools import check_controller, error_controller, parallel_controllers
+from . import parser</p>
+<p>&#64;parser.command()
+&#64;parallel_controllers()
+async def status(command: Command, controller: OsuController):</p>
 </div>
 
 
@@ -60,7 +70,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="osuactor.actor.html">osuactor.actor package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="osuactor.actor.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="osuactor.actor.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="osuactor.actor.html#module-contents">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="osuactor.actor.html#module-osuactor.actor">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="osuactor.controller.html">osuactor.controller package</a></li>

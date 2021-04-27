@@ -8,6 +8,7 @@
     <title>osuactor.actor.commands.sensor_temp module &#8212; osuactor  documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
@@ -32,8 +33,36 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="osuactor-actor-commands-sensor-temp-module">
-<h1>osuactor.actor.commands.sensor_temp module<a class="headerlink" href="#osuactor-actor-commands-sensor-temp-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-osuactor.actor.commands.sensor_temp">
+<span id="osuactor-actor-commands-sensor-temp-module"></span><h1>osuactor.actor.commands.sensor_temp module<a class="headerlink" href="#module-osuactor.actor.commands.sensor_temp" title="Permalink to this headline">¶</a></h1>
+<p>import OSU_control as osu
+from pymodbus3.client.sync import ModbusTcpClient as mbc
+desi=osu.Controller()</p>
+<p>print(desi.sensors)</p>
+<p>######initialization process########</p>
+<p># Populate the self.sensors data structure
+wago_status1, reply = desi.getWAGOEnv()
+if wago_status1:</p>
+<blockquote>
+<div><p>print(“WAGO sensor values read”)</p>
+</div></blockquote>
+<p># Populate self.controller_status data structure power values
+wago_status2, reply = desi.getWAGOPower()
+if wago_status2:</p>
+<blockquote>
+<div><p>print(“WAGO power values read”)</p>
+</div></blockquote>
+<p># If both previous steps returned True, set WAGO status to ready
+if wago_status1 and wago_status2:</p>
+<blockquote>
+<div><p>desi.controller_status[‘wago’] = ‘READY’</p>
+</div></blockquote>
+<dl class="simple">
+<dt>else:</dt><dd><p>print(“ERROR: Did not read WAGO sensors/powers”)</p>
+</dd>
+</dl>
+<hr class="docutils" />
+<p>print(desi.sensors)</p>
 </div>
 
 
@@ -60,7 +89,7 @@
 <li class="toctree-l3 current"><a class="reference internal" href="osuactor.actor.html">osuactor.actor package</a><ul class="current">
 <li class="toctree-l4 current"><a class="reference internal" href="osuactor.actor.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="osuactor.actor.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="osuactor.actor.html#module-contents">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="osuactor.actor.html#module-osuactor.actor">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="osuactor.controller.html">osuactor.controller package</a></li>

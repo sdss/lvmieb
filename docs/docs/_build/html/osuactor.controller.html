@@ -8,6 +8,7 @@
     <title>osuactor.controller package &#8212; osuactor  documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
@@ -42,8 +43,29 @@
 </ul>
 </div>
 </div>
-<div class="section" id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-osuactor.controller">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-osuactor.controller" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="osuactor.controller.OsuController">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.controller.</span></code><code class="sig-name descname"><span class="pre">OsuController</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/controller/controller.html#OsuController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.controller.OsuController" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">clu.device.Device</span></code></p>
+<dl class="py method">
+<dt id="osuactor.controller.OsuController.getWAGOEnv">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">getWAGOEnv</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/controller/controller.html#OsuController.getWAGOEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.controller.OsuController.getWAGOEnv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="osuactor.controller.OsuController.receive_status">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">receive_status</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">areader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/controller/controller.html#OsuController.receive_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.controller.OsuController.receive_status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="osuactor.controller.OsuController.send_command">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">send_command</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SelectTimeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/controller/controller.html#OsuController.send_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.controller.OsuController.send_command" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 
@@ -71,7 +93,7 @@
 <li class="toctree-l3"><a class="reference internal" href="osuactor.actor.html">osuactor.actor package</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">osuactor.controller package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-osuactor.controller">Module contents</a></li>
 </ul>
 </li>
 </ul>
