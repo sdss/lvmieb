@@ -20,7 +20,6 @@ from osuactor.exceptions import OsuActorError
 
 from . import parser
 
-'''
 @parser.command()
 async def telemetry(command: Command, controllers: dict[str, OsuController]):
     """Returns the status of wago sensor."""
@@ -48,4 +47,3 @@ async def telemetry(command: Command, controllers: dict[str, OsuController]):
                 return command.fail(error=str(err))
 
     return command.finish()
-'''
