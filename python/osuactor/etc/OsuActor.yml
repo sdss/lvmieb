@@ -5,13 +5,17 @@
 # hartman_door_right port : 7778
 # WAGO(temperature & humidity sensor connectted) : 502
 controllers:
-    sp1:
-        host: 10.7.45.27
-        port: 7776 #changged by CK 2021/03/30
+    shutter:
+            host: 10.7.45.27
+            port: 7776
 #added by CK 2021/03/30
 timeouts:
     controller_connect: 1
 
+sensors:
+        wago:
+                host: 10.7.45.27
+                port: 502
 # Actor configuration for the AMQPActor class
 actor:
     name: OsuActor

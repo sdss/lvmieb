@@ -1,4 +1,12 @@
-#added by CK 2021/03/30
+#!/usr/bin/env python                                                                                   
+# -*- coding: utf-8 -*-
+#
+# @Author: Changgon Kim, Mingyeong Yang, Taeeun Kim
+# @Date: 2021-03-22
+# @Filename: actor.py
+# @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
+# added by CK 2021/03/30
+
 from __future__ import annotations
 
 import asyncio
@@ -8,18 +16,21 @@ from clu.command import Command
 from osuactor.controller.controller import OsuController
 from osuactor.exceptions import OsuActorError
 
-#from ..tools import check_controller, error_controller, parallel_controllers
 from . import parser
-
 
 @parser.command()
 async def open(command: Command, controllers: dict[str, OsuController]):
+    """open the shutter."""
 
 #when opening multiple shutters asynchronously_CK    
     tasks = []
 
-    for controller_name in controllers:
-        tasks.append(controllers[controller_name].send_message("open"))
+    for shutter in controllers:
+       if controllers[shutter].name == 'shutter':
+            try:
+                tasks.append(controllers[shutter].send_command("open"))
+            except OsuActorError as err:
+                return command.fail(error=str(err))
 
     command.info(text="Opening all shutters")
     await asyncio.gather(*tasks)
