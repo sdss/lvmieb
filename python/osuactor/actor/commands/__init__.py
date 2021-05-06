@@ -12,7 +12,7 @@ import os
 import warnings
 
 import click
-from clu.parser import CluGroup, help_, ping, version
+from clu.parsers.click import CluGroup, help_, ping, version
 
 from osuactor.exceptions import OsuActorUserWarning
 
