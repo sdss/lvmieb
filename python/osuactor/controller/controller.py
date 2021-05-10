@@ -47,7 +47,7 @@ class OsuController(Device):
     def __init__(self, host: str, port: int, name: str = ""):
         Device.__init__(self, host, port)
         self.name = name #must use it!!_C
-        
+
         self.sensors = {
             'rhtT1(40001)' : -273., 		# Temperatures in C
             'rhtRH1(40002)' : -1., 	# Humidity in percent
@@ -65,6 +65,38 @@ class OsuController(Device):
 
         self.__status_event = asyncio.Event()
 
+
+    async def connect(self):
+        """connect with devices"""
+
+        self.connected = False
+
+        try:
+            self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
+            self.connected = True
+        except:
+            self.connected = False
+            raise OsuActorError(f"Could not connect the %s" %self.name)
+            return False
+
+        return True
+
+    async def noconnect(self):
+        """close the connect"""
+
+        try:
+            if self.connected == True:
+                self.writer.close()
+                await self.writer.wait_closed()
+            else:
+                raise OsuActorError(f"Could not connect the %s" %self.name)
+                return False
+        except:
+            raise OsuActorError(f"Could not connect the %s" %self.name)
+            return False
+
+        return True
+        
 
     async def send_command(self, command, SelectTimeout= 1):
 
@@ -98,36 +130,25 @@ class OsuController(Device):
             if command == "home":
                 SelectTimeout = 4.0
 
-        #connect to the mechanism
-
-        connected = False
-
-        try:
-            self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
-            connected = True
-        except:
-            connected = False
-            raise OsuActorError(f"Could not connect the %s" %self.name)
-            return False
-
         # parse the low-level command to the hardware
         sclHead = chr(0)+chr(7)
         sclTail = chr(13)
         sclStr = sclHead + c_message.upper() + sclTail
-        try:
-            self.writer.write(sclStr.encode())
-            await self.writer.drain()
-        except:
-            raise OsuActorError(f"Failed to write the data")
-            self.writer.close()
-            await self.writer.wait_close()
+        if self.connected == True:
+            try:
+                self.writer.write(sclStr.encode())
+                await self.writer.drain()
+            except:
+                raise OsuActorError(f"Failed to write the data")
+                self.writer.close()
+                await self.writer.wait_close()
+                return False
+        else:
+            raise OsuActorError(f"Could not connect the %s" %self.name)
             return False
 
         #start the select loop to read the socket
         status, Reply = await self.receive_status(self.reader, SelectTimeout, command)
-
-        self.writer.close()
-        await self.writer.wait_closed()
 
         return True
 

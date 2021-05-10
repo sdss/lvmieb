@@ -16,6 +16,7 @@ from contextlib import suppress
 from osuactor import __version__  #added by CK 2021/03/30
 #from osuactor.controller.command import OsuCommand #changed by CK 2021/03/30
 from osuactor.controller.controller import OsuController #changed by CK 2021/03/30
+from osuactor.exceptions import OsuActorUserWarning
 from clu.actor import AMQPActor
 
 from .commands import parser as osu_command_parser #added by CK 2021/03/30
@@ -67,9 +68,9 @@ class OsuActor(AMQPActor):
         await super().start()
 
 #        self._status_jobs = [
-#            asyncio.create_task(self._report_status(controller))   #need to be added after the hardware status commands are defined _CK 2021/03/30
+#            asyncio.create_task(self._report_status(controller))            #need to be added after the hardware status commands are defined _CK 2021/03/30
 #            for controller in self.controllers.values()
-#        ]
+#       ]
 
     async def stop(self):
         with suppress(asyncio.CancelledError):
