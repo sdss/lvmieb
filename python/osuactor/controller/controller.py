@@ -48,6 +48,7 @@ class OsuController(Device):
         Device.__init__(self, host, port)
         self.name = name #must use it!!_C
 
+        self.shutter_status = self.send_command("status")
         self.sensors = {
             'rhtT1(40001)' : -273., 		# Temperatures in C
             'rhtRH1(40002)' : -1., 	# Humidity in percent
@@ -122,6 +123,18 @@ class OsuController(Device):
             raise OsuActorError(f"%s and %s combination not found" % (command, self.name))
             return False
 
+        #check the shutter status before open and close
+        if self.connected == True:
+            if self.name == "shutter":
+                if command == "open":
+                    if self.shutter_status == "open":
+                        raise OsuActorError(f"The shutter is already {self.shutter_status}!")
+                        return False
+                elif command == "close":
+                    if self.shutter_status == "closed":
+                        raise OsuActorError(f"The shutter is already {self.shutter_status}!")
+                        return False
+
         #Tweak timeouts
         if self.name == "hartmann_left" or self.name == "hartmann_right":
             if command == "open" or command == "close" or command == "home":
@@ -147,13 +160,41 @@ class OsuController(Device):
             raise OsuActorError(f"Could not connect the %s" %self.name)
             return False
 
-        #start the select loop to read the socket
-        status, Reply = await self.receive_status(self.reader, SelectTimeout, command)
+        try:
+            reply = await asyncio.wait_for(self.reader.readuntil(b"\r"), SelectTimeout)
+        except:
+            self.writer.close()
+            await self.writer.wait_closed()
+            raise OsuActorError(f"failed to read the data")
+            return False
 
-        return True
+        if command == "status" and reply:
+            assert isinstance(reply, bytes)
+            shutter_stat = parse_IS(reply)
+            self.shutter_status = shutter_stat
+            return shutter_stat
+        else:
+            if command == "open":
+                self.shutter_status = "open"
+            elif command == "close":
+                self.shutter_status = "close"
+
+            if reply != b"\x00\x07%\r":
+                return False
+            else:
+                await asyncio.sleep(0.61)
+                reply = await self.reader.readuntil(b"\r")
+                if b"DONE" in reply:
+                    return True
+                else:
+                    return False
+
+        
 
     async def receive_status(self, areader, timeout, cmd):
+        
         KeepGoing = True
+
         while KeepGoing:
 
             sclReply = ""
@@ -179,6 +220,8 @@ class OsuController(Device):
                     return True, sclReply
                 if sclReply[:2] == 'IS':
                     return True, sclReply
+
+
 
     async def getWAGOEnv(self):
 
@@ -233,9 +276,6 @@ class OsuController(Device):
         wagoClient.close()
         return True
 
-
-
-
 #---------------------------------------------------------------------------
 #
 # WAGO I/O convenience functions
@@ -286,3 +326,17 @@ def wagoDOReg(rd,numOut=8):
     for i in range(numOut):
         testOut.append((rd & 2**i) == 2**i)
     return testOut
+
+def parse_IS(reply: bytes):
+
+    match = re.search(b"\x00\x07IS=([0-1])([0-1])[0-1]{6}\r$", reply)
+    if match is None:
+        return False
+
+    if match.groups() == (b"1", b"0"):
+        return "open"
+    elif match.groups() == (b"0", b"1"):
+        return "closed"
+    else:
+        return False
+

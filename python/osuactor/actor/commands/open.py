@@ -34,7 +34,7 @@ async def open(command: Command, controllers: dict[str, OsuController]):
 
     command.info(text="Opening all shutters")
     await asyncio.gather(*tasks)
-    return command.finish(shutter="open")
+    return command.finish(shutter= "open")
 
 #when opening shutters sequently_CK
 """    
