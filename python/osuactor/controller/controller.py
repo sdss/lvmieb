@@ -82,7 +82,7 @@ class OsuController(Device):
 
         return True
 
-    async def noconnect(self):
+    async def disconnect(self):
         """close the connect"""
 
         try:
