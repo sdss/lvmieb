@@ -20,16 +20,16 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules"
 ]
 packages = [
-    { include = "OsuActor", from = "python" }
+    { include = "osuactor", from = "python" }
 ]
-include = ["python/OsuActor/etc/*", "cextern/**/*", "LICENSE.md"]
+include = ["python/osuactor/etc/*", "cextern/**/*", "LICENSE.md"]
 
 [tool.poetry.build]
 script = "build.py"
 generate-setup-file = false
 
 [tool.poetry.scripts]
-OsuActor = "OsuActor.__main__:main"
+OsuActor = "osuactor.__main__:OsuActor"
 
 [tool.poetry.dependencies]
 python = "^3.7"
