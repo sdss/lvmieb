@@ -22,6 +22,9 @@ from . import parser
 __all__ = ["shutter"]
 
 
+#tasks = []
+#connections = []
+
 @parser.group()
 def shutter(*args):
     """control the shutter."""
@@ -33,17 +36,17 @@ def shutter(*args):
 async def connect(command: Command, controllers: dict[str, OsuController]):
     """open the connection with the shutter."""
 
-    tasks = []
+    connections = []
 
     for shutter in controllers:
         if controllers[shutter].name == 'shutter':
             try:
-                tasks.append(controllers[shutter].connect())
+                connections.append(controllers[shutter].connect())
             except OsuActorError as err:
                 return command.fail(error=str(err))
 
     command.info(text="Connecting all the shutters")
-    await asyncio.gather(*tasks)
+    await asyncio.gather(*connections)
     return command.finish(shutter = "connected")
 
 
@@ -51,17 +54,17 @@ async def connect(command: Command, controllers: dict[str, OsuController]):
 async def disconnect(command: Command, controllers: dict[str, OsuController]):
     """close the connection with the shutter"""
 
-    tasks = []
+    connections = []
 
     for shutter in controllers:
         if controllers[shutter].name == 'shutter':
             try:
-                tasks.append(controllers[shutter].disconnect())
+                connections.append(controllers[shutter].disconnect())
             except OsuActorError as err:
                 return command.fail(error=str(err))
 
     command.info(text="Disconnecting all the shutters")
-    await asyncio.gather(*tasks)
+    await asyncio.gather(*connections)
     return command.finish(shutter = "disconnected")
 
 
@@ -100,19 +103,20 @@ async def close(command: Command, controllers: dict[str, OsuController]):
     command.info(text="Closing all shutters")
     await asyncio.gather(*tasks)
     return command.finish(shutter= "closed")
-    
+   
+
 """
 @shutter.command
 async def status(command: Command, controllers: dict[str, OsuController]):
-    return the status of shutter.
+return the status of shutter.
 
     global connections
     global tasks
 
     command.info(text="Checking all shutters")
-    result_connect = await asyncio.gather(*connections)
-    result_shutter = await asyncio.gather(*tasks)
-    
+    result_connect = connections
+    result_shutter = tasks
+
     for n in result_connect:
         try:
             if n == "connected":
@@ -124,11 +128,14 @@ async def status(command: Command, controllers: dict[str, OsuController]):
                         return command.finish(shutter='closed')
                     else:
                         return command.fail(test='shutter is in a bad state')
+
             elif n == "disconnected":
                 return command.finish(shutter='disconnected')
+
             else:
                 return command.fail(text='Shutter is in a bad state')
-         except OsuActorError as err:
+
+        except OsuActorError as err:
             return command.fail(error=str(err))
 """
 
