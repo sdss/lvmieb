@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 #
 # @Author: Changgon Kim, Mingyeong Yang, Taeeun Kim
-# @Date: 2021-03-22
-# @Filename: actor.py
+# @Date: 2021-05-12
+# @Filename: shutter.py
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 # added by CK 2021/03/30
 
@@ -18,62 +18,119 @@ from osuactor.exceptions import OsuActorError
 
 from . import parser
 
-@click.option(
-    "-s",
-    "--send",
-    type=str,
-    default="status",
-    help="connect, disconnect, open, close, status",
-)   
-@parser.command()
-async def shutter(command: Command, controllers: dict[str, OsuController], send: str):
-    """operate the shutter."""
 
-#when opening multiple shutters asynchronously_CK    
+__all__ = ["shutter"]
+
+
+@parser.group()
+def shutter(*args):
+    """control the shutter."""
+
+    pass
+
+
+@shutter.command()
+async def connect(command: Command, controllers: dict[str, OsuController]):
+    """open the connection with the shutter."""
+
     tasks = []
 
     for shutter in controllers:
-       if controllers[shutter].name == 'shutter':
+        if controllers[shutter].name == 'shutter':
             try:
-                if send == "connect":
-                    tasks.append(controllers[shutter].connect())
-                elif send == "disconnect":
-                    tasks.append(controllers[shutter].disconnect())
-                else:
-                    tasks.append(controllers[shutter].send_command(send))
-            except OsuActorError as err:
-                return command.fail(error=str(err))
-    if send == "connect":
-        command.info(text="Connecting all the shutters")
-        await asyncio.gather(*tasks)
-        return command.finish(shutter = "connected")
-    elif send == "disconnect":
-        command.info(text="Disconnecting all the shutters")
-        await asyncio.gather(*tasks)
-        return command.finish(shutter = "Disconnected")
-    elif send == "open":
-        command.info(text="Opening all shutters")
-        await asyncio.gather(*tasks)
-        return command.finish(shutter= "open")
-    elif send == "close":
-        command.info(text="Closing all shutters")
-        await asyncio.gather(*tasks)
-        return command.finish(shutter= "closed")
-    elif send == "status":
-        command.info(text="Checking all shutters")
-        result = await asyncio.gather(*tasks)
-    
-        for n in result:
-            try:
-                if n == "open":
-                    return command.finish(shutter='open')
-                elif n == "closed":
-                    return command.finish(shutter='closed')
-                else:
-                    command.fail(text='Shutter is in a bad state')
+                tasks.append(controllers[shutter].connect())
             except OsuActorError as err:
                 return command.fail(error=str(err))
 
+    command.info(text="Connecting all the shutters")
+    await asyncio.gather(*tasks)
+    return command.finish(shutter = "connected")
+
+
+@shutter.command()
+async def disconnect(command: Command, controllers: dict[str, OsuController]):
+    """close the connection with the shutter"""
+
+    tasks = []
+
+    for shutter in controllers:
+        if controllers[shutter].name == 'shutter':
+            try:
+                tasks.append(controllers[shutter].disconnect())
+            except OsuActorError as err:
+                return command.fail(error=str(err))
+
+    command.info(text="Disconnecting all the shutters")
+    await asyncio.gather(*tasks)
+    return command.finish(shutter = "disconnected")
+
+
+@shutter.command()
+async def open(command: Command, controllers: dict[str, OsuController]):
+    """open the shutter"""
+
+    tasks = []
+
+    for shutter in controllers:
+        if controllers[shutter].name == 'shutter':
+            try:
+                tasks.append(controllers[shutter].send_command("open"))
+            except OsuActorError as err:
+                return command.fail(error=str(err))
+
+
+    command.info(text="Opening all shutters")
+    await asyncio.gather(*tasks)
+    return command.finish(shutter= "open")
+    
+
+@shutter.command()
+async def close(command: Command, controllers: dict[str, OsuController]):
+    """close the shutter"""
+
+    tasks = []
+
+    for shutter in controllers:
+        if controllers[shutter].name == 'shutter':
+            try:
+                tasks.append(controllers[shutter].send_command("close"))
+            except OsuActorError as err:
+                return command.fail(error=str(err))
+
+    command.info(text="Closing all shutters")
+    await asyncio.gather(*tasks)
+    return command.finish(shutter= "closed")
+    
+"""
+@shutter.command
+async def status(command: Command, controllers: dict[str, OsuController]):
+    return the status of shutter.
+
+    global connections
+    global tasks
+
+    command.info(text="Checking all shutters")
+    result_connect = await asyncio.gather(*connections)
+    result_shutter = await asyncio.gather(*tasks)
+    
+    for n in result_connect:
+        try:
+            if n == "connected":
+                command.finish(shutter='connected')
+                for m in result_shutter:
+                    if m == "open":
+                        return command.finish(shutter='open')
+                    elif m == "closed":
+                        return command.finish(shutter='closed')
+                    else:
+                        return command.fail(test='shutter is in a bad state')
+            elif n == "disconnected":
+                return command.finish(shutter='disconnected')
+            else:
+                return command.fail(text='Shutter is in a bad state')
+         except OsuActorError as err:
+            return command.fail(error=str(err))
+"""
 
 #when opening shutters sequently_CK
 """    
