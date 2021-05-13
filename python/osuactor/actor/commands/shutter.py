@@ -22,9 +22,6 @@ from . import parser
 __all__ = ["shutter"]
 
 
-#tasks = []
-#connections = []
-
 @parser.group()
 def shutter(*args):
     """control the shutter."""
@@ -105,38 +102,68 @@ async def close(command: Command, controllers: dict[str, OsuController]):
     return command.finish(shutter= "closed")
    
 
-"""
-@shutter.command
+@shutter.command()
 async def status(command: Command, controllers: dict[str, OsuController]):
-return the status of shutter.
-
-    global connections
-    global tasks
+#return the status of shutter.
 
     command.info(text="Checking all shutters")
-    result_connect = connections
-    result_shutter = tasks
+    tasks = []
+    connection = []
 
-    for n in result_connect:
+    for shutter in controllers:
+        if controllers[shutter].name == 'shutter':
+            try:
+                tasks.append(controllers[shutter].send_command("status"))
+                connection.append(controllers[shutter].connected)
+            except OsuActorError as err:
+                return command.fail(error=str(err))
+
+    result_shutter = await asyncio.gather(*tasks)
+
+    for n in result_shutter:
         try:
-            if n == "connected":
-                command.finish(shutter='connected')
-                for m in result_shutter:
-                    if m == "open":
-                        return command.finish(shutter='open')
-                    elif m == "closed":
-                        return command.finish(shutter='closed')
-                    else:
-                        return command.fail(test='shutter is in a bad state')
-
-            elif n == "disconnected":
-                return command.finish(shutter='disconnected')
-
+            if n == "open":
+                return command.info(
+                        status={
+                        "open/closed:" : n,
+                        "connected/disconnected" : connection[result_shutter.index(n)]
+                    }
+                )
+            elif n == "closed":
+                return command.info(
+                        status={
+                        "open/closed:" : n,
+                        "connection/disconnected" : connection[result_shutter.index(n)]
+                    }
+                )
             else:
-                return command.fail(text='Shutter is in a bad state')
-
+                return command.fail(test='shutter is in a bad state')
         except OsuActorError as err:
             return command.fail(error=str(err))
+
+
+"""
+    for m in result_connected:
+        for n in result_shutter:
+            try:
+                if n == "open":
+                    return command.finish(
+                        status={
+                        "open/closed:" : n,
+                        "connected/disconnected:" : m
+                    }
+                )
+                elif n == "closed":
+                    return command.finish(
+                        status={
+                        "open/closed:" : n,
+                        "connected/disconnected:" : m
+                    }
+                )
+                else:
+                    return command.fail(test='shutter is in a bad state')
+            except OsuActorError as err:
+                return command.fail(error=str(err))
 """
 
 #when opening shutters sequently_CK
