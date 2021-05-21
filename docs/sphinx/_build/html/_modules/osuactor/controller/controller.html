@@ -79,8 +79,10 @@
 
 <span class="n">hdCmds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;init&quot;</span><span class="p">:</span><span class="s2">&quot;QX1&quot;</span><span class="p">,</span><span class="s2">&quot;home&quot;</span><span class="p">:</span><span class="s2">&quot;QX2&quot;</span><span class="p">,</span><span class="s2">&quot;open&quot;</span><span class="p">:</span><span class="s2">&quot;QX3&quot;</span><span class="p">,</span><span class="s2">&quot;close&quot;</span><span class="p">:</span><span class="s2">&quot;QX4&quot;</span><span class="p">,</span><span class="s2">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;IS&quot;</span><span class="p">}</span>
 
-<div class="viewcode-block" id="OsuController"><a class="viewcode-back" href="../../../Controller.html#osuactor.controller.controller.OsuController">[docs]</a><span class="k">class</span> <span class="nc">OsuController</span><span class="p">(</span><span class="n">Device</span><span class="p">):</span>
-    <span class="c1">#Talks to an Osu controller over TCP/IP.</span>
+<div class="viewcode-block" id="OsuController"><a class="viewcode-back" href="../../../Controller.html#osuactor.actor.commands.telemetry.OsuController">[docs]</a><span class="k">class</span> <span class="nc">OsuController</span><span class="p">(</span><span class="n">Device</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Talks to an OSU controller over TCP/IP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
         <span class="n">Device</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="c1">#must use it!!_C</span>
@@ -105,7 +107,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">False</span>
 
 
-<div class="viewcode-block" id="OsuController.connect"><a class="viewcode-back" href="../../../Controller.html#osuactor.controller.controller.OsuController.connect">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="OsuController.connect"><a class="viewcode-back" href="../../../Controller.html#osuactor.actor.commands.telemetry.OsuController.connect">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;connect with devices&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
@@ -121,7 +123,7 @@
 
         <span class="k">return</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="OsuController.disconnect"><a class="viewcode-back" href="../../../Controller.html#osuactor.controller.controller.OsuController.disconnect">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="OsuController.disconnect"><a class="viewcode-back" href="../../../Controller.html#osuactor.actor.commands.telemetry.OsuController.disconnect">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;close the connect&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
@@ -137,7 +139,7 @@
         <span class="k">return</span> <span class="kc">True</span></div>
         
 
-<div class="viewcode-block" id="OsuController.send_command"><a class="viewcode-back" href="../../../Controller.html#osuactor.controller.controller.OsuController.send_command">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">send_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">SelectTimeout</span><span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="OsuController.send_command"><a class="viewcode-back" href="../../../Controller.html#osuactor.actor.commands.telemetry.OsuController.send_command">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">send_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">SelectTimeout</span><span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
 
         <span class="c1">#check that the device exists</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">devList</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
@@ -229,7 +231,7 @@
 
         
 
-<div class="viewcode-block" id="OsuController.receive_status"><a class="viewcode-back" href="../../../Controller.html#osuactor.controller.controller.OsuController.receive_status">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">receive_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">areader</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
+<div class="viewcode-block" id="OsuController.receive_status"><a class="viewcode-back" href="../../../Controller.html#osuactor.actor.commands.telemetry.OsuController.receive_status">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">receive_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">areader</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">cmd</span><span class="p">):</span>
         
         <span class="n">KeepGoing</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -261,7 +263,7 @@
 
 
 
-<div class="viewcode-block" id="OsuController.getWAGOEnv"><a class="viewcode-back" href="../../../Controller.html#osuactor.controller.controller.OsuController.getWAGOEnv">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">getWAGOEnv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="OsuController.getWAGOEnv"><a class="viewcode-back" href="../../../Controller.html#osuactor.actor.commands.telemetry.OsuController.getWAGOEnv">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">getWAGOEnv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="n">rtdAddr</span> <span class="o">=</span> <span class="mi">8</span>
 
