@@ -15,7 +15,14 @@ import os
 # sys.path.insert(0, os.path.abspath('.'))
 
 from pkg_resources import parse_version
-from osuactor import __version__
+
+try:
+    from osuactor import __version__
+except ModuleNotFoundError:
+    from sdsstools import get_package_version
+
+    __version__ = get_package_version(__file__, "osuactor") or "dev"
+
 
 # -- Project information -----------------------------------------------------
 

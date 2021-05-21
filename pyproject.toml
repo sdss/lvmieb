@@ -1,13 +1,14 @@
 [tool.poetry]
-name = "sdss-OsuActor"
-version = "0.2.0-alpha.0"
+name = "sdss-osuactor"
+version = "0.1.0-alpha.0"
+
 description = "Simple Template package for creating SDSS Python projects"
 authors = ["Changgon Kim <changgonkim@khu.ac.kr>"]
 license = "BSD-3-Clause"
 readme = "README.md"
-homepage = "https://github.com/sdss/OsuActor"
-repository = "https://github.com/sdss/OsuActor"
-documentation = "https://sdss-OsuActor.readthedocs.org"
+homepage = "https://github.com/sdss/osuactor"
+repository = "https://github.com/sdss/osuactor"
+documentation = "https://sdss-osuactor.readthedocs.org"
 keywords = ["astronomy", "software"]
 classifiers = [
     "Intended Audience :: Science/Research",
@@ -29,7 +30,7 @@ script = "build.py"
 generate-setup-file = false
 
 [tool.poetry.scripts]
-OsuActor = "osuactor.__main__:OsuActor"
+osuactor = "osuactor.__main__:osuactor"
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -65,7 +66,7 @@ docs = ["Sphinx", "sphinx_bootstrap_theme"]
 line_length = 79
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "SDSS", "FIRSTPARTY", "LOCALFOLDER"]
 default_section = "THIRDPARTY"
-known_first_party = "OsuActor"
+known_first_party = "osuactor"
 known_sdss = ["sdsstools"]
 balanced_wrapping = true
 include_trailing_comma = false
@@ -73,7 +74,7 @@ lines_after_imports = 2
 use_parentheses = true
 
 [tool.pytest.ini_options]
-addopts = "--cov OsuActor --cov-report xml --cov-report html --cov-report term"
+addopts = "--cov osuactor --cov-report xml --cov-report html --cov-report term"
 
 [tool.coverage.run]
 branch = true

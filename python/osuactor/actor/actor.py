@@ -22,9 +22,9 @@ from clu.actor import AMQPActor
 from .commands import parser as osu_command_parser #added by CK 2021/03/30
 
 
-__all__ = ["OsuActor"]                             #changed by CK 2021/03/30
+__all__ = ["osuactor"]                             #changed by CK 2021/03/30
 
-class OsuActor(AMQPActor):
+class osuactor(AMQPActor):
     """OSU Spectrograph controller actor.
 
     In addition to the normal arguments and keyword parameters for
@@ -83,9 +83,9 @@ class OsuActor(AMQPActor):
     def from_config(cls, config, *args, **kwargs):
         """Creates an actor from a configuration file."""
 
-        instance = super(OsuActor, cls).from_config(config, *args, **kwargs)
+        instance = super(osuactor, cls).from_config(config, *args, **kwargs)
         
-        assert isinstance(instance, OsuActor)
+        assert isinstance(instance, osuactor)
         assert isinstance(instance.config, dict)
 
         if "controllers" in instance.config:

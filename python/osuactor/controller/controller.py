@@ -65,36 +65,37 @@ class OsuController(Device):
           
 
         self.__status_event = asyncio.Event()
+        self.connected = False
 
 
     async def connect(self):
         """connect with devices"""
 
-        self.connected = False
-
-        try:
-            self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
-            self.connected = True
-        except:
-            self.connected = False
-            raise OsuActorError(f"Could not connect the %s" %self.name)
+        if self.connected == False:
+            try:
+                self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
+                self.connected = True
+            except:
+                self.connected = False
+                raise OsuActorError(f"Could not connect the %s" %self.name)
             return False
+        else:
+            raise OsuActorError(f"The %s is already connected!" %self.name)
 
         return True
 
     async def disconnect(self):
         """close the connect"""
 
-        try:
-            if self.connected == True:
+        if self.connected == True:
+            try:
                 self.writer.close()
                 await self.writer.wait_closed()
-            else:
+            except:
                 raise OsuActorError(f"Could not connect the %s" %self.name)
-                return False
-        except:
-            raise OsuActorError(f"Could not connect the %s" %self.name)
             return False
+        else:
+            raise OsuActorError(f"The %s is dicennected!" %self.name)
 
         return True
         
@@ -131,7 +132,7 @@ class OsuController(Device):
                         raise OsuActorError(f"The shutter is already {self.shutter_status}!")
                         return False
                 elif command == "close":
-                    if self.shutter_status == "closed":
+                    if self.shutter_status == "close":
                         raise OsuActorError(f"The shutter is already {self.shutter_status}!")
                         return False
 
