@@ -11,6 +11,7 @@ Controller
 ------------
 
 .. automodule:: osuactor.controller.controller
+   :imported-members:
    :members:
    :undoc-members:
    :show-inheritance:
