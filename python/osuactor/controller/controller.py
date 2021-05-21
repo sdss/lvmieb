@@ -4,7 +4,7 @@
 # -*- coding: utf-8 -*-
 #
 
-from __future__ import annotations
+from __future__ import annotations, print_function, division, absolute_import
 
 import asyncio
 import configparser
