@@ -102,36 +102,37 @@
           
 
         <span class="bp">self</span><span class="o">.</span><span class="n">__status_event</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">False</span>
 
 
 <div class="viewcode-block" id="OsuController.connect"><a class="viewcode-back" href="../../../Controller.html#osuactor.controller.OsuController.connect">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;connect with devices&quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">False</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">writer</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">open_connection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">raise</span> <span class="n">OsuActorError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not connect the %s&quot;</span> <span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">writer</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">open_connection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">raise</span> <span class="n">OsuActorError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not connect the %s&quot;</span> <span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">OsuActorError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The %s is already connected!&quot;</span> <span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="OsuController.disconnect"><a class="viewcode-back" href="../../../Controller.html#osuactor.controller.OsuController.disconnect">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;close the connect&quot;&quot;&quot;</span>
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">writer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
                 <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">writer</span><span class="o">.</span><span class="n">wait_closed</span><span class="p">()</span>
-            <span class="k">else</span><span class="p">:</span>
+            <span class="k">except</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">OsuActorError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not connect the %s&quot;</span> <span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-                <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">OsuActorError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not connect the %s&quot;</span> <span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">OsuActorError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The %s is dicennected!&quot;</span> <span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="kc">True</span></div>
         
@@ -168,7 +169,7 @@
                         <span class="k">raise</span> <span class="n">OsuActorError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The shutter is already </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">shutter_status</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
                         <span class="k">return</span> <span class="kc">False</span>
                 <span class="k">elif</span> <span class="n">command</span> <span class="o">==</span> <span class="s2">&quot;close&quot;</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shutter_status</span> <span class="o">==</span> <span class="s2">&quot;closed&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shutter_status</span> <span class="o">==</span> <span class="s2">&quot;close&quot;</span><span class="p">:</span>
                         <span class="k">raise</span> <span class="n">OsuActorError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The shutter is already </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">shutter_status</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
                         <span class="k">return</span> <span class="kc">False</span>
 

@@ -6,8 +6,8 @@
 OsuActor's documentation
 =========================
 
-.. include:: ../../README.rst
-  :start-line: 2
+#.. include:: ../../README.rst
+#  :start-line: 2
 
 
 
@@ -29,4 +29,3 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`modindex`
-~
