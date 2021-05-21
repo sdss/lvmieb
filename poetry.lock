@@ -518,7 +518,7 @@ python-versions = ">=3.6"
 name = "numpy"
 version = "1.20.3"
 description = "NumPy is the fundamental package for array computing with Python."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 
@@ -1241,7 +1241,7 @@ docs = ["Sphinx", "sphinx_bootstrap_theme"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "1976ca66a995488f4c1ba7bcb10aec4ac5226c07b6c184e592405252b2f4eb6f"
+content-hash = "cd80f0f66c0f583f99880a3169510bea2b7ee96998aedaeb140c9769e5b907a4"
 
 [metadata.files]
 aio-pika = [

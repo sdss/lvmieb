@@ -110,13 +110,14 @@ intersphinx_mapping = {
 # 'matplotlib': ('https://matplotlib.org/', None),
 # 'scipy': ('https://docs.scipy.org/doc/scipy/reference', None)}
 
-autodoc_mock_imports = ["_tkinter", "asynctest"]
+autodoc_mock_imports = ["_tkinter", "asynctest", "numpy"]
 autodoc_member_order = "groupwise"
 #autodoc_default_options = {"members": None, "show-inheritance": None}
 autodoc_typehints = "description"
 
 napoleon_use_rtype = False
 napoleon_use_ivar = True
+napoleon_numpy_docstring = True
 
 # -- Options for HTML output -------------------------------------------------
 

@@ -43,7 +43,9 @@ expCmds = {"init":"QX1","home":"QX2","open":"QX3","close":"QX4",
 hdCmds = {"init":"QX1","home":"QX2","open":"QX3","close":"QX4","status":"IS"}
 
 class OsuController(Device):
-    #Talks to an Osu controller over TCP/IP.
+    """
+            Talks to an OSU controller over TCP/IP
+    """
     def __init__(self, host: str, port: int, name: str = ""):
         Device.__init__(self, host, port)
         self.name = name #must use it!!_C
