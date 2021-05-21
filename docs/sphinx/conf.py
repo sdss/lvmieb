@@ -37,6 +37,12 @@ release = __version__
 # Are we building in RTD?
 on_rtd = os.environ.get("READTHEDOCS") == "True"
 
+#Sphinc template selected in cookiecutter
+sphinx_template = 'alabaster'
+
+if sphinx_template == "sphinx-bootstrap":
+    import sphinx_bootstrap_theme
+
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -104,9 +110,9 @@ intersphinx_mapping = {
 # 'matplotlib': ('https://matplotlib.org/', None),
 # 'scipy': ('https://docs.scipy.org/doc/scipy/reference', None)}
 
-autodoc_mock_imports = ["_tkinter", "asynctest","osuactor"]
+autodoc_mock_imports = ["_tkinter", "asynctest"]
 autodoc_member_order = "groupwise"
-autodoc_default_options = {"members": None, "show-inheritance": None}
+#autodoc_default_options = {"members": None, "show-inheritance": None}
 autodoc_typehints = "description"
 
 napoleon_use_rtype = False

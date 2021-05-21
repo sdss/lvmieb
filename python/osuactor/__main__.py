@@ -17,10 +17,6 @@ from clu.tools import cli_coro as cli_coro_osu
 from sdsstools.daemonizer import DaemonGroup
 
 from osuactor.actor.actor import osuactor as OsuActorInstance
-import osuactor.controller.controller
-import osuactor.actor.actor
-import osuactor.actor.commands.shutter
-import osuactor.actor.commands.telemetry
 
 @click.group(cls=DefaultGroup, default="actor", default_if_no_args=True)
 @click.option(
