@@ -1,6 +1,7 @@
 [tool.poetry]
 name = "sdss-osuactor"
 version = "0.1.0-alpha.0"
+
 description = "Simple Template package for creating SDSS Python projects"
 authors = ["Changgon Kim <changgonkim@khu.ac.kr>"]
 license = "BSD-3-Clause"
