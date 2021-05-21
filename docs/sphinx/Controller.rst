@@ -10,7 +10,7 @@ This module communicates with OsuController.
 Controller
 ---------------
 
-.. automodule:: osuactor.controller.controller
+.. automodule:: osuactor.controller.controller.py
    :members:
    :undoc-members:
    :show-inheritance:

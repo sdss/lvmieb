@@ -89,7 +89,7 @@ pygments_style = "sphinx"
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
-releases_github_path = "sdss/OsuActor"
+releases_github_path = "sdss/osuactor"
 releases_document_name = ["changelog"]
 releases_unstable_prehistory = True
 
@@ -104,7 +104,7 @@ intersphinx_mapping = {
 # 'matplotlib': ('https://matplotlib.org/', None),
 # 'scipy': ('https://docs.scipy.org/doc/scipy/reference', None)}
 
-autodoc_mock_imports = ["_tkinter", "asynctest"]
+autodoc_mock_imports = ["_tkinter", "asynctest","osuactor"]
 autodoc_member_order = "groupwise"
 autodoc_default_options = {"members": None, "show-inheritance": None}
 autodoc_typehints = "description"
@@ -125,7 +125,7 @@ html_theme = 'alabaster'
 html_theme_options = {
     "logo": "sdssv_logo.png",
     "github_user": "sdss",
-    "github_repo": "OsuActor",
+    "github_repo": "osuactor",
     "github_button": True,
     "github_type": "star",
     "sidebar_collapse": True,

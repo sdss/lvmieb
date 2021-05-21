@@ -44,53 +44,6 @@
 </div>
 <div class="section" id="module-osuactor.actor.actor">
 <span id="actor"></span><h2>Actor<a class="headerlink" href="#module-osuactor.actor.actor" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt id="osuactor.actor.actor.osuactor">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.actor.actor.</span></code><code class="sig-name descname"><span class="pre">osuactor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controllers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/actor/actor.html#osuactor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.actor.actor.osuactor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">clu.actor.AMQPActor</span></code></p>
-<p>OSU Spectrograph controller actor.</p>
-<p>In addition to the normal arguments and keyword parameters for
-<code class="xref py py-obj docutils literal notranslate"><span class="pre">AMQPActor</span></code>, the class accepts the following parameters.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>controllers</strong> – The list of ‘.OsuController’ instances to manage.</p>
-</dd>
-</dl>
-<dl class="py method">
-<dt id="osuactor.actor.actor.osuactor.from_config">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">from_config</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/actor/actor.html#osuactor.from_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.actor.actor.osuactor.from_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates an actor from a configuration file.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="osuactor.actor.actor.osuactor.start">
-<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">start</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/actor/actor.html#osuactor.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.actor.actor.osuactor.start" title="Permalink to this definition">¶</a></dt>
-<dd><p>Start the actor and connect the controllers.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="osuactor.actor.actor.osuactor.stop">
-<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">stop</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/actor/actor.html#osuactor.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.actor.actor.osuactor.stop" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cancels queues and closes the connection.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="osuactor.actor.actor.osuactor.log">
-<code class="sig-name descname"><span class="pre">log</span></code><em class="property"><span class="pre">:</span> <span class="pre">SDSSLogger</span></em><a class="headerlink" href="#osuactor.actor.actor.osuactor.log" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="osuactor.actor.actor.osuactor.name">
-<code class="sig-name descname"><span class="pre">name</span></code><em class="property"><span class="pre">:</span> <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><span class="pre">str</span></a></em><a class="headerlink" href="#osuactor.actor.actor.osuactor.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="osuactor.actor.actor.osuactor.parser">
-<code class="sig-name descname"><span class="pre">parser</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&lt;CluGroup</span> <span class="pre">parser&gt;</span></em><a class="headerlink" href="#osuactor.actor.actor.osuactor.parser" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
 </div>
 </div>
 
@@ -114,7 +67,7 @@
 
 
 <p>
-<iframe src="https://ghbtns.com/github-btn.html?user=sdss&repo=OsuActor&type=star&count=true&size=large&v=2"
+<iframe src="https://ghbtns.com/github-btn.html?user=sdss&repo=osuactor&type=star&count=true&size=large&v=2"
   allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
 </p>
 
@@ -170,7 +123,7 @@
     </div>
 
     
-    <a href="https://github.com/sdss/OsuActor" class="github">
+    <a href="https://github.com/sdss/osuactor" class="github">
         <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
     </a>
     
