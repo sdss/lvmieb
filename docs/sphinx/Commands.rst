@@ -4,6 +4,7 @@ Commands
 shutter
 ----------
 .. automodule:: osuactor.actor.commands.shutter
+   :imported-members:
    :members:
    :undoc-members:
    :show-inheritance:
@@ -11,6 +12,7 @@ shutter
 telemetry
 -----------
 .. automodule:: osuactor.actor.commands.telemetry
+   :imported-members:
    :members:
    :undoc-members:
    :show-inheritance:

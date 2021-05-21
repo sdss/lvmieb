@@ -14,7 +14,8 @@ This package work on ...
 Actor
 -----
 
-.. automodule:: osuactor.__main__
+.. automodule:: osuactor.actor.actor
+   :imported-members:
    :members:
    :undoc-members:
    :show-inheritance:
