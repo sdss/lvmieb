@@ -40,6 +40,69 @@
 <h1>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
 <h2>Exceptions<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-osuactor.exceptions"></span><dl class="py exception">
+<dt id="osuactor.exceptions.OsuActorAPIError">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorAPIError</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorAPIError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorAPIError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#osuactor.exceptions.OsuActorError" title="osuactor.exceptions.OsuActorError"><code class="xref py py-class docutils literal notranslate"><span class="pre">osuactor.exceptions.OsuActorError</span></code></a></p>
+<p>A custom exception for API errors</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="osuactor.exceptions.OsuActorApiAuthError">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorApiAuthError</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorApiAuthError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorApiAuthError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#osuactor.exceptions.OsuActorAPIError" title="osuactor.exceptions.OsuActorAPIError"><code class="xref py py-class docutils literal notranslate"><span class="pre">osuactor.exceptions.OsuActorAPIError</span></code></a></p>
+<p>A custom exception for API authentication errors</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="osuactor.exceptions.OsuActorDeprecationWarning">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorDeprecationWarning</span></code><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorDeprecationWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorDeprecationWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#osuactor.exceptions.OsuActorUserWarning" title="osuactor.exceptions.OsuActorUserWarning"><code class="xref py py-class docutils literal notranslate"><span class="pre">osuactor.exceptions.OsuActorUserWarning</span></code></a></p>
+<p>A warning for deprecated features.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="osuactor.exceptions.OsuActorError">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorError</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<p>A custom core OsuActor exception</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="osuactor.exceptions.OsuActorMissingDependency">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorMissingDependency</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorMissingDependency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorMissingDependency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#osuactor.exceptions.OsuActorError" title="osuactor.exceptions.OsuActorError"><code class="xref py py-class docutils literal notranslate"><span class="pre">osuactor.exceptions.OsuActorError</span></code></a></p>
+<p>A custom exception for missing dependencies.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="osuactor.exceptions.OsuActorNotImplemented">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorNotImplemented</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorNotImplemented"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorNotImplemented" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#osuactor.exceptions.OsuActorError" title="osuactor.exceptions.OsuActorError"><code class="xref py py-class docutils literal notranslate"><span class="pre">osuactor.exceptions.OsuActorError</span></code></a></p>
+<p>A custom exception for not yet implemented features.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="osuactor.exceptions.OsuActorSkippedTestWarning">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorSkippedTestWarning</span></code><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorSkippedTestWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorSkippedTestWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#osuactor.exceptions.OsuActorUserWarning" title="osuactor.exceptions.OsuActorUserWarning"><code class="xref py py-class docutils literal notranslate"><span class="pre">osuactor.exceptions.OsuActorUserWarning</span></code></a></p>
+<p>A warning for when a test is skipped.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="osuactor.exceptions.OsuActorUserWarning">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorUserWarning</span></code><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorUserWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorUserWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#UserWarning" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserWarning</span></code></a>, <a class="reference internal" href="#osuactor.exceptions.OsuActorWarning" title="osuactor.exceptions.OsuActorWarning"><code class="xref py py-class docutils literal notranslate"><span class="pre">osuactor.exceptions.OsuActorWarning</span></code></a></p>
+<p>The primary warning class.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt id="osuactor.exceptions.OsuActorWarning">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorWarning</span></code><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Warning" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Warning</span></code></a></p>
+<p>Base warning for OsuActor.</p>
+</dd></dl>
+
 </div>
 </div>
 
