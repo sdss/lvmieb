@@ -58,7 +58,8 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sdsstools.releases",
     "sphinx.ext.inheritance_diagram",
-    "sphinx_click"
+    "sphinx_click",
+    "myst_parser",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
