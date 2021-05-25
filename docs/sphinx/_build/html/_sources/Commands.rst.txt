@@ -5,6 +5,6 @@ Commands
 
 The ``osuactor`` replies to the follwing commands.
 
-.. click:: osuactor.actor.commands.shutter:parser
-  :prog: shutter
+.. click:: osuactor.actor.commands:parser
+  :prog: osuactor
   :show-nested:
