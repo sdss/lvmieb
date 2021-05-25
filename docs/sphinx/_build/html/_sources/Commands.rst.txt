@@ -1,13 +1,10 @@
+.. _Commands:
+
 Commands
 =============
 
+The ``osuactor`` replies to the follwing commands.
 
-shutter
--------------
-
-.. automodule:: osuactor.actor.commands.shutter
-
-telemetry
--------------
-
-.. automodule:: osuactor.actor.commands.telemetry
+.. click:: osuactor.actor.commands::parser
+  :prog:: osuactor
+  :show-nested:
