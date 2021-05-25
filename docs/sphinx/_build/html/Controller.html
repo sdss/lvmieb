@@ -45,6 +45,40 @@
 </div>
 <div class="section" id="id1">
 <h2>Controller<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-osuactor.controller"></span><dl class="py class">
+<dt id="osuactor.controller.OsuController">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.controller.</span></code><code class="sig-name descname"><span class="pre">OsuController</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/controller/controller.html#OsuController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.controller.OsuController" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">clu.device.Device</span></code></p>
+<p>Talks to an OSU controller over TCP/IP</p>
+<dl class="py method">
+<dt id="osuactor.controller.OsuController.connect">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">connect</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/controller/controller.html#OsuController.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.controller.OsuController.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>connect with devices</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="osuactor.controller.OsuController.disconnect">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">disconnect</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/controller/controller.html#OsuController.disconnect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.controller.OsuController.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>close the connect</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="osuactor.controller.OsuController.getWAGOEnv">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">getWAGOEnv</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/controller/controller.html#OsuController.getWAGOEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.controller.OsuController.getWAGOEnv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="osuactor.controller.OsuController.receive_status">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">receive_status</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">areader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/controller/controller.html#OsuController.receive_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.controller.OsuController.receive_status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="osuactor.controller.OsuController.send_command">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">send_command</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SelectTimeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/controller/controller.html#OsuController.send_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.controller.OsuController.send_command" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 
