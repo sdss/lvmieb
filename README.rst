@@ -2,11 +2,11 @@ This is the documentation for the SDSS Python product OSU. The current version i
 
 .. code-block:: console
 
-  $ pip install osuactor
+  $ pip install lvmieb
    
-  $ git clone https://github.com/sdss/osuactor.git
+  $ git clone https://github.com/sdss/lvmieb.git
 
-Refer to the `repository <https://github.com/sdss/osuactor.git>`__ for details on how to develop the code and for issue tracking.
+Refer to the `repository <https://github.com/sdss/lvmieb.git>`__ for details on how to develop the code and for issue tracking.
 
 
 

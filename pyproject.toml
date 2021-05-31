@@ -1,14 +1,14 @@
 [tool.poetry]
-name = "sdss-osuactor"
+name = "sdss-lvmieb"
 version = "0.1.0-alpha.0"
 
 description = "Simple Template package for creating SDSS Python projects"
 authors = ["Changgon Kim <changgonkim@khu.ac.kr>"]
 license = "BSD-3-Clause"
 readme = "README.md"
-homepage = "https://github.com/sdss/osuactor"
-repository = "https://github.com/sdss/osuactor"
-documentation = "https://sdss-osuactor.readthedocs.org"
+homepage = "https://github.com/sdss/lvmieb"
+repository = "https://github.com/sdss/lvmieb"
+documentation = "https://sdss-lvmieb.readthedocs.org"
 keywords = ["astronomy", "software"]
 classifiers = [
     "Intended Audience :: Science/Research",
@@ -21,16 +21,16 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules"
 ]
 packages = [
-    { include = "osuactor", from = "python" }
+    { include = "lvmieb", from = "python" }
 ]
-include = ["python/osuactor/etc/*", "cextern/**/*", "LICENSE.md"]
+include = ["python/lvmieb/etc/*", "cextern/**/*", "LICENSE.md"]
 
 [tool.poetry.build]
 script = "build.py"
 generate-setup-file = false
 
 [tool.poetry.scripts]
-osuactor = "osuactor.__main__:osuactor"
+lvmieb = "lvmieb.__main__:lvmieb"
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -39,7 +39,7 @@ sdss-access = ">=0.2.3"
 sdsstools = ">=0.4.0"
 Sphinx = {version="^3.0.0", optional=true}
 sphinx_bootstrap_theme = { version=">=0.4.12", optional=true}
-sdss-clu = "0.9.1"
+sdss-clu = "^1.1.1"
 click-default-group = "^1.2.2"
 twine = "^3.4.1"
 numpy = "^1.20.3"
@@ -70,7 +70,7 @@ docs = ["Sphinx", "sphinx_bootstrap_theme"]
 line_length = 79
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "SDSS", "FIRSTPARTY", "LOCALFOLDER"]
 default_section = "THIRDPARTY"
-known_first_party = "osuactor"
+known_first_party = "lvmieb"
 known_sdss = ["sdsstools"]
 balanced_wrapping = true
 include_trailing_comma = false
@@ -78,11 +78,11 @@ lines_after_imports = 2
 use_parentheses = true
 
 [tool.pytest.ini_options]
-addopts = "--cov osuactor --cov-report xml --cov-report html --cov-report term"
+addopts = "--cov lvmieb --cov-report xml --cov-report html --cov-report term"
 
 [tool.coverage.run]
 branch = true
-include = ["python/osuactor/*"]
+include = ["python/lvmieb/*"]
 omit = [
     "*/__init__.py",
 ]

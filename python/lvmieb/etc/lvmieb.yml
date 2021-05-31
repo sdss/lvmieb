@@ -27,6 +27,6 @@ sensors:
 
 # Actor configuration for the AMQPActor class
 actor:
-    name: osuactor
+    name: lvmieb
     host: localhost
     port: 5672              

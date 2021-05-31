@@ -13,8 +13,8 @@ import asyncio
 import click
 from clu.command import Command
 
-from osuactor.controller.controller import OsuController
-from osuactor.exceptions import OsuActorError
+from lvmieb.controller.controller import IebController
+from lvmieb.exceptions import LvmIebError
 
 from . import parser
 
@@ -30,7 +30,7 @@ def shutter(*args):
 
 
 @shutter.command()
-async def connect(command: Command, controllers: dict[str, OsuController]):
+async def connect(command: Command, controllers: dict[str, IebController]):
     """open the connection with the shutter."""
 
     connections = []
@@ -39,7 +39,7 @@ async def connect(command: Command, controllers: dict[str, OsuController]):
         if controllers[shutter].name == 'shutter':
             try:
                 connections.append(controllers[shutter].connect())
-            except OsuActorError as err:
+            except LvmIebError as err:
                 return command.fail(error=str(err))
 
     command.info(text="Connecting all the shutters")
@@ -48,7 +48,7 @@ async def connect(command: Command, controllers: dict[str, OsuController]):
 
 
 @shutter.command()
-async def disconnect(command: Command, controllers: dict[str, OsuController]):
+async def disconnect(command: Command, controllers: dict[str, IebController]):
     """close the connection with the shutter"""
 
     connections = []
@@ -57,7 +57,7 @@ async def disconnect(command: Command, controllers: dict[str, OsuController]):
         if controllers[shutter].name == 'shutter':
             try:
                 connections.append(controllers[shutter].disconnect())
-            except OsuActorError as err:
+            except lvmiebError as err:
                 return command.fail(error=str(err))
 
     command.info(text="Disconnecting all the shutters")
@@ -66,7 +66,7 @@ async def disconnect(command: Command, controllers: dict[str, OsuController]):
 
 
 @shutter.command()
-async def open(command: Command, controllers: dict[str, OsuController]):
+async def open(command: Command, controllers: dict[str, IebController]):
     """open the shutter"""
 
     tasks = []
@@ -75,7 +75,7 @@ async def open(command: Command, controllers: dict[str, OsuController]):
         if controllers[shutter].name == 'shutter':
             try:
                 tasks.append(controllers[shutter].send_command("open"))
-            except OsuActorError as err:
+            except LvmIebError as err:
                 return command.fail(error=str(err))
 
 
@@ -85,7 +85,7 @@ async def open(command: Command, controllers: dict[str, OsuController]):
     
 
 @shutter.command()
-async def close(command: Command, controllers: dict[str, OsuController]):
+async def close(command: Command, controllers: dict[str, IebController]):
     """close the shutter"""
 
     tasks = []
@@ -94,7 +94,7 @@ async def close(command: Command, controllers: dict[str, OsuController]):
         if controllers[shutter].name == 'shutter':
             try:
                 tasks.append(controllers[shutter].send_command("close"))
-            except OsuActorError as err:
+            except lvmiebError as err:
                 return command.fail(error=str(err))
 
     command.info(text="Closing all shutters")
@@ -103,7 +103,7 @@ async def close(command: Command, controllers: dict[str, OsuController]):
    
 
 @shutter.command()
-async def status(command: Command, controllers: dict[str, OsuController]):
+async def status(command: Command, controllers: dict[str, IebController]):
 #return the status of shutter.
 
     command.info(text="Checking all shutters")
@@ -115,7 +115,7 @@ async def status(command: Command, controllers: dict[str, OsuController]):
             try:
                 tasks.append(controllers[shutter].send_command("status"))
                 connection.append(controllers[shutter].connected)
-            except OsuActorError as err:
+            except LvmIebError as err:
                 return command.fail(error=str(err))
 
     result_shutter = await asyncio.gather(*tasks)
@@ -138,7 +138,7 @@ async def status(command: Command, controllers: dict[str, OsuController]):
                 )
             else:
                 return command.fail(test='shutter is in a bad state')
-        except OsuActorError as err:
+        except LvmIebError as err:
             return command.fail(error=str(err))
 
 
@@ -162,7 +162,7 @@ async def status(command: Command, controllers: dict[str, OsuController]):
                 )
                 else:
                     return command.fail(test='shutter is in a bad state')
-            except OsuActorError as err:
+            except LvmIebError as err:
                 return command.fail(error=str(err))
 """
 

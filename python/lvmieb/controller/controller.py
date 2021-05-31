@@ -12,7 +12,7 @@ import os
 import re
 import warnings
 
-from osuactor.exceptions import OsuActorError, OsuActorWarning
+from lvmieb.exceptions import LvmIebError, LvmIebWarning
 from typing import Any, Callable, Iterable, Optional
 
 import numpy
@@ -22,7 +22,7 @@ from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 #from pymodbus.client.asynchronous.tcp import AsyncModbusTCPClient as ModbusClient
 #from pymodbus.client.asynchronous import schedulers
 
-__all__ = ["OsuController"]
+__all__ = ["IebController"]
 
 
 # Device list
@@ -42,9 +42,9 @@ expCmds = {"init":"QX1","home":"QX2","open":"QX3","close":"QX4",
 
 hdCmds = {"init":"QX1","home":"QX2","open":"QX3","close":"QX4","status":"IS"}
 
-class OsuController(Device):
+class IebController(Device):
     """
-            Talks to an OSU controller over TCP/IP
+            Talks to an Ieb controller over TCP/IP
     """
     def __init__(self, host: str, port: int, name: str = ""):
         Device.__init__(self, host, port)
@@ -79,10 +79,10 @@ class OsuController(Device):
                 self.connected = True
             except:
                 self.connected = False
-                raise OsuActorError(f"Could not connect the %s" %self.name)
+                raise LvmIebError(f"Could not connect the %s" %self.name)
             return False
         else:
-            raise OsuActorError(f"The %s is already connected!" %self.name)
+            raise LvmIebError(f"The %s is already connected!" %self.name)
 
         return True
 
@@ -94,10 +94,10 @@ class OsuController(Device):
                 self.writer.close()
                 await self.writer.wait_closed()
             except:
-                raise OsuActorError(f"Could not connect the %s" %self.name)
+                raise LvmIebError(f"Could not connect the %s" %self.name)
             return False
         else:
-            raise OsuActorError(f"The %s is dicennected!" %self.name)
+            raise LvmIebError(f"The %s is dicennected!" %self.name)
 
         return True
         
@@ -106,24 +106,24 @@ class OsuController(Device):
 
         #check that the device exists
         if self.name in devList == False:
-            raise OsuActorError(f"%s is not a valid device" %self.name)
+            raise LvmIebError(f"%s is not a valid device" %self.name)
             return False
         
         #check that the command is legal for the device
         if self.name == "shutter":
             if command in expCmds == False:
-                raise OsuActorError(f"%s is not a valid %s command" % (command, self.name))
+                raise LvmIebError(f"%s is not a valid %s command" % (command, self.name))
                 return False
             else:
                 c_message = expCmds[command]
         elif self.name == "hartmann_left" or self.name == "hartmann_right":
             if command in hdCmds == False:
-                raise OsuActorError(f"%s is not a valid %s command" % (command, self.name))
+                raise LvmIebError(f"%s is not a valid %s command" % (command, self.name))
                 return False
             else:
                 c_message = hdCmds[command]
         else:
-            raise OsuActorError(f"%s and %s combination not found" % (command, self.name))
+            raise LvmIebError(f"%s and %s combination not found" % (command, self.name))
             return False
 
         #check the shutter status before open and close
@@ -131,11 +131,11 @@ class OsuController(Device):
             if self.name == "shutter":
                 if command == "open":
                     if self.shutter_status == "open":
-                        raise OsuActorError(f"The shutter is already {self.shutter_status}!")
+                        raise LvmIebError(f"The shutter is already {self.shutter_status}!")
                         return False
                 elif command == "close":
                     if self.shutter_status == "close":
-                        raise OsuActorError(f"The shutter is already {self.shutter_status}!")
+                        raise LvmIebError(f"The shutter is already {self.shutter_status}!")
                         return False
 
         #Tweak timeouts
@@ -155,12 +155,12 @@ class OsuController(Device):
                 self.writer.write(sclStr.encode())
                 await self.writer.drain()
             except:
-                raise OsuActorError(f"Failed to write the data")
+                raise LvmIebError(f"Failed to write the data")
                 self.writer.close()
                 await self.writer.wait_close()
                 return False
         else:
-            raise OsuActorError(f"Could not connect the %s" %self.name)
+            raise LvmIebError(f"Could not connect the %s" %self.name)
             return False
 
         try:
@@ -168,7 +168,7 @@ class OsuController(Device):
         except:
             self.writer.close()
             await self.writer.wait_closed()
-            raise OsuActorError(f"failed to read the data")
+            raise LvmIebError(f"failed to read the data")
             return False
 
         if command == "status" and reply:
@@ -210,10 +210,10 @@ class OsuController(Device):
                 except:
                     self.writer.close()
                     await self.writer.wait_closed()
-                    raise OsuActorError(f"Failed to read the data")
+                    raise LvmIebError(f"Failed to read the data")
                     return False, sclReply
             else:
-                raise OsuActorError(f"Wrong timeout!")
+                raise LvmIebError(f"Wrong timeout!")
                 return False, sclReply
 
             if len(sclReply) > 0:
@@ -255,7 +255,7 @@ class OsuController(Device):
 #        self.loop, wagoClient = await ModbusClient(schedulers.ASYNC_IO, host = self.host, loop=self.loop)
         
         if not wagoClient.connect():
-            raise OsuActorError(f"Cannot connect to WAGO at %s" %(self.host))
+            raise LvmIebError(f"Cannot connect to WAGO at %s" %(self.host))
             return False
         
         try:
@@ -263,7 +263,7 @@ class OsuController(Device):
             for i in range(4):
                 self.sensors[rtdKeys[i]] = round(ptRTD2C(float(rd.registers[i])), 2)
         except:
-            raise OsuActorError(f"Failed to have the rtd data")
+            raise LvmIebError(f"Failed to have the rtd data")
             return False
         # Read the E+E RH/T sensors and convert to physical units.
 
@@ -273,7 +273,7 @@ class OsuController(Device):
                 self.sensors[rhtRHKeys[i]] = round(RH0 + RHs*float(rd.registers[2*i]), 2)
                 self.sensors[rhtTKeys[i]] = round(T0 + Ts*float(rd.registers[2*i+1]), 2)
         except:
-            raise OsuActorError(f"Failed to have the rht data")
+            raise LvmIebError(f"Failed to have the rht data")
             return False
         
         wagoClient.close()

@@ -14,8 +14,7 @@ import warnings
 import click
 from clu.parsers.click import CluGroup, help_, ping, version
 
-from osuactor.exceptions import OsuActorUserWarning
-
+from lvmieb.exceptions import LvmIebUserWarning
 
 @click.group(cls=CluGroup)
 def parser(*args):
@@ -39,7 +38,7 @@ files = [
 
 for file_ in files:
     modname = file_[0:-3].replace("/", ".")
-    mod = importlib.import_module("osuactor.actor.commands." + modname) #changged by CK 2021/03/30
+    mod = importlib.import_module("lvmieb.actor.commands." + modname) #changged by CK 2021/03/30
 
 os.chdir(cwd)
 

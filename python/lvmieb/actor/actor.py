@@ -13,19 +13,19 @@ import os
 import warnings
 from contextlib import suppress
 
-from osuactor import __version__  #added by CK 2021/03/30
-#from osuactor.controller.command import OsuCommand #changed by CK 2021/03/30
-from osuactor.controller.controller import OsuController #changed by CK 2021/03/30
-from osuactor.exceptions import OsuActorUserWarning
+from lvmieb import __version__  #added by CK 2021/03/30
+#from lvmieb.controller.command import lvmCommand #changed by CK 2021/03/30
+from lvmieb.controller.controller import IebController #changed by CK 2021/03/30
+from lvmieb.exceptions import LvmIebUserWarning
 from clu.actor import AMQPActor
 
-from .commands import parser as osu_command_parser #added by CK 2021/03/30
+from .commands import parser as lvm_command_parser #added by CK 2021/03/30
 
 
-__all__ = ["osuactor"]                             #changed by CK 2021/03/30
+__all__ = ["lvmieb"]                             #changed by CK 2021/03/30
 
-class osuactor(AMQPActor):
-    """OSU Spectrograph controller actor.
+class lvmieb(AMQPActor):
+    """lvm Spectrograph controller actor.
 
     In addition to the normal arguments and keyword parameters for
     `~clu.actor.AMQPActor`, the class accepts the following parameters.
@@ -33,15 +33,15 @@ class osuactor(AMQPActor):
     parameters
     ----------
     controllers
-        The list of '.OsuController' instances to manage.
+        The list of '.IebController' instances to manage.
     """ 
 
-    parser = osu_command_parser
+    parser = lvm_command_parser
 
     def __init__(
         self,
         *args,
-        controllers: tuple[OsuController, ...] = (),
+        controllers: tuple[IebController, ...] = (),
         **kwargs,
     ):
         self.controllers = {c.name: c for c in controllers}
@@ -62,7 +62,7 @@ class osuactor(AMQPActor):
             except asyncio.TimeoutError:
                 warnings.warn(
                     f"Timeout out connecting to {controller.name!r}.",
-                    OsuActorUserWarning,
+                    LvmIebUserWarning,
                 )
 
         await super().start()
@@ -83,14 +83,14 @@ class osuactor(AMQPActor):
     def from_config(cls, config, *args, **kwargs):
         """Creates an actor from a configuration file."""
 
-        instance = super(osuactor, cls).from_config(config, *args, **kwargs)
+        instance = super(lvmieb, cls).from_config(config, *args, **kwargs)
         
-        assert isinstance(instance, osuactor)
+        assert isinstance(instance, lvmieb)
         assert isinstance(instance.config, dict)
 
         if "controllers" in instance.config:
             controllers = (
-                OsuController(
+                IebController(
                     ctr["host"],
                     ctr["port"],
                     name=ctrname,

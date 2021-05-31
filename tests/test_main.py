@@ -4,7 +4,7 @@
 
 from pytest import mark
 
-from OsuActor.main import math
+from lvmieb.main import math
 
 
 class TestMath(object):

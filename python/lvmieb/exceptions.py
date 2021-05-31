@@ -11,18 +11,18 @@
 from __future__ import print_function, division, absolute_import
 
 
-class OsuActorError(Exception):
-    """A custom core OsuActor exception"""
+class LvmIebError(Exception):
+    """A custom core LvmIeb exception"""
 
     def __init__(self, message=None):
 
         message = 'There has been an error' \
             if not message else message
 
-        super(OsuActorError, self).__init__(message)
+        super(LvmIebError, self).__init__(message)
 
 
-class OsuActorNotImplemented(OsuActorError):
+class LvmIebNotImplemented(LvmIebError):
     """A custom exception for not yet implemented features."""
 
     def __init__(self, message=None):
@@ -30,45 +30,45 @@ class OsuActorNotImplemented(OsuActorError):
         message = 'This feature is not implemented yet.' \
             if not message else message
 
-        super(OsuActorNotImplemented, self).__init__(message)
+        super(LvmIebNotImplemented, self).__init__(message)
 
 
-class OsuActorAPIError(OsuActorError):
+class LvmIebAPIError(LvmIebError):
     """A custom exception for API errors"""
 
     def __init__(self, message=None):
         if not message:
-            message = 'Error with Http Response from OsuActor API'
+            message = 'Error with Http Response from LvmIeb API'
         else:
-            message = 'Http response error from OsuActor API. {0}'.format(message)
+            message = 'Http response error from LvmIeb API. {0}'.format(message)
 
-        super(OsuActorAPIError, self).__init__(message)
+        super(LvmIebAPIError, self).__init__(message)
 
 
-class OsuActorApiAuthError(OsuActorAPIError):
+class LvmIebApiAuthError(LvmIebAPIError):
     """A custom exception for API authentication errors"""
     pass
 
 
-class OsuActorMissingDependency(OsuActorError):
+class LvmIebMissingDependency(LvmIebError):
     """A custom exception for missing dependencies."""
     pass
 
 
-class OsuActorWarning(Warning):
-    """Base warning for OsuActor."""
+class LvmIebWarning(Warning):
+    """Base warning for LvmIeb."""
 
 
-class OsuActorUserWarning(UserWarning, OsuActorWarning):
+class LvmIebUserWarning(UserWarning, LvmIebWarning):
     """The primary warning class."""
     pass
 
 
-class OsuActorSkippedTestWarning(OsuActorUserWarning):
+class LvmIebSkippedTestWarning(LvmIebUserWarning):
     """A warning for when a test is skipped."""
     pass
 
 
-class OsuActorDeprecationWarning(OsuActorUserWarning):
+class LvmIebDeprecationWarning(LvmIebUserWarning):
     """A warning for deprecated features."""
     pass

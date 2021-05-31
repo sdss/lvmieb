@@ -17,16 +17,16 @@ import os
 from pkg_resources import parse_version
 
 try:
-    from osuactor import __version__
+    from lvmieb import __version__
 except ModuleNotFoundError:
     from sdsstools import get_package_version
 
-    __version__ = get_package_version(__file__, "osuactor") or "dev"
+    __version__ = get_package_version(__file__, "lvmieb") or "dev"
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'osuactor'
+project = 'lvmieb'
 copyright = '{0}, {1}'.format('2021', 'SDSS LVMI softwareteam in Kyung Hee university')
 author = 'Changgon Kim, Mingyeong Yang, Taeeun Kim'
 
@@ -97,7 +97,7 @@ pygments_style = "sphinx"
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
-releases_github_path = "sdss/osuactor"
+releases_github_path = "sdss/lvmieb"
 releases_document_name = ["changelog"]
 releases_unstable_prehistory = True
 
@@ -134,7 +134,7 @@ html_theme = 'alabaster'
 html_theme_options = {
     "logo": "sdssv_logo.png",
     "github_user": "sdss",
-    "github_repo": "osuactor",
+    "github_repo": "lvmieb",
     "github_button": True,
     "github_type": "star",
     "sidebar_collapse": True,

@@ -1,6 +1,6 @@
-.. _osuactor:
+.. _lvmieb:
 
-Osuactor
+lvmieb
 ================
 
 
@@ -14,7 +14,7 @@ This package work on ...
 Actor
 -----
 
-.. automodule:: osuactor.actor.actor
+.. automodule:: lvmieb.actor.actor
    :members:
    :undoc-members:
    :show-inheritance:

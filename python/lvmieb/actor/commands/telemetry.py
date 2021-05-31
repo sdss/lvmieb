@@ -16,13 +16,13 @@ import asyncio
 
 from clu.command import Command
 
-from osuactor.controller.controller import OsuController
-from osuactor.exceptions import OsuActorError
+from lvmieb.controller.controller import IebController
+from lvmieb.exceptions import LvmIebError
 
 from . import parser
 
 @parser.command()
-async def telemetry(command: Command, controllers: dict[str, OsuController]):
+async def telemetry(command: Command, controllers: dict[str, IebController]):
     """Returns the status of wago sensor."""
 
     for shutter in controllers:
@@ -44,7 +44,7 @@ async def telemetry(command: Command, controllers: dict[str, OsuController]):
                 })
                 else:
                     return command.fail(text=f"ERROR: Did not read sensors/powers")
-            except OsuActorError as err:
+            except LvmIebError as err:
                 return command.fail(error=str(err))
 
     return command.finish()
