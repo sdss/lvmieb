@@ -18,9 +18,9 @@ from typing import Any, Callable, Iterable, Optional
 import numpy
 from clu.device import Device
 
-from pymodbus.client.sync import ModbusTcpClient as ModbusClient
-#from pymodbus.client.asynchronous.tcp import AsyncModbusTCPClient as ModbusClient
-#from pymodbus.client.asynchronous import schedulers
+#from pymodbus.client.sync import ModbusTcpClient as ModbusClient
+from pymodbus.client.asynchronous.tcp import AsyncModbusTCPClient as ModbusClient
+from pymodbus.client.asynchronous import schedulers
 
 __all__ = ["IebController"]
 
@@ -250,16 +250,16 @@ class IebController(Device):
         T0 = -30.0
         Ts = RHs
  
-        wagoClient = ModbusClient(self.host)
+        #wagoClient = ModbusClient(self.host)
 
-#        self.loop, wagoClient = await ModbusClient(schedulers.ASYNC_IO, host = self.host, loop=self.loop)
+        self.loop, wagoClient = await ModbusClient(schedulers.ASYNC_IO, host = self.host, loop=self.loop)
         
         if not wagoClient.connect():
             raise LvmIebError(f"Cannot connect to WAGO at %s" %(self.host))
             return False
         
         try:
-            rd = wagoClient.read_holding_registers(rtdAddr, numRTDs)
+            rd = await wagoClient.read_holding_registers(rtdAddr, numRTDs)
             for i in range(4):
                 self.sensors[rtdKeys[i]] = round(ptRTD2C(float(rd.registers[i])), 2)
         except:
@@ -268,7 +268,7 @@ class IebController(Device):
         # Read the E+E RH/T sensors and convert to physical units.
 
         try:
-            rd = wagoClient.read_holding_registers(rhtAddr,2*numRHT)
+            rd = await wagoClient.read_holding_registers(rhtAddr,2*numRHT)
             for i in range(3):
                 self.sensors[rhtRHKeys[i]] = round(RH0 + RHs*float(rd.registers[2*i]), 2)
                 self.sensors[rhtTKeys[i]] = round(T0 + Ts*float(rd.registers[2*i+1]), 2)
