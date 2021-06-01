@@ -25,7 +25,7 @@ from . import parser
 @parser.command()
 async def telemetry(command: Command, controllers: dict[str, IebController]):
     """Returns the status of wago sensor."""
-    """
+    
     for shutter in controllers:
         if controllers[shutter].name == 'shutter':
             try:
@@ -47,5 +47,5 @@ async def telemetry(command: Command, controllers: dict[str, IebController]):
                     return command.fail(text=f"ERROR: Did not read sensors/powers")
             except LvmIebError as err:
                 return command.fail(error=str(err))
-        """
+        
     return command.finish()
