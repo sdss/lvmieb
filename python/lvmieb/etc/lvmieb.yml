@@ -15,15 +15,13 @@ controllers:
     hartman_door_right:
             host: 10.7.45.27
             port: 7778
+    wago:
+            host: 10.7.45.27
+            port: 502
 
 #added by CK 2021/03/30
 timeouts:
     controller_connect: 1
-
-sensors:
-        wago:
-                host: 10.7.45.27
-                port: 502
 
 # Actor configuration for the AMQPActor class
 actor:

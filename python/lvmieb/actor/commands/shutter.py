@@ -57,7 +57,7 @@ async def disconnect(command: Command, controllers: dict[str, IebController]):
         if controllers[shutter].name == 'shutter':
             try:
                 connections.append(controllers[shutter].disconnect())
-            except lvmiebError as err:
+            except LvmIebError as err:
                 return command.fail(error=str(err))
 
     command.info(text="Disconnecting all the shutters")
@@ -94,7 +94,7 @@ async def close(command: Command, controllers: dict[str, IebController]):
         if controllers[shutter].name == 'shutter':
             try:
                 tasks.append(controllers[shutter].send_command("close"))
-            except lvmiebError as err:
+            except LvmIebError as err:
                 return command.fail(error=str(err))
 
     command.info(text="Closing all shutters")

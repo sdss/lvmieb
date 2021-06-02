@@ -45,7 +45,7 @@ def lvmieb(ctx, config_file, verbose):
 @cli_coro_lvm
 async def actor(ctx):
     """Runs the actor."""
-    
+   
     default_config_file = os.path.join(os.path.dirname(__file__), "etc/lvmieb.yml")
     config_file = ctx.obj["config_file"] or default_config_file
 

@@ -18,9 +18,7 @@ from typing import Any, Callable, Iterable, Optional
 import numpy
 from clu.device import Device
 
-#from pymodbus.client.sync import ModbusTcpClient as ModbusClient
-from pymodbus.client.asynchronous.tcp import AsyncModbusTCPClient as ModbusClient
-from pymodbus.client.asynchronous import schedulers
+from pymodbus.client.asynchronous.async_io import AsyncioModbusTcpClient as ModbusClient
 
 __all__ = ["IebController"]
 
@@ -250,9 +248,7 @@ class IebController(Device):
         T0 = -30.0
         Ts = RHs
  
-        #wagoClient = ModbusClient(self.host)
-
-        self.loop, wagoClient = await ModbusClient(schedulers.ASYNC_IO, host = self.host, loop=self.loop)
+        wagoClient = ModbusClient(self.host)
         
         if not wagoClient.connect():
             raise LvmIebError(f"Cannot connect to WAGO at %s" %(self.host))
@@ -269,6 +265,7 @@ class IebController(Device):
 
         try:
             rd = await wagoClient.read_holding_registers(rhtAddr,2*numRHT)
+
             for i in range(3):
                 self.sensors[rhtRHKeys[i]] = round(RH0 + RHs*float(rd.registers[2*i]), 2)
                 self.sensors[rhtTKeys[i]] = round(T0 + Ts*float(rd.registers[2*i+1]), 2)
@@ -278,6 +275,9 @@ class IebController(Device):
         
         wagoClient.close()
         return True
+
+      
+
 
 #---------------------------------------------------------------------------
 #
