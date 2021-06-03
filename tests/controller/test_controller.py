@@ -22,13 +22,14 @@ from lvmieb.exceptions import (
     LvmIebDeprecationWarning,
 )
 
-
 @pytest.mark.asyncio
-async def test_hartmann_door(hartmann_right: IebController):
+async def test_hartmann_door_connection(hartmann_right: IebController):
     assert hartmann_right.host == "localhost"
-    #assert hartmann_right.port == 
     assert hartmann_right.name == "hartmann_right"
-    command = await hartmann_right.send_command('open')
-    await command
+    await hartmann_right.connect()
+    assert hartmann_right.connected == True
+    #await hartmann_right.connect()
 
-    #print(command)
+    await hartmann_right.disconnect()
+    assert hartmann_right.connected == False
+

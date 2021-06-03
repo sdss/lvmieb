@@ -13,6 +13,7 @@ more information.
 
 import asyncio
 import pytest as pytest
+import re
 
 from clu.device import Device
 
@@ -39,6 +40,10 @@ async def hartmann_right(request, unused_tcp_port: int):
     ) -> None:
         reader, writer = await asyncio.open_connection("localhost", unused_tcp_port)
 
+
+
+
+
     server = await asyncio.start_server(handle_connection, "localhost", unused_tcp_port)
 
     async with server:
@@ -46,6 +51,7 @@ async def hartmann_right(request, unused_tcp_port: int):
         await hr.start()
         yield hr
         await hr.stop()
+
 
 @pytest.fixture
 async def hartmann_left(request, unused_tcp_port: int):
@@ -97,3 +103,16 @@ async def wago(request, unused_tcp_port: int):
         await wa.start()
         yield wa
         await wa.stop()
+
+def parse_IS(reply: bytes):
+
+    match = re.search(b"\x00\x07IS=([0-1])([0-1])[0-1]{6}\r$", reply)
+    if match is None:
+        return False
+
+    if match.groups() == (b"1", b"0"):
+        return "open"
+    elif match.groups() == (b"0", b"1"):
+        return "closed"
+    else:
+        return False

@@ -109,11 +109,12 @@ class IebController(Device):
             try:
                 self.writer.close()
                 await self.writer.wait_closed()
+                self.connected = False
             except:
-                raise LvmIebError(f"Could not connect the %s" %self.name)
+                raise LvmIebError(f"Could not disconnect the %s" %self.name)
             return False
         else:
-            raise LvmIebError(f"The %s is dicennected!" %self.name)
+            raise LvmIebError(f"The %s is already diconnected!" %self.name)
 
         return True
         
@@ -219,37 +220,6 @@ class IebController(Device):
                 else:
                     return False
 
-        
-
-    async def receive_status(self, areader, timeout, cmd):
-        
-        KeepGoing = True
-
-        while KeepGoing:
-
-            sclReply = ""
-
-            if timeout > 0.0:
-                try:
-                    data = await asyncio.wait_for(areader.read(4096), timeout)
-                    recStr = data.decode()
-                    sclReply = recStr[2:-1]
-                except:
-                    self.writer.close()
-                    await self.writer.wait_closed()
-                    raise LvmIebError(f"Failed to read the data")
-                    return False, sclReply
-            else:
-                raise LvmIebError(f"Wrong timeout!")
-                return False, sclReply
-
-            if len(sclReply) > 0:
-                if sclReply[:4] == 'DONE':
-                    return True, sclReply
-                if sclReply[:3] == 'ERR':
-                    return True, sclReply
-                if sclReply[:2] == 'IS':
-                    return True, sclReply
 
     def getWAGOEnv(self):
 
