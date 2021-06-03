@@ -23,28 +23,28 @@ from lvmieb.exceptions import LvmIebError
 from . import parser
 
 @parser.command()
-async def telemetry(command: Command, controllers: dict[str, IebController]):
+async def wago(command: Command, controllers: dict[str, IebController]):
     """Returns the status of wago sensor."""
     
     loop = asyncio.get_running_loop()
 
-    for shutter in controllers:
-        if controllers[shutter].name == 'shutter':
+    for wago in controllers:
+        if controllers[wago].name == 'wago':
             try:
-                wago_status1 = await loop.run_in_executor(None, controllers[shutter].getWAGOEnv)
+                wago_status1 = await loop.run_in_executor(None, controllers[wago].getWAGOEnv)
                 
                 if wago_status1:
                     command.info(text="Temperature & Humidity is:",status={
-                "rhtT1(40001)":controllers[shutter].sensors['rhtT1(40001)'],
-                "rhtRH1(40002)":controllers[shutter].sensors['rhtRH1(40002)'],
-                "rhtT2(40003)":controllers[shutter].sensors['rhtT2(40003)'],
-                "rhtRH2(40004)":controllers[shutter].sensors['rhtRH2(40004)'],
-                "rhtT3(40005)":controllers[shutter].sensors['rhtT3(40005)'],
-                "rhtRH3(40006)":controllers[shutter].sensors['rhtRH3(40006)'],
-                "rtd1(40009)":controllers[shutter].sensors['rtd1(40009)'],
-                "rtd2(40010)":controllers[shutter].sensors['rtd2(40010)'],
-                "rtd3(40011)":controllers[shutter].sensors['rtd3(40011)'],
-                "rtd4(40012)":controllers[shutter].sensors['rtd4(40012)']
+                "rhtT1(40001)":controllers[wago].sensors['rhtT1(40001)'],
+                "rhtRH1(40002)":controllers[wago].sensors['rhtRH1(40002)'],
+                "rhtT2(40003)":controllers[wago].sensors['rhtT2(40003)'],
+                "rhtRH2(40004)":controllers[wago].sensors['rhtRH2(40004)'],
+                "rhtT3(40005)":controllers[wago].sensors['rhtT3(40005)'],
+                "rhtRH3(40006)":controllers[wago].sensors['rhtRH3(40006)'],
+                "rtd1(40009)":controllers[wago].sensors['rtd1(40009)'],
+                "rtd2(40010)":controllers[wago].sensors['rtd2(40010)'],
+                "rtd3(40011)":controllers[wago].sensors['rtd3(40011)'],
+                "rtd4(40012)":controllers[wago].sensors['rtd4(40012)']
                 })
                 else:
                     return command.fail(text=f"ERROR: Did not read sensors/powers")

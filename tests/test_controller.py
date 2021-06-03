@@ -7,22 +7,23 @@
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 
 import asyncio
+import pytest as pytest
 
-import pytest
 from clu.device import Device
 
-from osuactor.controller.controller import OsuController
-from osuactor.exceptions import (
-    OsuActorError,
-    OsuActorNotImplemented,
-    OsuActorAPIError,
-    OsuActorApiAuthError,
-    OsuActorMissingDependency,
-    OsuActorWarning,
-    OsuActorUserWarning,
-    OsuActorSkippedTestWarning,
-    OsuActorDeprecationWarning,
+from lvmieb.controller.controller import IebController
+from lvmieb.exceptions import (
+    LvmIebError,
+    LvmIebNotImplemented,
+    LvmIebAPIError,
+    LvmIebApiAuthError,
+    LvmIebMissingDependency,
+    LvmIebWarning,
+    LvmIebUserWarning,
+    LvmIebSkippedTestWarning,
+    LvmIebDeprecationWarning,
 )
+
 
 @pytest.fixture
 async def controller(request, unused_tcp_port: int):
@@ -32,18 +33,18 @@ async def controller(request, unused_tcp_port: int):
         reader: asyncio.StreamReader, writer: asyncio.StreamWriter
     ) -> None:
 
-        reader, writer = await open_connection("localhost", unused_tcp_port)
+        reader, writer = await asyncio.open_connection("localhost", unused_tcp_port)
 
     server = await asyncio.start_server(handle_connection, "localhost", unused_tcp_port)
 
     async with server:
-        osu = OsuController("localhost", unused_tcp_port, name = "test_controller")
-        await osu.start()
-        yield osu
-        await osu.stop()
+        ieb = IebController("localhost", unused_tcp_port, name = "test_controller")
+        await ieb.start()
+        yield ieb
+        await ieb.stop()
 
 @pytest.mark.asyncio
-async def test_controller(controller: OsuController):
+async def test_controller(controller: IebController):
     assert controller.host == "localhost"
 #    command = controller.send_command(ping)
 #    await command

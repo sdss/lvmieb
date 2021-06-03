@@ -11,6 +11,7 @@ import configparser
 import os
 import re
 import warnings
+import time
 
 from lvmieb.exceptions import LvmIebError, LvmIebWarning
 from typing import Any, Callable, Iterable, Optional
@@ -19,12 +20,23 @@ import numpy
 from clu.device import Device
 
 from pymodbus.client.sync import ModbusTcpClient as ModbusClient
-#from pymodbus.client.asynchronous.tcp import AsyncModbusTCPClient as ModbusClient
+
+#Tried everythin but failed..CK
+#from pymodbus.client.asynchronous.tornado import AsyncModbusTCPClient as ModbusClient
 #from pymodbus.client.asynchronous import schedulers
+#from pymodbus.client.asynchronous.async_io import ModbusClientProtocol as ModbusClient
+#from pymodbus.client.asynchronous.async_io import AsyncioModbusTcpClient as ModbusClient
+#from pymodbus.client.asynchronous.mixins import AsyncModbusClientMixin as ModbusClient
+
+#from threading import Thread
+#import logging
 
 
 __all__ = ["IebController"]
 
+#logging.basicConfig()
+#log = logging.getLogger()
+#log.setLevel(logging.DEBUG)
 
 # Device list
 
@@ -52,6 +64,9 @@ class IebController(Device):
         self.name = name #must use it!!_C
 
         self.shutter_status = self.send_command("status")
+        self.hartann_left_status = self.send_command("status")
+        self.hartmann_right_status = self.send_command("status")
+
         self.sensors = {
             'rhtT1(40001)' : -273., 		# Temperatures in C
             'rhtRH1(40002)' : -1., 	# Humidity in percent
@@ -173,10 +188,21 @@ class IebController(Device):
             return False
 
         if command == "status" and reply:
-            assert isinstance(reply, bytes)
-            shutter_stat = parse_IS(reply)
-            self.shutter_status = shutter_stat
-            return shutter_stat
+            if self.name == "shutter":
+                assert isinstance(reply, bytes)
+                shutter_stat = parse_IS(reply)
+                self.shutter_status = shutter_stat
+                return shutter_stat
+            elif self.name == "hartmann_left":
+                assert isinstance(reply, bytes)
+                hartmann_stat = parse_IS(reply)
+                self.hartann_left_status = hartmann_stat
+                return self.name + hartmann_stat
+            elif self.name == "hartmann_right":
+                assert isinstance(reply, bytes)
+                hartmann_stat = parse_IS(reply)
+                self.hartmann_right_status = hartmann_stat
+                return self.name + hartmann_stat        
         else:
             if command == "open":
                 self.shutter_status = "open"
@@ -225,8 +251,6 @@ class IebController(Device):
                 if sclReply[:2] == 'IS':
                     return True, sclReply
 
-
-
     def getWAGOEnv(self):
 
         rtdAddr = 8
@@ -251,13 +275,12 @@ class IebController(Device):
         T0 = -30.0
         Ts = RHs
 
-        #self.loop = asyncio.get_running_loop()
         wagoClient = ModbusClient(self.host)
-        
+
         if not wagoClient.connect():
             raise LvmIebError(f"Cannot connect to WAGO at %s" %(self.host))
             return False
-
+        
         try:
             rd = wagoClient.read_holding_registers(rtdAddr, numRTDs)
             for i in range(4):
@@ -280,7 +303,6 @@ class IebController(Device):
         wagoClient.close()
         return True
 
-      
 
 
 #---------------------------------------------------------------------------
