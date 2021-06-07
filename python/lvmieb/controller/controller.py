@@ -11,6 +11,7 @@ import configparser
 import os
 import re
 import warnings
+import time
 
 from lvmieb.exceptions import LvmIebError, LvmIebWarning
 from typing import Any, Callable, Iterable, Optional
@@ -20,8 +21,12 @@ from clu.device import Device
 
 from pymodbus.client.asynchronous.async_io import AsyncioModbusTcpClient as ModbusClient
 
+
 __all__ = ["IebController"]
 
+#logging.basicConfig()
+#log = logging.getLogger()
+#log.setLevel(logging.DEBUG)
 
 # Device list
 
@@ -49,13 +54,14 @@ class IebController(Device):
         self.name = name #must use it!!_C
 
         self.shutter_status = self.send_command("status")
+        self.hartann_left_status = self.send_command("status")
+        self.hartmann_right_status = self.send_command("status")
+
         self.sensors = {
             'rhtT1(40001)' : -273., 		# Temperatures in C
             'rhtRH1(40002)' : -1., 	# Humidity in percent
             'rhtT2(40003)' : -273.,
             'rhtRH2(40004)' : -1.,
-            'rhtT3(40005)' : -273.,
-            'rhtRH3(40006)' : -1.,
             'rtd1(40009)' : -273., 		# IEB internal temp
             'rtd2(40010)' : -273.,		# Bench temp near NIR camera
             'rtd3(40011)' : -273., 		# Bench temp near collimator
@@ -91,11 +97,12 @@ class IebController(Device):
             try:
                 self.writer.close()
                 await self.writer.wait_closed()
+                self.connected = False
             except:
-                raise LvmIebError(f"Could not connect the %s" %self.name)
+                raise LvmIebError(f"Could not disconnect the %s" %self.name)
             return False
         else:
-            raise LvmIebError(f"The %s is dicennected!" %self.name)
+            raise LvmIebError(f"The %s is already diconnected!" %self.name)
 
         return True
         
@@ -170,10 +177,21 @@ class IebController(Device):
             return False
 
         if command == "status" and reply:
-            assert isinstance(reply, bytes)
-            shutter_stat = parse_IS(reply)
-            self.shutter_status = shutter_stat
-            return shutter_stat
+            if self.name == "shutter":
+                assert isinstance(reply, bytes)
+                shutter_stat = parse_IS(reply)
+                self.shutter_status = shutter_stat
+                return shutter_stat
+            elif self.name == "hartmann_left":
+                assert isinstance(reply, bytes)
+                hartmann_stat = parse_IS(reply)
+                self.hartann_left_status = hartmann_stat
+                return self.name + hartmann_stat
+            elif self.name == "hartmann_right":
+                assert isinstance(reply, bytes)
+                hartmann_stat = parse_IS(reply)
+                self.hartmann_right_status = hartmann_stat
+                return self.name + hartmann_stat        
         else:
             if command == "open":
                 self.shutter_status = "open"
@@ -190,39 +208,6 @@ class IebController(Device):
                 else:
                     return False
 
-        
-
-    async def receive_status(self, areader, timeout, cmd):
-        
-        KeepGoing = True
-
-        while KeepGoing:
-
-            sclReply = ""
-
-            if timeout > 0.0:
-                try:
-                    data = await asyncio.wait_for(areader.read(4096), timeout)
-                    recStr = data.decode()
-                    sclReply = recStr[2:-1]
-                except:
-                    self.writer.close()
-                    await self.writer.wait_closed()
-                    raise LvmIebError(f"Failed to read the data")
-                    return False, sclReply
-            else:
-                raise LvmIebError(f"Wrong timeout!")
-                return False, sclReply
-
-            if len(sclReply) > 0:
-                if sclReply[:4] == 'DONE':
-                    return True, sclReply
-                if sclReply[:3] == 'ERR':
-                    return True, sclReply
-                if sclReply[:2] == 'IS':
-                    return True, sclReply
-
-
 
     async def getWAGOEnv(self):
 
@@ -235,11 +220,9 @@ class IebController(Device):
         numRTDs = len(rtdKeys)
 
         rhtRHKeys = ['rhtRH1(40002)',
-                     'rhtRH2(40004)',
-                     'rhtRH3(40006)']
+                     'rhtRH2(40004)']
         rhtTKeys = ['rhtT1(40001)',
-                    'rhtT2(40003)',
-                    'rhtT3(40005)']
+                    'rhtT2(40003)']
         numRHT = len(rhtTKeys)
         rhtAddr = 8
 
@@ -247,36 +230,24 @@ class IebController(Device):
         RHs = 100.0/32767.0
         T0 = -30.0
         Ts = RHs
- 
-        wagoClient = ModbusClient(self.host)
-        
-        if not wagoClient.connect():
-            raise LvmIebError(f"Cannot connect to WAGO at %s" %(self.host))
-            return False
-        
-        try:
-            rd = await wagoClient.read_holding_registers(rtdAddr, numRTDs)
-            for i in range(4):
-                self.sensors[rtdKeys[i]] = round(ptRTD2C(float(rd.registers[i])), 2)
-        except:
-            raise LvmIebError(f"Failed to have the rtd data")
-            return False
-        # Read the E+E RH/T sensors and convert to physical units.
 
-        try:
-            rd = await wagoClient.read_holding_registers(rhtAddr,2*numRHT)
-
-            for i in range(3):
-                self.sensors[rhtRHKeys[i]] = round(RH0 + RHs*float(rd.registers[2*i]), 2)
-                self.sensors[rhtTKeys[i]] = round(T0 + Ts*float(rd.registers[2*i+1]), 2)
-        except:
-            raise LvmIebError(f"Failed to have the rht data")
-            return False
+        wagoClient = ModbusClient(self.host, self.port)
         
-        wagoClient.close()
+        await wagoClient.connect()
+        
+        rd = await wagoClient.protocol.read_holding_registers(rtdAddr, numRTDs)
+        for i in range(4):
+            self.sensors[rtdKeys[i]] = round(ptRTD2C(float(rd.registers[i])), 2)
+
+        rh = await wagoClient.protocol.read_holding_registers(rhtAddr,2*numRHT)
+
+        for i in range(2):
+            self.sensors[rhtRHKeys[i]] = round(RH0 + RHs*float(rd.registers[2*i]), 2)
+            self.sensors[rhtTKeys[i]] = round(T0 + Ts*float(rd.registers[2*i+1]), 2)
+
+        wagoClient.protocol.close()
         return True
 
-      
 
 
 #---------------------------------------------------------------------------

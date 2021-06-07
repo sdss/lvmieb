@@ -53,10 +53,7 @@ async def actor(ctx):
     if ctx.obj["verbose"]:
         lvmieb_obj.log.fh.setLevel(0)
         lvmieb_obj.log.sh.setLevel(0)
-#    await lvmieb_obj.new_user(config_file)
-#    await lvmieb_obj.new_user(os.path.join(os.path.dirname(__file__), "etc/lvmieb.yml"))
     await lvmieb_obj.start()
- #   await asyncio.to_thread(lvmieb_obj.start())
     await lvmieb_obj.run_forever()
     
 if __name__ == "__main__":

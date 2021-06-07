@@ -9,10 +9,10 @@ controllers:
     shutter:
             host: 10.7.45.27
             port: 7776
-    hartman_door_left:
+    hartman_left:
             host: 10.7.45.27
             port: 7777
-    hartman_door_right:
+    hartman_right:
             host: 10.7.45.27
             port: 7778
     wago:

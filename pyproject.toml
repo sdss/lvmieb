@@ -46,6 +46,8 @@ numpy = "^1.20.3"
 sphinx-click = "^3.0.0"
 daemonocle = "^1.2.3"
 pymodbus = "^2.5.2"
+tornado = "^6.1"
+pytest = "^6.2.4"
 
 [tool.poetry.dev-dependencies]
 ipython = ">=7.11.0"
