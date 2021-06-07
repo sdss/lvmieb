@@ -40,11 +40,9 @@ async def hartmann_right(request, unused_tcp_port: int):
     ) -> None:
         reader, writer = await asyncio.open_connection("localhost", unused_tcp_port)
 
-
-
-
-
     server = await asyncio.start_server(handle_connection, "localhost", unused_tcp_port)
+
+
 
     async with server:
         hr = IebController("localhost", unused_tcp_port, name = "hartmann_right")

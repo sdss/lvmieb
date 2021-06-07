@@ -26,12 +26,12 @@ from . import parser
 async def wago(command: Command, controllers: dict[str, IebController]):
     """Returns the status of wago sensor."""
     
-    loop = asyncio.get_running_loop()
+    #loop = asyncio.get_running_loop()
 
     for wago in controllers:
         if controllers[wago].name == 'wago':
             try:
-                wago_status1 = await loop.run_in_executor(None, controllers[wago].getWAGOEnv)
+                wago_status1 = await controllers[wago].getWAGOEnv()
                 
                 if wago_status1:
                     command.info(text="Temperature & Humidity is:",status={
@@ -39,8 +39,6 @@ async def wago(command: Command, controllers: dict[str, IebController]):
                 "rhtRH1(40002)":controllers[wago].sensors['rhtRH1(40002)'],
                 "rhtT2(40003)":controllers[wago].sensors['rhtT2(40003)'],
                 "rhtRH2(40004)":controllers[wago].sensors['rhtRH2(40004)'],
-                "rhtT3(40005)":controllers[wago].sensors['rhtT3(40005)'],
-                "rhtRH3(40006)":controllers[wago].sensors['rhtRH3(40006)'],
                 "rtd1(40009)":controllers[wago].sensors['rtd1(40009)'],
                 "rtd2(40010)":controllers[wago].sensors['rtd2(40010)'],
                 "rtd3(40011)":controllers[wago].sensors['rtd3(40011)'],

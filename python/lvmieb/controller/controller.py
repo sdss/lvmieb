@@ -19,17 +19,7 @@ from typing import Any, Callable, Iterable, Optional
 import numpy
 from clu.device import Device
 
-from pymodbus.client.sync import ModbusTcpClient as ModbusClient
-
-#Tried everythin but failed..CK
-#from pymodbus.client.asynchronous.tornado import AsyncModbusTCPClient as ModbusClient
-#from pymodbus.client.asynchronous import schedulers
-#from pymodbus.client.asynchronous.async_io import ModbusClientProtocol as ModbusClient
-#from pymodbus.client.asynchronous.async_io import AsyncioModbusTcpClient as ModbusClient
-#from pymodbus.client.asynchronous.mixins import AsyncModbusClientMixin as ModbusClient
-
-#from threading import Thread
-#import logging
+from pymodbus.client.asynchronous.async_io import AsyncioModbusTcpClient as ModbusClient
 
 
 __all__ = ["IebController"]
@@ -72,8 +62,6 @@ class IebController(Device):
             'rhtRH1(40002)' : -1., 	# Humidity in percent
             'rhtT2(40003)' : -273.,
             'rhtRH2(40004)' : -1.,
-            'rhtT3(40005)' : -273.,
-            'rhtRH3(40006)' : -1.,
             'rtd1(40009)' : -273., 		# IEB internal temp
             'rtd2(40010)' : -273.,		# Bench temp near NIR camera
             'rtd3(40011)' : -273., 		# Bench temp near collimator
@@ -221,7 +209,7 @@ class IebController(Device):
                     return False
 
 
-    def getWAGOEnv(self):
+    async def getWAGOEnv(self):
 
         rtdAddr = 8
 
@@ -232,11 +220,9 @@ class IebController(Device):
         numRTDs = len(rtdKeys)
 
         rhtRHKeys = ['rhtRH1(40002)',
-                     'rhtRH2(40004)',
-                     'rhtRH3(40006)']
+                     'rhtRH2(40004)']
         rhtTKeys = ['rhtT1(40001)',
-                    'rhtT2(40003)',
-                    'rhtT3(40005)']
+                    'rhtT2(40003)']
         numRHT = len(rhtTKeys)
         rhtAddr = 8
 
@@ -245,32 +231,21 @@ class IebController(Device):
         T0 = -30.0
         Ts = RHs
 
-        wagoClient = ModbusClient(self.host)
+        wagoClient = ModbusClient(self.host, self.port)
+        
+        await wagoClient.connect()
+        
+        rd = await wagoClient.protocol.read_holding_registers(rtdAddr, numRTDs)
+        for i in range(4):
+            self.sensors[rtdKeys[i]] = round(ptRTD2C(float(rd.registers[i])), 2)
 
-        if not wagoClient.connect():
-            raise LvmIebError(f"Cannot connect to WAGO at %s" %(self.host))
-            return False
-        
-        try:
-            rd = wagoClient.read_holding_registers(rtdAddr, numRTDs)
-            for i in range(4):
-                self.sensors[rtdKeys[i]] = round(ptRTD2C(float(rd.registers[i])), 2)
-        except:
-            raise LvmIebError(f"Failed to have the rtd data")
-            return False
-        # Read the E+E RH/T sensors and convert to physical units.
-        
-        try:
-            rd = wagoClient.read_holding_registers(rhtAddr,2*numRHT)
+        rh = await wagoClient.protocol.read_holding_registers(rhtAddr,2*numRHT)
 
-            for i in range(3):
-                self.sensors[rhtRHKeys[i]] = round(RH0 + RHs*float(rd.registers[2*i]), 2)
-                self.sensors[rhtTKeys[i]] = round(T0 + Ts*float(rd.registers[2*i+1]), 2)
-        except:
-            raise LvmIebError(f"Failed to have the rht data")
-            return False
-        
-        wagoClient.close()
+        for i in range(2):
+            self.sensors[rhtRHKeys[i]] = round(RH0 + RHs*float(rd.registers[2*i]), 2)
+            self.sensors[rhtTKeys[i]] = round(T0 + Ts*float(rd.registers[2*i+1]), 2)
+
+        wagoClient.protocol.close()
         return True
 
 
