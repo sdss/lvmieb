@@ -30,6 +30,15 @@ from lvmieb.exceptions import (
     LvmIebDeprecationWarning,
 )
 
+#Exposure shutter commands
+
+expCmds = {"QX1":"init","QX2":"home","QX3":"open","QX4":"close",
+
+           "flash":"QX5","QX8": "on", "QX9":"off","QX10":"ssroff","QX11":"ssron", "IS":"status"}
+
+# Hartmann Door commands
+
+hdCmds = {"QX1":"init","QX2":"home","QX3":"open","QX4":"close","IS":"status"}
 
 @pytest.fixture
 async def hartmann_right(request, unused_tcp_port: int):
@@ -38,11 +47,48 @@ async def hartmann_right(request, unused_tcp_port: int):
     async def handle_connection(
         reader: asyncio.StreamReader, writer: asyncio.StreamWriter
     ) -> None:
-        reader, writer = await asyncio.open_connection("localhost", unused_tcp_port)
+        initial_status = 'close'
+        status = initial_status
+
+        while True:
+            data = await reader.readuntil(b'\r')
+            #data = data.decode()
+
+            #print(data)
+
+            matched = re.search(
+                b"(QX1|QX2|QX3|QX4|IS)", data
+            )
+
+            print(matched)
+
+            if not matched:
+                continue
+            else:
+                com = matched.group()
+                cmd = com.decode()
+                cmd = hdCmds[cmd]
+                print(f"command is now {cmd}!")
+
+                if cmd == "open":
+                    status = 'open'
+                elif cmd == "close":
+                    status = 'close'
+                
+                if cmd == "status":
+                    if status == 'open':
+                        writer.write(b'\x00\x07IS=10111111\r')
+                    elif status == 'close':
+                        writer.write(b'\x00\x07IS=01111111\r')
+                else:
+                    print("writer will write ")
+                    writer.write(b'\x00\x07%\r')
+                await writer.drain()
+                writer.close()
+                break
+
 
     server = await asyncio.start_server(handle_connection, "localhost", unused_tcp_port)
-
-
 
     async with server:
         hr = IebController("localhost", unused_tcp_port, name = "hartmann_right")

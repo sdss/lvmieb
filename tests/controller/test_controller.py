@@ -29,7 +29,15 @@ async def test_hartmann_door_connection(hartmann_right: IebController):
     await hartmann_right.connect()
     assert hartmann_right.connected == True
     
-    await hartmann_right.send_command('open')
+    await hartmann_right.send_command('status')
+    assert hartmann_right.hartmann_right_status == 'closed'
+    #await hartmann_right.send_command('status')
+    #assert hartmann_right.hartmann_right_status == 'closed'
+    
+    #await hartmann_right.send_command('open')
+    #await hartmann_right.send_command('status')
+    #assert hartmann_right.hartmann_right_status == 'open'
+    
     #assert hartmann_right.
 
     await hartmann_right.disconnect()

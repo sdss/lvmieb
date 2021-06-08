@@ -157,25 +157,27 @@ class IebController(Device):
         sclStr = sclHead + c_message.upper() + sclTail
         if self.connected == True:
             try:
+                #print(sclStr.encode())
                 self.writer.write(sclStr.encode())
                 await self.writer.drain()
             except:
-                raise LvmIebError(f"Failed to write the data")
                 self.writer.close()
-                await self.writer.wait_close()
-                return False
+                await self.writer.wait_close()                
+                raise LvmIebError(f"Failed to write the data")
         else:
             raise LvmIebError(f"Could not connect the %s" %self.name)
-            return False
+
+        reply = await asyncio.wait_for(self.reader.readuntil(b"\r"), SelectTimeout)
+        print(reply)
 
         try:
-            reply = await asyncio.wait_for(self.reader.readuntil(b"\r"), SelectTimeout)
+            #reply = await asyncio.wait_for(self.reader.readuntil(b"\r"), SelectTimeout)
+            print(reply)
         except:
             self.writer.close()
             await self.writer.wait_closed()
             raise LvmIebError(f"failed to read the data")
-            return False
-
+ 
         if command == "status" and reply:
             if self.name == "shutter":
                 assert isinstance(reply, bytes)
@@ -191,6 +193,8 @@ class IebController(Device):
                 assert isinstance(reply, bytes)
                 hartmann_stat = parse_IS(reply)
                 self.hartmann_right_status = hartmann_stat
+                print(self.name)
+                print(hartmann_stat)
                 return self.name + hartmann_stat        
         else:
             if command == "open":
@@ -202,7 +206,9 @@ class IebController(Device):
                 return False
             else:
                 await asyncio.sleep(0.61)
+                print("reading start")
                 reply = await self.reader.readuntil(b"\r")
+                print(reply)
                 if b"DONE" in reply:
                     return True
                 else:
@@ -239,7 +245,7 @@ class IebController(Device):
         for i in range(4):
             self.sensors[rtdKeys[i]] = round(ptRTD2C(float(rd.registers[i])), 2)
 
-        rh = await wagoClient.protocol.read_holding_registers(rhtAddr,2*numRHT)
+        rd = await wagoClient.protocol.read_holding_registers(rhtAddr,2*numRHT)
 
         for i in range(2):
             self.sensors[rhtRHKeys[i]] = round(RH0 + RHs*float(rd.registers[2*i]), 2)
