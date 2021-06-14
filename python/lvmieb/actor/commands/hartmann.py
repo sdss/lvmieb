@@ -36,13 +36,13 @@ async def connect(command: Command, controllers: dict[str, IebController]):
     connections = []
 
     for hartmann in controllers:
-        if controllers[hartmann].name == 'hartman_door_right':
+        if controllers[hartmann].name == 'hartman_right':
             try:
                 connections.append(controllers[hartmann].connect())
             except LvmIebError as err:
                 return command.fail(error=str(err))
             
-        if controllers[hartmann].name == 'hartman_door_left':
+        if controllers[hartmann].name == 'hartman_left':
             try:
                 connections.append(controllers[hartmann].connect())
             except LvmIebError as err:
@@ -60,13 +60,13 @@ async def disconnect(command: Command, controllers: dict[str, IebController]):
     connections = []
 
     for hartmann in controllers:
-        if controllers[hartmann].name == 'hartman_door_right':
+        if controllers[hartmann].name == 'hartman_right':
             try:
                 connections.append(controllers[hartmann].disconnect())
             except LvmIebError as err:
                 return command.fail(error=str(err))
             
-        if controllers[hartmann].name == 'hartman_door_left':
+        if controllers[hartmann].name == 'hartman_left':
             try:
                 connections.append(controllers[hartmann].disconnect())
             except LvmIebError as err:
