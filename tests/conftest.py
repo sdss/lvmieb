@@ -49,12 +49,9 @@ async def hartmann_right(request, unused_tcp_port: int):
     ) -> None:
         initial_status = 'close'
         status = initial_status
-
+        
         while True:
             data = await reader.readuntil(b'\r')
-            #data = data.decode()
-
-            #print(data)
 
             matched = re.search(
                 b"(QX1|QX2|QX3|QX4|IS)", data
@@ -82,11 +79,8 @@ async def hartmann_right(request, unused_tcp_port: int):
                         writer.write(b'\x00\x07IS=01111111\r')
                 else:
                     print("writer will write ")
-                    writer.write(b'\x00\x07%\r')
+                    writer.write(b'\x00\x07%DONE\r')
                 await writer.drain()
-                writer.close()
-                break
-
 
     server = await asyncio.start_server(handle_connection, "localhost", unused_tcp_port)
 
@@ -95,6 +89,7 @@ async def hartmann_right(request, unused_tcp_port: int):
         await hr.start()
         yield hr
         await hr.stop()
+        server.close()
 
 
 @pytest.fixture

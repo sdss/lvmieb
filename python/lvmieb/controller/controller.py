@@ -24,10 +24,6 @@ from pymodbus.client.asynchronous.async_io import AsyncioModbusTcpClient as Modb
 
 __all__ = ["IebController"]
 
-#logging.basicConfig()
-#log = logging.getLogger()
-#log.setLevel(logging.DEBUG)
-
 # Device list
 
 devList = ["shutter","hartmann_left","hartmann_right"]
@@ -88,8 +84,6 @@ class IebController(Device):
         else:
             raise LvmIebError(f"The %s is already connected!" %self.name)
 
-        return True
-
     async def disconnect(self):
         """close the connect"""
 
@@ -103,33 +97,26 @@ class IebController(Device):
             return False
         else:
             raise LvmIebError(f"The %s is already diconnected!" %self.name)
-
-        return True
         
-
     async def send_command(self, command, SelectTimeout= 1):
 
         #check that the device exists
         if self.name in devList == False:
             raise LvmIebError(f"%s is not a valid device" %self.name)
-            return False
         
         #check that the command is legal for the device
         if self.name == "shutter":
             if command in expCmds == False:
                 raise LvmIebError(f"%s is not a valid %s command" % (command, self.name))
-                return False
             else:
                 c_message = expCmds[command]
         elif self.name == "hartmann_left" or self.name == "hartmann_right":
             if command in hdCmds == False:
                 raise LvmIebError(f"%s is not a valid %s command" % (command, self.name))
-                return False
             else:
                 c_message = hdCmds[command]
         else:
             raise LvmIebError(f"%s and %s combination not found" % (command, self.name))
-            return False
 
         #check the shutter status before open and close
         if self.connected == True:
@@ -137,11 +124,9 @@ class IebController(Device):
                 if command == "open":
                     if self.shutter_status == "open":
                         raise LvmIebError(f"The shutter is already {self.shutter_status}!")
-                        return False
                 elif command == "close":
                     if self.shutter_status == "close":
                         raise LvmIebError(f"The shutter is already {self.shutter_status}!")
-                        return False
 
         #Tweak timeouts
         if self.name == "hartmann_left" or self.name == "hartmann_right":
@@ -254,8 +239,6 @@ class IebController(Device):
         wagoClient.protocol.close()
         return True
 
-
-
 #---------------------------------------------------------------------------
 #
 # WAGO I/O convenience functions
@@ -319,4 +302,3 @@ def parse_IS(reply: bytes):
         return "closed"
     else:
         return False
-

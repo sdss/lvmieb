@@ -22,6 +22,7 @@ from lvmieb.exceptions import (
     LvmIebDeprecationWarning,
 )
 
+# check the normal sequence of opening the hartmann_door and closing the door after opening
 @pytest.mark.asyncio
 async def test_hartmann_door_connection(hartmann_right: IebController):
     assert hartmann_right.host == "localhost"
@@ -31,15 +32,37 @@ async def test_hartmann_door_connection(hartmann_right: IebController):
     
     await hartmann_right.send_command('status')
     assert hartmann_right.hartmann_right_status == 'closed'
-    #await hartmann_right.send_command('status')
-    #assert hartmann_right.hartmann_right_status == 'closed'
     
-    #await hartmann_right.send_command('open')
-    #await hartmann_right.send_command('status')
-    #assert hartmann_right.hartmann_right_status == 'open'
-    
-    #assert hartmann_right.
+    await hartmann_right.send_command('open')
+    await hartmann_right.send_command('status')
+    assert hartmann_right.hartmann_right_status == 'open'
+
+    await hartmann_right.send_command('close')
+    await hartmann_right.send_command('status')
+    assert hartmann_right.hartmann_right_status == 'closed'
 
     await hartmann_right.disconnect()
     assert hartmann_right.connected == False
 
+@pytest.mark.asyncio
+async def test_hartmann_door_connection_failure(hartmann_right: IebController):
+    assert hartmann_right.host == "localhost"
+    assert hartmann_right.name == "hartmann_right"
+    await hartmann_right.connect()
+    assert hartmann_right.connected == True
+    
+    #await hartmann_right.send_command('status')
+    #assert hartmann_right.hartmann_right_status == 'closed'
+    
+    await asyncio.sleep(10)
+    #await hartmann_right.send_command('open')
+    #await hartmann_right.send_command('status')
+    #assert hartmann_right.hartmann_right_status == 'open'
+
+    #await hartmann_right.send_command('close')
+    #await hartmann_right.send_command('status')
+    #assert hartmann_right.hartmann_right_status == 'closed'
+
+    await hartmann_right.disconnect()
+    assert hartmann_right.connected == False
+    
