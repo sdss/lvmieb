@@ -24,10 +24,6 @@ from pymodbus.client.asynchronous.async_io import AsyncioModbusTcpClient as Modb
 
 __all__ = ["IebController"]
 
-#logging.basicConfig()
-#log = logging.getLogger()
-#log.setLevel(logging.DEBUG)
-
 # Device list
 
 devList = ["shutter","hartmann_left","hartmann_right"]
@@ -53,10 +49,6 @@ class IebController(Device):
         Device.__init__(self, host, port)
         self.name = name #must use it!!_C
 
-        self.shutter_status = self.send_command("status")
-        self.hartann_left_status = self.send_command("status")
-        self.hartmann_right_status = self.send_command("status")
-
         self.sensors = {
             'rhtT1(40001)' : -273., 		# Temperatures in C
             'rhtRH1(40002)' : -1., 	# Humidity in percent
@@ -66,13 +58,10 @@ class IebController(Device):
             'rtd2(40010)' : -273.,		# Bench temp near NIR camera
             'rtd3(40011)' : -273., 		# Bench temp near collimator
             'rtd4(40012)' : -273. 		# Bench temp near cryostats
-        #    'updated' : datetime.datetime.utcnow().isoformat()
           }
           
-
         self.__status_event = asyncio.Event()
         self.connected = False
-
 
     async def connect(self):
         """connect with devices"""
@@ -81,14 +70,18 @@ class IebController(Device):
             try:
                 self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
                 self.connected = True
+                if self.name == 'shutter':
+                    self.shutter_status = await self.send_command('status')
+                elif self.name == 'hartmann_right':
+                    self.hartmann_right_status = await self.send_command('status')
+                elif self.name == 'hartmann_left':
+                    self.hartmann_left_status = await self.send_command('status')
             except:
                 self.connected = False
                 raise LvmIebError(f"Could not connect the %s" %self.name)
             return False
-        else:
+        elif self.connected == True:
             raise LvmIebError(f"The %s is already connected!" %self.name)
-
-        return True
 
     async def disconnect(self):
         """close the connect"""
@@ -101,47 +94,55 @@ class IebController(Device):
             except:
                 raise LvmIebError(f"Could not disconnect the %s" %self.name)
             return False
-        else:
+        elif self.connected == False:
             raise LvmIebError(f"The %s is already diconnected!" %self.name)
-
-        return True
         
-
     async def send_command(self, command, SelectTimeout= 1):
+        """Parses the high level command (open, close, status) to low level commands and send 
+        to the motor controller controlling the exposure shutter, hartmann door. reads the reply from the motor
+        """
 
         #check that the device exists
         if self.name in devList == False:
             raise LvmIebError(f"%s is not a valid device" %self.name)
-            return False
         
         #check that the command is legal for the device
         if self.name == "shutter":
             if command in expCmds == False:
                 raise LvmIebError(f"%s is not a valid %s command" % (command, self.name))
-                return False
             else:
                 c_message = expCmds[command]
         elif self.name == "hartmann_left" or self.name == "hartmann_right":
             if command in hdCmds == False:
                 raise LvmIebError(f"%s is not a valid %s command" % (command, self.name))
-                return False
             else:
                 c_message = hdCmds[command]
         else:
             raise LvmIebError(f"%s and %s combination not found" % (command, self.name))
-            return False
 
-        #check the shutter status before open and close
+        #check the shutter& harmann door status before open and close
         if self.connected == True:
             if self.name == "shutter":
                 if command == "open":
-                    if self.shutter_status == "open":
+                    if self.shutter_status == "opened":
                         raise LvmIebError(f"The shutter is already {self.shutter_status}!")
-                        return False
                 elif command == "close":
-                    if self.shutter_status == "close":
+                    if self.shutter_status == "closed":
                         raise LvmIebError(f"The shutter is already {self.shutter_status}!")
-                        return False
+            elif self.name == "hartmann_right":
+                if command == "open":
+                    if self.hartmann_right_status == "opened":
+                        raise LvmIebError(f"The hartmann right door is already {self.hartmann_right_status}!")
+                elif command == 'close':
+                    if self.hartmann_right_status == "closed":
+                        raise LvmIebError(f"The hartmann right door is already {self.hartmann_right_status}!")
+            elif self.name == "hartmann_left":
+                if command == "open":
+                    if self.hartmann_left_status == "opened":
+                        raise LvmIebError(f"The hartmann left door is already {self.hartmann_left_status}!")
+                elif command == "close":
+                    if self.hartmann_left_status == "closed":
+                        raise LvmIebError(f"The hartmann right door is already {self.hartmann_left_status}!")
 
         #Tweak timeouts
         if self.name == "hartmann_left" or self.name == "hartmann_right":
@@ -160,22 +161,20 @@ class IebController(Device):
                 self.writer.write(sclStr.encode())
                 await self.writer.drain()
             except:
-                raise LvmIebError(f"Failed to write the data")
                 self.writer.close()
-                await self.writer.wait_close()
-                return False
+                await self.writer.wait_close()                
+                raise LvmIebError(f"Failed to write the data")
         else:
             raise LvmIebError(f"Could not connect the %s" %self.name)
-            return False
 
+        #read byte stream from the motor controller
         try:
             reply = await asyncio.wait_for(self.reader.readuntil(b"\r"), SelectTimeout)
         except:
             self.writer.close()
             await self.writer.wait_closed()
             raise LvmIebError(f"failed to read the data")
-            return False
-
+ 
         if command == "status" and reply:
             if self.name == "shutter":
                 assert isinstance(reply, bytes)
@@ -185,29 +184,28 @@ class IebController(Device):
             elif self.name == "hartmann_left":
                 assert isinstance(reply, bytes)
                 hartmann_stat = parse_IS(reply)
-                self.hartann_left_status = hartmann_stat
-                return self.name + hartmann_stat
+                self.hartmann_left_status = hartmann_stat
+                return hartmann_stat
             elif self.name == "hartmann_right":
                 assert isinstance(reply, bytes)
                 hartmann_stat = parse_IS(reply)
                 self.hartmann_right_status = hartmann_stat
-                return self.name + hartmann_stat        
-        else:
-            if command == "open":
-                self.shutter_status = "open"
-            elif command == "close":
-                self.shutter_status = "close"
+                return hartmann_stat        
+        elif b"DONE" in reply:
+            #updating the status of each hardware
+            if self.name == "shutter":
+                self.shutter_status = await self.send_command("status")
+                return self.shutter_status
+            elif self.name == "hartmann_right":
+                self.hartmann_right_status = await self.send_command("status")
+                return self.hartmann_right_status
+            elif self.name == "hartmann_left":
+                self.hartmann_left_status = await self.send_command("status")
+                return self.hartmann_left_status
+        elif b"ERR" in reply:
+            raise LvmIebError(f"Error in the controller, please check the hardware")
 
-            if reply != b"\x00\x07%\r":
-                return False
-            else:
-                await asyncio.sleep(0.61)
-                reply = await self.reader.readuntil(b"\r")
-                if b"DONE" in reply:
-                    return True
-                else:
-                    return False
-
+    # courutine for receiving data from the WAGO module
 
     async def getWAGOEnv(self):
 
@@ -239,7 +237,7 @@ class IebController(Device):
         for i in range(4):
             self.sensors[rtdKeys[i]] = round(ptRTD2C(float(rd.registers[i])), 2)
 
-        rh = await wagoClient.protocol.read_holding_registers(rhtAddr,2*numRHT)
+        rd = await wagoClient.protocol.read_holding_registers(rhtAddr,2*numRHT)
 
         for i in range(2):
             self.sensors[rhtRHKeys[i]] = round(RH0 + RHs*float(rd.registers[2*i]), 2)
@@ -247,8 +245,6 @@ class IebController(Device):
 
         wagoClient.protocol.close()
         return True
-
-
 
 #---------------------------------------------------------------------------
 #
@@ -301,6 +297,8 @@ def wagoDOReg(rd,numOut=8):
         testOut.append((rd & 2**i) == 2**i)
     return testOut
 
+# low level command to parse the byte stream from the motor controller
+
 def parse_IS(reply: bytes):
 
     match = re.search(b"\x00\x07IS=([0-1])([0-1])[0-1]{6}\r$", reply)
@@ -308,9 +306,8 @@ def parse_IS(reply: bytes):
         return False
 
     if match.groups() == (b"1", b"0"):
-        return "open"
+        return "opened"
     elif match.groups() == (b"0", b"1"):
         return "closed"
     else:
         return False
-

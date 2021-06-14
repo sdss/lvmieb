@@ -22,16 +22,146 @@ from lvmieb.exceptions import (
     LvmIebDeprecationWarning,
 )
 
+# check the normal sequence of opening the hartmann_door and closing the door after opening
 @pytest.mark.asyncio
-async def test_hartmann_door_connection(hartmann_right: IebController):
+async def test_hartmann_door_right_exposure(hartmann_right: IebController):
+    assert hartmann_right.host == "localhost"
+    assert hartmann_right.name == "hartmann_right"
+    await hartmann_right.connect()
+    assert hartmann_right.connected == True    
+    assert hartmann_right.hartmann_right_status == 'closed'
+    
+    for i in range(1):
+        await hartmann_right.send_command('open')
+        assert hartmann_right.hartmann_right_status == 'opened'
+        
+        #1 second exposure
+        await asyncio.sleep(1)
+        
+        await hartmann_right.send_command('close')
+        assert hartmann_right.hartmann_right_status == 'closed'
+    
+    await hartmann_right.disconnect()
+    assert hartmann_right.connected == False
+
+
+@pytest.mark.asyncio
+async def test_hartmann_door_right_open_close_again(hartmann_right: IebController):
     assert hartmann_right.host == "localhost"
     assert hartmann_right.name == "hartmann_right"
     await hartmann_right.connect()
     assert hartmann_right.connected == True
+
+    #initial state is 'closed'
+    assert hartmann_right.hartmann_right_status == 'closed'
+    #await hartmann_right.send_command('close')
+
+@pytest.mark.asyncio
+async def test_hartmann_door_left_exposure(hartmann_left: IebController):
+
+    assert hartmann_left.host == "localhost"
+    assert hartmann_left.name == "hartmann_left"
+    await hartmann_left.connect()
+    assert hartmann_left.connected == True    
     
-    await hartmann_right.send_command('open')
-    #assert hartmann_right.
+    
+    assert hartmann_left.hartmann_left_status == 'closed'
 
-    await hartmann_right.disconnect()
-    assert hartmann_right.connected == False
+    for i in range(1):
+        await hartmann_left.send_command('open')
+        assert hartmann_left.hartmann_left_status == 'opened'
+        
+        #1 second exposure
+        await asyncio.sleep(1)
+        
+        await hartmann_left.send_command('close')
+        assert hartmann_left.hartmann_left_status == 'closed'
+    
+    await hartmann_left.disconnect()
+    assert hartmann_left.connected == False
+    
+@pytest.mark.asyncio
+async def test_hartmann_door_left_open_close_again(hartmann_left: IebController):
+    assert hartmann_left.host == "localhost"
+    assert hartmann_left.name == "hartmann_left"
+    await hartmann_left.connect()
+    assert hartmann_left.connected == True
 
+    #initial state is 'closed'
+    assert hartmann_left.hartmann_left_status == 'closed'
+    #await hartmann_left.send_command('close')
+
+@pytest.mark.asyncio
+async def test_shutter_exposure(shutter: IebController):
+
+    assert shutter.host == "localhost"
+    assert shutter.name == "shutter"
+    await shutter.connect()
+    assert shutter.connected == True    
+    
+    assert shutter.shutter_status == 'closed'
+
+    for i in range(1):
+        await shutter.send_command('open')
+        assert shutter.shutter_status == 'opened'
+        
+        #1 second exposure
+        await asyncio.sleep(1)
+        
+        await shutter.send_command('close')
+        assert shutter.shutter_status == 'closed'
+    
+    await shutter.disconnect()
+    assert shutter.connected == False
+    
+@pytest.mark.asyncio
+async def test_shutter_open_close_again(shutter: IebController):
+    assert shutter.host == "localhost"
+    assert shutter.name == "shutter"
+    await shutter.connect()
+    assert shutter.connected == True
+
+    #initial state is 'closed'
+    assert shutter.shutter_status == 'closed'
+    #await shutter.send_command('close')
+
+@pytest.mark.asyncio
+async def test_hartmann_and_shutters(hartmann_right: IebController, hartmann_left:IebController, shutter:IebController):
+    assert shutter.host == "localhost"
+    assert shutter.name == "shutter"
+    await shutter.connect()
+    assert shutter.connected == True
+
+    assert hartmann_left.host == "localhost"
+    assert hartmann_left.name == "hartmann_left"
+    await hartmann_left.connect()
+    assert hartmann_left.connected == True
+
+    assert hartmann_right.host == "localhost"
+    assert hartmann_right.name == "hartmann_right"
+    await hartmann_right.connect()
+    assert hartmann_right.connected == True
+
+    tasks_open = []
+
+    tasks_open.append(hartmann_right.send_command('open'))
+    tasks_open.append(hartmann_left.send_command('open'))
+    tasks_open.append(shutter.send_command('open'))
+
+    await asyncio.gather(*tasks_open)
+
+    assert hartmann_right.hartmann_right_status == 'opened'
+    assert hartmann_left.hartmann_left_status == 'opened'
+    assert shutter.shutter_status == 'opened'
+
+    tasks_close = []
+
+    tasks_close.append(hartmann_right.send_command('close'))
+    tasks_close.append(hartmann_left.send_command('close'))
+    tasks_close.append(shutter.send_command('close'))
+
+    await asyncio.gather(*tasks_close)
+
+    assert hartmann_right.hartmann_right_status == 'closed'
+    assert hartmann_left.hartmann_left_status == 'closed'
+    assert shutter.shutter_status == 'closed'
