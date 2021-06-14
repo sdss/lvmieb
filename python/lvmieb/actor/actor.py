@@ -46,7 +46,6 @@ class lvmieb(AMQPActor):
     ):
         self.controllers = {c.name: c for c in controllers}
         self.parser_args = [self.controllers]
-#        super().new_user()
         super().__init__(*args, **kwargs)
 
 #Changgon changed the under part 2021/03/30
@@ -66,11 +65,6 @@ class lvmieb(AMQPActor):
                 )
 
         await super().start()
-
-#        self._status_jobs = [
-#            asyncio.create_task(self._report_status(controller))            #need to be added after the hardware status commands are defined _CK 2021/03/30
-#            for controller in self.controllers.values()
-#       ]
 
     async def stop(self):
         with suppress(asyncio.CancelledError):

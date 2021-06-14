@@ -189,35 +189,3 @@ async def status(command: Command, controllers: dict[str, IebController]):
                 return command.fail(test='hartmann is in a bad state')
         except LvmIebError as err:
             return command.fail(error=str(err))
-
-
-"""
-    for m in result_connected:
-        for n in result_hartmann:
-            try:
-                if n == "open":
-                    return command.finish(
-                        status={
-                        "open/closed:" : n,
-                        "connected/disconnected:" : m
-                    }
-                )
-                elif n == "closed":
-                    return command.finish(
-                        status={
-                        "open/closed:" : n,
-                        "connected/disconnected:" : m
-                    }
-                )
-                else:
-                    return command.fail(test='hartmann is in a bad state')
-            except LvmIebError as err:
-                return command.fail(error=str(err))
-"""
-
-#when opening hartmanns sequently_CK
-"""    
-    for controller_name in controllers:
-        command.info(text=f"Opening the hartmann in controller {controller_name}!")
-        await controllers[controller_name].send_message("open")
-"""
