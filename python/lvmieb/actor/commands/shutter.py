@@ -28,43 +28,6 @@ def shutter(*args):
 
     pass
 
-
-@shutter.command()
-async def connect(command: Command, controllers: dict[str, IebController]):
-    """open the connection with the shutter."""
-
-    connections = []
-
-    for shutter in controllers:
-        if controllers[shutter].name == 'shutter':
-            try:
-                connections.append(controllers[shutter].connect())
-            except LvmIebError as err:
-                return command.fail(error=str(err))
-
-    command.info(text="Connecting all the shutters")
-    await asyncio.gather(*connections)
-    return command.finish(shutter = "connected")
-
-
-@shutter.command()
-async def disconnect(command: Command, controllers: dict[str, IebController]):
-    """close the connection with the shutter"""
-
-    connections = []
-
-    for shutter in controllers:
-        if controllers[shutter].name == 'shutter':
-            try:
-                connections.append(controllers[shutter].disconnect())
-            except LvmIebError as err:
-                return command.fail(error=str(err))
-
-    command.info(text="Disconnecting all the shutters")
-    await asyncio.gather(*connections)
-    return command.finish(shutter = "disconnected")
-
-
 @shutter.command()
 async def open(command: Command, controllers: dict[str, IebController]):
     """open the shutter"""
@@ -122,17 +85,17 @@ async def status(command: Command, controllers: dict[str, IebController]):
 
     for n in result_shutter:
         try:
-            if n == "open":
+            if n == "opened":
                 return command.info(
                         status={
-                        "open/closed:" : n,
+                        "opened/closed:" : n,
                         "connected/disconnected" : connection[result_shutter.index(n)]
                     }
                 )
             elif n == "closed":
                 return command.info(
                         status={
-                        "open/closed:" : n,
+                        "opened/closed:" : n,
                         "connection/disconnected" : connection[result_shutter.index(n)]
                     }
                 )

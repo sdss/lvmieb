@@ -43,21 +43,24 @@ hdCmds = {"QX1":"init","QX2":"home","QX3":"open","QX4":"close","IS":"status"}
 @pytest.fixture
 async def hartmann_right(request, unused_tcp_port_factory: int):
     """Mocks a 'hartmann door right' that replies to commands with predefined replies."""
-
+    
     async def handle_connection(
         reader: asyncio.StreamReader, writer: asyncio.StreamWriter
     ) -> None:
+        
         initial_status = 'closed'
         status = initial_status
         
         while True:
+            #print(f"line 58 {status}")
             data = await reader.readuntil(b'\r')
-
+            #print(f"line 60 {status}")
             matched = re.search(
                 b"(QX1|QX2|QX3|QX4|IS)", data
             )
-
+            #print(f"line 64 {status}")
             print(matched)
+            #print(f"line 66 {status}")
 
             if not matched:
                 continue
@@ -72,6 +75,7 @@ async def hartmann_right(request, unused_tcp_port_factory: int):
                 elif cmd == "close":
                     status = 'closed'
                 
+                #print(status)
                 if cmd == "status":
                     if status == 'opened':
                         writer.write(b'\x00\x07IS=10111111\r')
@@ -80,6 +84,7 @@ async def hartmann_right(request, unused_tcp_port_factory: int):
                 else:
                     print("writer will write ")
                     writer.write(b'\x00\x07%DONE\r')
+                    #print(status)
                 await writer.drain()
 
     port_hart_right = unused_tcp_port_factory()

@@ -62,41 +62,12 @@ class IebController(Device):
           
         self.__status_event = asyncio.Event()
         self.connected = False
+        self.reader = None
+        self.writer = None
+        self.hartmann_right_status = None
+        self.hartmann_left_status = None
+        self.shutter_status = None
 
-    async def connect(self):
-        """connect with devices"""
-
-        if self.connected == False:
-            try:
-                self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
-                self.connected = True
-                if self.name == 'shutter':
-                    self.shutter_status = await self.send_command('status')
-                elif self.name == 'hartmann_right':
-                    self.hartmann_right_status = await self.send_command('status')
-                elif self.name == 'hartmann_left':
-                    self.hartmann_left_status = await self.send_command('status')
-            except:
-                self.connected = False
-                raise LvmIebError(f"Could not connect the %s" %self.name)
-            return False
-        elif self.connected == True:
-            raise LvmIebError(f"The %s is already connected!" %self.name)
-
-    async def disconnect(self):
-        """close the connect"""
-
-        if self.connected == True:
-            try:
-                self.writer.close()
-                await self.writer.wait_closed()
-                self.connected = False
-            except:
-                raise LvmIebError(f"Could not disconnect the %s" %self.name)
-            return False
-        elif self.connected == False:
-            raise LvmIebError(f"The %s is already diconnected!" %self.name)
-        
     async def send_command(self, command, SelectTimeout= 1):
         """Parses the high level command (open, close, status) to low level commands and send 
         to the motor controller controlling the exposure shutter, hartmann door. reads the reply from the motor
@@ -119,6 +90,43 @@ class IebController(Device):
                 c_message = hdCmds[command]
         else:
             raise LvmIebError(f"%s and %s combination not found" % (command, self.name))
+        
+        if command != 'status':
+            try:
+                if self.name == 'shutter':
+                    self.shutter_status = await self.get_status()
+                elif self.name == 'hartmann_right':
+                    self.hartmann_right_status = await self.get_status()
+                elif self.name == 'hartmann_left':
+                    self.hartmann_left_status = await self.get_status()
+                #self.connected = True
+            except:
+                #self.connected = False
+                raise LvmIebError(f"Could not connect the %s" %self.name)
+                
+        #print(self.hartmann_right_status)
+        #connect device
+        #if self.reader == None and self.writer == None:
+        #    self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
+        #    self.connected = True
+                
+        """if self.connected == False:
+            if command != 'status':
+                try:
+                    self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
+                    self.connected = True
+                    if self.name == 'shutter':
+                        self.shutter_status = await self.send_command('status')
+                    elif self.name == 'hartmann_right':
+                        self.hartmann_right_status = await self.send_command('status')
+                    elif self.name == 'hartmann_left':
+                        self.hartmann_left_status = await self.send_command('status')
+                    #self.connected = True
+                except:
+                    self.connected = False
+                    raise LvmIebError(f"Could not connect the %s" %self.name)
+        elif self.connected == True:
+            raise LvmIebError(f"The %s is already connected!" %self.name)"""
 
         #check the shutter& harmann door status before open and close
         if self.connected == True:
@@ -152,20 +160,22 @@ class IebController(Device):
             if command == "home":
                 SelectTimeout = 4.0
 
+        self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
+       
         # parse the low-level command to the hardware
         sclHead = chr(0)+chr(7)
         sclTail = chr(13)
         sclStr = sclHead + c_message.upper() + sclTail
-        if self.connected == True:
-            try:
-                self.writer.write(sclStr.encode())
-                await self.writer.drain()
-            except:
-                self.writer.close()
-                await self.writer.wait_close()                
-                raise LvmIebError(f"Failed to write the data")
-        else:
-            raise LvmIebError(f"Could not connect the %s" %self.name)
+        #if self.connected == True:
+        try:
+            self.writer.write(sclStr.encode())
+            await self.writer.drain()
+        except:
+            self.writer.close()
+            await self.writer.wait_close()                
+            raise LvmIebError(f"Failed to write the data")
+        #else:
+        #    raise LvmIebError(f"Could not connect the %s" %self.name)
 
         #read byte stream from the motor controller
         try:
@@ -174,7 +184,18 @@ class IebController(Device):
             self.writer.close()
             await self.writer.wait_closed()
             raise LvmIebError(f"failed to read the data")
- 
+
+        #disconnect device 
+        #if self.connected == True:
+        try:
+            self.writer.close()
+            await self.writer.wait_closed()
+                #self.connected = False
+        except:
+            raise LvmIebError(f"Could not disconnect the %s" %self.name)
+        #elif self.connected == False:
+        #    raise LvmIebError(f"The %s is already diconnected!" %self.name)
+        
         if command == "status" and reply:
             if self.name == "shutter":
                 assert isinstance(reply, bytes)
@@ -194,17 +215,58 @@ class IebController(Device):
         elif b"DONE" in reply:
             #updating the status of each hardware
             if self.name == "shutter":
-                self.shutter_status = await self.send_command("status")
+                self.shutter_status = await self.get_status()
                 return self.shutter_status
             elif self.name == "hartmann_right":
-                self.hartmann_right_status = await self.send_command("status")
+                self.hartmann_right_status = await self.get_status()
+                #print(self.hartmann_right_status)
                 return self.hartmann_right_status
             elif self.name == "hartmann_left":
-                self.hartmann_left_status = await self.send_command("status")
+                self.hartmann_left_status = await self.get_status()
                 return self.hartmann_left_status
         elif b"ERR" in reply:
             raise LvmIebError(f"Error in the controller, please check the hardware")
 
+    async def get_status(self):
+        
+        r, w = await asyncio.open_connection(self.host, self.port)
+        
+        # parse the low-level command to the hardware
+        message = 'IS'
+        SelectTimeout = 1
+        
+        sclHead = chr(0)+chr(7)
+        sclTail = chr(13)
+        sclStr = sclHead + message.upper() + sclTail
+        
+        try:
+            w.write(sclStr.encode())
+            await w.drain()
+        except:
+            w.close()
+            await w.wait_close()                
+            raise LvmIebError(f"Failed to write the data")
+        
+        #read byte stream from the motor controller
+        try:
+            reply = await asyncio.wait_for(r.readuntil(b"\r"), SelectTimeout)
+        except:
+            w.close()
+            await w.wait_closed()
+            raise LvmIebError(f"failed to read the data")
+        
+        try:
+            #r.close()
+            w.close()
+            await w.wait_closed()
+        except:
+            raise LvmIebError(f"Could not disconnect the %s" %self.name)
+        
+        if message == "IS" and reply:
+            assert isinstance(reply, bytes)
+            stat = parse_IS(reply)
+            return stat
+        
     # courutine for receiving data from the WAGO module
 
     async def getWAGOEnv(self):
