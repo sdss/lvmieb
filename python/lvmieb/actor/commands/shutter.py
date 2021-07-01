@@ -12,6 +12,7 @@ from __future__ import annotations, print_function, division, absolute_import
 import asyncio
 import click
 from clu.command import Command
+import datetime
 
 from lvmieb.controller.controller import IebController
 from lvmieb.exceptions import LvmIebError
@@ -43,7 +44,13 @@ async def open(command: Command, controllers: dict[str, IebController]):
 
 
     command.info(text="Opening all shutters")
+    print("----open----")
+    current_time = datetime.datetime.now()
+    print('before command gathered        : %s', current_time)     
     await asyncio.gather(*tasks)
+    current_time = datetime.datetime.now()
+    print('after command gathered         : %s', current_time)     
+        
     return command.finish(shutter= "open")
     
 
@@ -61,7 +68,12 @@ async def close(command: Command, controllers: dict[str, IebController]):
                 return command.fail(error=str(err))
 
     command.info(text="Closing all shutters")
+    print("----close----")
+    current_time = datetime.datetime.now()
+    print('before command gathered        : %s', current_time)     
     await asyncio.gather(*tasks)
+    current_time = datetime.datetime.now()
+    print('after command gathered         : %s', current_time)     
     return command.finish(shutter= "closed")
    
 
@@ -71,13 +83,11 @@ async def status(command: Command, controllers: dict[str, IebController]):
 
     command.info(text="Checking all shutters")
     tasks = []
-    connection = []
 
     for shutter in controllers:
         if controllers[shutter].name == 'shutter':
             try:
                 tasks.append(controllers[shutter].send_command("status"))
-                connection.append(controllers[shutter].connected)
             except LvmIebError as err:
                 return command.fail(error=str(err))
 
@@ -89,15 +99,13 @@ async def status(command: Command, controllers: dict[str, IebController]):
                 return command.info(
                         status={
                         "opened/closed:" : n,
-                        "connected/disconnected" : connection[result_shutter.index(n)]
-                    }
+                   }
                 )
             elif n == "closed":
                 return command.info(
                         status={
                         "opened/closed:" : n,
-                        "connection/disconnected" : connection[result_shutter.index(n)]
-                    }
+                   }
                 )
             else:
                 return command.fail(test='shutter is in a bad state')

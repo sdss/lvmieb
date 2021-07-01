@@ -28,55 +28,6 @@ def hartmann(*args):
 
     pass
 
-
-@hartmann.command()
-async def connect(command: Command, controllers: dict[str, IebController]):
-    """open the connection with all of the hartmann door left, and right simultaneously."""
-
-    connections = []
-
-    for hartmann in controllers:
-        if controllers[hartmann].name == 'hartman_right':
-            try:
-                connections.append(controllers[hartmann].connect())
-            except LvmIebError as err:
-                return command.fail(error=str(err))
-            
-        if controllers[hartmann].name == 'hartman_left':
-            try:
-                connections.append(controllers[hartmann].connect())
-            except LvmIebError as err:
-                return command.fail(error=str(err))
-
-    command.info(text="Connecting all the hartmann doors")
-    await asyncio.gather(*connections)
-    return command.finish(hartmann = "connected")
-
-
-@hartmann.command()
-async def disconnect(command: Command, controllers: dict[str, IebController]):
-    """close the connection with all of the hartmann door left, and right simultaneously"""
-
-    connections = []
-
-    for hartmann in controllers:
-        if controllers[hartmann].name == 'hartman_right':
-            try:
-                connections.append(controllers[hartmann].disconnect())
-            except LvmIebError as err:
-                return command.fail(error=str(err))
-            
-        if controllers[hartmann].name == 'hartman_left':
-            try:
-                connections.append(controllers[hartmann].disconnect())
-            except LvmIebError as err:
-                return command.fail(error=str(err))
-
-    command.info(text="Disconnecting all the hartmann doors")
-    await asyncio.gather(*connections)
-    return command.finish(hartmann = "disconnected")
-
-
 @hartmann.command()
 @click.option(
     "-s",
@@ -121,7 +72,6 @@ async def open(command: Command, side: str, controllers: dict[str, IebController
 async def close(command: Command, side: str, controllers: dict[str, IebController]):
     """close the hartmann"""
 
-
     tasks = []
 
     for hartmann in controllers:
@@ -150,20 +100,17 @@ async def status(command: Command, controllers: dict[str, IebController]):
 
     command.info(text="Checking all hartmanns")
     tasks = []
-    connection = []
 
     for hartmann in controllers:
         if controllers[hartmann].name == 'hartmann_right':
             try:
                 tasks.append(controllers[hartmann].send_command("status"))
-                connection.append(controllers[hartmann].connected)
             except LvmIebError as err:
                 return command.fail(error=str(err))
 
         if controllers[hartmann].name == 'hartmann_left':
             try:
                 tasks.append(controllers[hartmann].send_command("status"))
-                connection.append(controllers[hartmann].connected)
             except LvmIebError as err:
                 return command.fail(error=str(err))
         
@@ -175,15 +122,13 @@ async def status(command: Command, controllers: dict[str, IebController]):
                 return command.info(
                         status={
                         "open/closed:" : n,
-                        "connected/disconnected" : connection[result_hartmann.index(n)]
-                    }
+                   }
                 )
             elif "closed" in n:
                 return command.info(
                         status={
                         "open/closed:" : n,
-                        "connection/disconnected" : connection[result_hartmann.index(n)]
-                    }
+                   }
                 )
             else:
                 return command.fail(test='hartmann is in a bad state')
