@@ -40,7 +40,7 @@ expCmds = {"init":"QX1","home":"QX2","open":"QX3","close":"QX4",
 hdCmds = {"init":"QX1","home":"QX2","open":"QX3","close":"QX4","status":"IS"}
 
 # This list is used by the WAGO power control utilities
-powList = ['exp_shutter_power', 
+powList = ['shutter_power', 
             'hartmann_left_power', 
             'hartmann_right_power']
 
@@ -64,7 +64,15 @@ class IebController:
             'rtd3(40011)' : -273., 		# Bench temp near collimator
             'rtd4(40012)' : -273. 		# Bench temp near cryostats
           }
-          
+        
+        self.power_status = {
+            'hartmann_left_power' : 'ERROR', # ERROR | ON | OFF
+            'hartmann_right_power' : 'ERROR', # ERROR | ON | OFF
+            'shutter_power' : 'ERROR' # ERROR | ON | OFF
+        }
+        
+        self.wagohost = '10.7.45.28'
+        self.wagoport = 502
         self.__status_event = asyncio.Event()
         self.reader = None
         self.writer = None
@@ -281,6 +289,36 @@ class IebController:
             stat = parse_IS(reply)
             return stat
         
+#################################################################
+#
+#  WAGO routines 
+#
+#################################################################
+
+#---------------------------------------------------------------------------
+#
+# getWAGOEnv(): read all WAGO unit environmental sensors
+#
+# Read the environmental sensors (temperature and humidity) connected
+# to the WAGO modbus controller and set the approriate values in the
+# self.sensors data dictionary.
+#
+# Temperature is expressed in degrees Celsius
+# Relative Humidity is expressed in Percent (%)
+#
+# Returns:
+#   (status,msgStr)
+# where:
+#   status = True on success, with msgStr = DONE
+#   status = False on errors, with msgStr containing a fault message
+#
+# This is normally invoked by the get() method with what='sensors'
+#
+# Updated to replace the Dwyer RH/T sensors with the E+E sensors that
+# we'll use for the final controller system [rwp/osu]
+#
+#---------------------------------------------------------------------------
+  
     # courutine for receiving data from the WAGO module
 
     async def getWAGOEnv(self):
@@ -305,7 +343,7 @@ class IebController:
         T0 = -30.0
         Ts = RHs
 
-        wagoClient = ModbusClient(self.host, self.port)
+        wagoClient = ModbusClient(self.wagohost, self.wagoport)
         
         await wagoClient.connect()
         
@@ -322,6 +360,27 @@ class IebController:
         wagoClient.protocol.close()
         return True
     
+
+ #---------------------------------------------------------------------------
+ #
+ # getWAGOPower(self)
+ #
+ # Returns the power state of all DESI devices controlled by the
+ # WAGO modbus unit.
+ #
+ # Sets the appropriate entry in the self.controller_status
+ # dictionary with the current state, "on" or "off"
+ #
+ # Returns:
+ #   (status,msgStr)
+ # where:
+ #   status = True on success, with msgStr = DONE
+ #   status = False on errors, with msgStr containing a fault message
+ #
+ # See also: setWAGOPower()
+ #
+ #---------------------------------------------------------------------------
+
     async def getWAGOPower(self):
         
         # 8-port digital output register address
@@ -337,9 +396,10 @@ class IebController:
         # Get a WAGO client handle and connect (port 502 is implicit as
         # per modbus spec).
     
-        wagoClient = mbc(self.wagoHost)
+        wagoClient = ModbusClient(self.wagohost, self.wagoport)
+        
         if not wagoClient.connect():
-            return False,"** ERROR: Cannot connect to WAGO at %s" % (self.wagoHost)
+            return False,"** ERROR: Cannot connect to WAGO at %s" % (self.wagohost)
         # Read the output data, and translate into "on" and "off"
         # states. The outputs are different for the shutters and doors. 
         # For the shutters: 
@@ -354,27 +414,122 @@ class IebController:
         #     datum = True, power = ON
         # Note: this is a change from pre-Jan2018 versions [PM] 
     
-        rd = wagoClient.read_holding_registers(do8Addr,maxPorts)
+        rd = await wagoClient.protocol.read_holding_registers(do8Addr,maxPorts)
         outState = wagoDOReg(rd.registers[0],numOut=maxPorts)
 
         for i in range(numDevs):
             if i == 0 or i == 1: # shutters 
               if outState[i]:
-                  self.controller_status[powList[i]] = "OFF"
+                  self.power_status[powList[i]] = "OFF"
               else:
-                  self.controller_status[powList[i]] = "ON"
+                  self.power_status[powList[i]] = "ON"
             if i == 2 or i == 3: # shutters 
               if outState[i]:
-                  self.controller_status[powList[i]] = "ON"
+                  self.power_status[powList[i]] = "ON"
               else:
-                  self.controller_status[powList[i]] = "OFF"
+                  self.power_status[powList[i]] = "OFF"
         
         # All done, clean up and return success
         self.sensors['updated'] = datetime.datetime.utcnow().isoformat()
  
-        wagoClient.close()
+        wagoClient.protocol.close()
         return True,'DONE'        
         
+#---------------------------------------------------------------------------
+#
+# setWAGOPower(self,dev,state)
+#
+# Set a WAGO power control state of the named device.
+#
+# Inputs:
+#   dev = name of a DESI device
+#   state = state to set, "on" or "off"
+#
+# Sets the appropriate entry in the self.controller_status
+# dictionary with the state achieved "on" or "off"
+#
+# This function is invoked internally by the power() method
+#
+# Returns:
+#   (status,msgStr)
+# where:
+#   status = True on success, with msgStr = DONE
+#   status = False on errors, with msgStr containing a fault message
+#
+# See also: getWAGOPower()
+#
+#---------------------------------------------------------------------------
+  
+    def setWAGOPower(self,dev,state):
+  
+        # 8-port digital output register address
+    
+        do8Addr = 512
+        maxPorts = 8
+    
+        # Mapping between 8DO ports and Desi devices
+    
+        numDevs = len(powList)
+    
+        # Validate input parameters
+    
+        if not dev in powList:
+            return False,"Unknown device '%s'" % (dev)
+    
+        if not state in ['ON','OFF']:
+            return False,"Unknown power state '%s', must be ON or OFF" % (state)
+    
+        # Get a WAGO client handle and connect (port 502 is implicit as
+        # per modbus spec).
+    
+        wagoClient = ModbusClient(self.wagohost, self.wagoport)
+        
+        if not wagoClient.connect():
+            return False,"** ERROR: Cannot connect to WAGO at %s" % (self.wagoHost)
+        idev = powList.index(dev)
+ 
+        # relay open == Hartmann Doors powered off
+        if dev == 'hartmann_left_power' or dev == 'hartmann_right_power': 
+          if state == 'ON':
+              reqState = True  # output off, relay opens, power ON
+          else:
+              reqState = False   # output on, relay closes, power OFF
+
+        # relay open == shutters powered on 
+        if dev == 'shutter_power': 
+          if state == 'ON':
+              reqState = False  # output off, relay closes, power ON
+          else:
+              reqState = True   # output on, relay opens, power OFF
+    
+        # Set the output state reqested
+    
+        rd = wagoClient.protocol.write_coil(idev,reqState)
+        sleep(0.1) # required pause before reading...
+    
+        # Now read the ports to confirm
+    
+        rd = wagoClient.protocol.read_holding_registers(do8Addr,maxPorts)
+        outState = wagoDOReg(rd.registers[0],numOut=maxPorts)
+    
+        # Changed due to change in HD logic [PM|26Jan2018] 
+        for i in range(numDevs):
+            if i == 0 or i == 1:  # shutters 
+                if outState[i]: 
+                    self.power_status[powList[i]] = "OFF"
+                else:
+                    self.power_status[powList[i]] = "ON"
+            if i == 2 or i == 3:  # doors 
+                if outState[i]:
+                    self.power_status[powList[i]] = "ON"
+                else:
+                    self.power_status[powList[i]] = "OFF"
+    
+        # All done, clean up and return success
+        #self.power_status['updated'] = datetime.datetime.utcnow().isoformat()
+    
+        wagoClient.protocol.close()
+        return True,'DONE'
 
 #---------------------------------------------------------------------------
 #

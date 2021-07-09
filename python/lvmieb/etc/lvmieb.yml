@@ -19,7 +19,6 @@ controllers:
             host: 10.7.45.28
             port: 502
 
-
 #added by CK 2021/03/30
 timeouts:
     controller_connect: 1
