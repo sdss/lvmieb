@@ -46,7 +46,6 @@ class lvmieb(AMQPActor):
     ):
         self.controllers = {c.name: c for c in controllers}
         self.parser_args = [self.controllers]
-#        super().new_user()
         super().__init__(*args, **kwargs)
 
 #Changgon changed the under part 2021/03/30
@@ -56,21 +55,19 @@ class lvmieb(AMQPActor):
 
         connect_timeout = self.config["timeouts"]["controller_connect"]
 
+        """
+        #cannot use this part for now.. we will develop the code for the timeout error eventually
         for controller in self.controllers.values():
             try:
-                await asyncio.wait_for(controller.start(), timeout=connect_timeout)
+                await asyncio.wait_for(controller.send_command('init'), timeout=connect_timeout)
             except asyncio.TimeoutError:
                 warnings.warn(
                     f"Timeout out connecting to {controller.name!r}.",
                     LvmIebUserWarning,
                 )
-
+        """
+                
         await super().start()
-
-#        self._status_jobs = [
-#            asyncio.create_task(self._report_status(controller))            #need to be added after the hardware status commands are defined _CK 2021/03/30
-#            for controller in self.controllers.values()
-#       ]
 
     async def stop(self):
         with suppress(asyncio.CancelledError):
@@ -87,17 +84,18 @@ class lvmieb(AMQPActor):
         
         assert isinstance(instance, lvmieb)
         assert isinstance(instance.config, dict)
-
+        
         if "controllers" in instance.config:
             controllers = (
                 IebController(
-                    ctr["host"],
-                    ctr["port"],
+                    host = ctr["host"],
+                    port = ctr["port"],
                     name=ctrname,
                 )
                 for (ctrname, ctr) in instance.config["controllers"].items()
             )
             instance.controllers = {c.name: c for c in controllers}
-            instance.parser_args = [instance.controllers]  # Need to refresh this
+            instance.parser_args = [instance.controllers]
+            
         return instance
 

@@ -12,6 +12,7 @@ from __future__ import annotations, print_function, division, absolute_import
 import asyncio
 import click
 from clu.command import Command
+import datetime
 
 from lvmieb.controller.controller import IebController
 from lvmieb.exceptions import LvmIebError
@@ -28,43 +29,6 @@ def shutter(*args):
 
     pass
 
-
-@shutter.command()
-async def connect(command: Command, controllers: dict[str, IebController]):
-    """open the connection with the shutter."""
-
-    connections = []
-
-    for shutter in controllers:
-        if controllers[shutter].name == 'shutter':
-            try:
-                connections.append(controllers[shutter].connect())
-            except LvmIebError as err:
-                return command.fail(error=str(err))
-
-    command.info(text="Connecting all the shutters")
-    await asyncio.gather(*connections)
-    return command.finish(shutter = "connected")
-
-
-@shutter.command()
-async def disconnect(command: Command, controllers: dict[str, IebController]):
-    """close the connection with the shutter"""
-
-    connections = []
-
-    for shutter in controllers:
-        if controllers[shutter].name == 'shutter':
-            try:
-                connections.append(controllers[shutter].disconnect())
-            except LvmIebError as err:
-                return command.fail(error=str(err))
-
-    command.info(text="Disconnecting all the shutters")
-    await asyncio.gather(*connections)
-    return command.finish(shutter = "disconnected")
-
-
 @shutter.command()
 async def open(command: Command, controllers: dict[str, IebController]):
     """open the shutter"""
@@ -80,8 +44,14 @@ async def open(command: Command, controllers: dict[str, IebController]):
 
 
     command.info(text="Opening all shutters")
+    print("----open----")
+    current_time = datetime.datetime.now()
+    print('before command gathered        : %s', current_time)     
     await asyncio.gather(*tasks)
-    return command.finish(shutter= "open")
+    current_time = datetime.datetime.now()
+    print('after command gathered         : %s', current_time)     
+        
+    return command.finish(shutter= "opened")
     
 
 @shutter.command()
@@ -98,7 +68,12 @@ async def close(command: Command, controllers: dict[str, IebController]):
                 return command.fail(error=str(err))
 
     command.info(text="Closing all shutters")
+    print("----close----")
+    current_time = datetime.datetime.now()
+    print('before command gathered        : %s', current_time)     
     await asyncio.gather(*tasks)
+    current_time = datetime.datetime.now()
+    print('after command gathered         : %s', current_time)     
     return command.finish(shutter= "closed")
    
 
@@ -108,13 +83,11 @@ async def status(command: Command, controllers: dict[str, IebController]):
 
     command.info(text="Checking all shutters")
     tasks = []
-    connection = []
 
     for shutter in controllers:
         if controllers[shutter].name == 'shutter':
             try:
                 tasks.append(controllers[shutter].send_command("status"))
-                connection.append(controllers[shutter].connected)
             except LvmIebError as err:
                 return command.fail(error=str(err))
 
@@ -122,53 +95,20 @@ async def status(command: Command, controllers: dict[str, IebController]):
 
     for n in result_shutter:
         try:
-            if n == "open":
+            if n == "opened":
                 return command.info(
                         status={
-                        "open/closed:" : n,
-                        "connected/disconnected" : connection[result_shutter.index(n)]
-                    }
+                        "opened/closed:" : n,
+                   }
                 )
             elif n == "closed":
                 return command.info(
                         status={
-                        "open/closed:" : n,
-                        "connection/disconnected" : connection[result_shutter.index(n)]
-                    }
+                        "opened/closed:" : n,
+                   }
                 )
             else:
                 return command.fail(test='shutter is in a bad state')
         except LvmIebError as err:
             return command.fail(error=str(err))
 
-
-"""
-    for m in result_connected:
-        for n in result_shutter:
-            try:
-                if n == "open":
-                    return command.finish(
-                        status={
-                        "open/closed:" : n,
-                        "connected/disconnected:" : m
-                    }
-                )
-                elif n == "closed":
-                    return command.finish(
-                        status={
-                        "open/closed:" : n,
-                        "connected/disconnected:" : m
-                    }
-                )
-                else:
-                    return command.fail(test='shutter is in a bad state')
-            except LvmIebError as err:
-                return command.fail(error=str(err))
-"""
-
-#when opening shutters sequently_CK
-"""    
-    for controller_name in controllers:
-        command.info(text=f"Opening the shutter in controller {controller_name}!")
-        await controllers[controller_name].send_message("open")
-"""
