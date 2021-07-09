@@ -89,10 +89,10 @@ async def hartmann_right(request, unused_tcp_port_factory: int):
     server = await asyncio.start_server(handle_connection, "localhost", port_hart_right)
 
     async with server:
-        hr = IebController("localhost", port_hart_right, name = 'hartmann_right')
-        await hr.start()
+        hr = IebController(host = "localhost", port = port_hart_right, name = 'hartmann_right')
+        #await hr.start()
         yield hr
-        await hr.stop()
+        #await hr.stop()
     server.close()
 
 
@@ -140,13 +140,13 @@ async def hartmann_left(request, unused_tcp_port_factory: int):
 
     async with server:
         hr = IebController("localhost", port_hart_right, name = "hartmann_left")
-        await hr.start()
+        #await hr.start()
         yield hr
-        await hr.stop()
+        #await hr.stop()
     server.close()
 
 @pytest.fixture
-async def shutter1(request, unused_tcp_port_factory: int):
+async def shutter(request, unused_tcp_port_factory: int):
     
     async def handle_connection(
         reader: asyncio.StreamReader, writer: asyncio.StreamWriter, 
@@ -159,7 +159,7 @@ async def shutter1(request, unused_tcp_port_factory: int):
             matched = re.search(
                 b"(QX1|QX2|QX3|QX4|IS)", data
             )
-            print(matched)
+            #print(matched)
 
             if not matched:
                 continue
@@ -167,7 +167,7 @@ async def shutter1(request, unused_tcp_port_factory: int):
                 com = matched.group()
                 cmd = com.decode()
                 cmd = hdCmds[cmd]
-                print(f"command is now {cmd}!")
+                #print(f"command is now {cmd}!")
 
                 if cmd == "open":
                     sh_status = 'opened'
@@ -188,13 +188,13 @@ async def shutter1(request, unused_tcp_port_factory: int):
     server = await asyncio.start_server(handle_connection, "localhost", port_hart_right)
 
     async with server:
-        hr = IebController("localhost", port_hart_right, name = "shutter1")
+        hr = IebController("localhost", port_hart_right, name = "shutter")
         await hr.start()
         yield hr
         await hr.stop()
     server.close()
 
-
+"""
 @pytest.fixture
 async def shutter2(request, unused_tcp_port_factory: int):
     
@@ -243,3 +243,4 @@ async def shutter2(request, unused_tcp_port_factory: int):
         yield hr
         await hr.stop()
     server.close()
+"""

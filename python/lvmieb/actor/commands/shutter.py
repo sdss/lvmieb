@@ -51,7 +51,7 @@ async def open(command: Command, controllers: dict[str, IebController]):
     current_time = datetime.datetime.now()
     print('after command gathered         : %s', current_time)     
         
-    return command.finish(shutter= "open")
+    return command.finish(shutter= "opened")
     
 
 @shutter.command()

@@ -24,22 +24,21 @@ from lvmieb.exceptions import (
 
 
 @pytest.mark.asyncio
-async def test_shutter_command_multiple_times(shutter1: IebController, shutter2: IebController):
-    assert shutter1.host == "localhost"
-    assert shutter2.host == "localhost"
+async def test_shutter_command_multiple_times(hartmann_left: IebController):
     
-    assert shutter1.name == "shutter1"
-    assert shutter2.name == "shutter2"
+    assert hartmann_left.host == "localhost"
+    assert hartmann_left.name == "hartmann_left"
     
     tasks_open = []
     for i in range(1):
-        tasks_open.append(shutter1.send_command('open'))
-        tasks_open.append(shutter2.send_command('open'))
-            
+        tasks_open.append(hartmann_left.send_command('status'))
+        #tasks_open.append(shutter.send_command('open'))
+        #tasks_open.append(shutter.send_command('open'))
+
     await asyncio.gather(*tasks_open)
     
-    assert shutter1.shutter_status == 'opened'
-    assert shutter2.shutter_status == 'opened'
+    #assert shutter.shutter_status == 'closed'
+    #assert shutter.shutter_status == 'opened'
 
     
 """
