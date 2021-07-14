@@ -88,17 +88,13 @@ async def status(command: Command, controllers: dict[str, IebController]):
 
     command.info(text="Checking all hartmanns")
     tasks = []
-
-    for hartmann in controllers:
-        if controllers[hartmann].name == 'hartmann_right':
+    print(controllers)
+    for h in controllers:
+        print(controllers[h].name)
+        if controllers[h].name == 'hartmann_left':
+            print(controllers[h].name, controllers[h].host, controllers[h].port)
             try:
-                tasks.append(controllers[hartmann].send_command("status"))
-            except LvmIebError as err:
-                return command.fail(error=str(err))
-
-        if controllers[hartmann].name == 'hartmann_left':
-            try:
-                tasks.append(controllers[hartmann].send_command("status"))
+                tasks.append(controllers[h].get_status())
             except LvmIebError as err:
                 return command.fail(error=str(err))
         
@@ -119,6 +115,9 @@ async def status(command: Command, controllers: dict[str, IebController]):
                    }
                 )
             else:
+                print(n)
                 return command.fail(test='hartmann is in a bad state')
         except LvmIebError as err:
             return command.fail(error=str(err))
+        
+    return command.finish()

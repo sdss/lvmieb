@@ -83,7 +83,7 @@ class IebController:
         self.host = host
         self.port = port
 
-    async def send_command(self, command, SelectTimeout= 1):
+    async def send_command(self, command, SelectTimeout= 1.0):
         """
         Parses the high level command (open, close, status) to low level commands and send 
         to the motor controller controlling the exposure shutter, hartmann door. reads the reply from the motor
@@ -251,7 +251,7 @@ class IebController:
 
 
     async def get_status(self):
-        
+        print(self.host, self.port)
         r, w = await asyncio.open_connection(self.host, self.port)
         
         # parse the low-level command to the hardware
@@ -463,7 +463,7 @@ class IebController:
 #
 #---------------------------------------------------------------------------
   
-    def setWAGOPower(self,dev,state):
+    async def setWAGOPower(self,dev,state):
   
         # 8-port digital output register address
     
@@ -475,6 +475,9 @@ class IebController:
         numDevs = len(powList)
     
         # Validate input parameters
+        
+        print(dev)
+        print(state)
     
         if not dev in powList:
             return False,"Unknown device '%s'" % (dev)
@@ -487,8 +490,12 @@ class IebController:
     
         wagoClient = ModbusClient(self.wagohost, self.wagoport)
         
+        await wagoClient.connect()
+        """
         if not wagoClient.connect():
             return False,"** ERROR: Cannot connect to WAGO at %s" % (self.wagoHost)
+        """
+        
         idev = powList.index(dev)
  
         # relay open == Hartmann Doors powered off
@@ -506,15 +513,17 @@ class IebController:
               reqState = True   # output on, relay opens, power OFF
     
         # Set the output state reqested
-    
-        rd = wagoClient.protocol.write_coil(idev,reqState)
-        sleep(0.1) # required pause before reading...
+        print(f'idev is {idev}')
+        print(f'reqState is {reqState}')
+        
+        rd = await wagoClient.protocol.write_coil(idev,reqState)
+        #sleep(0.1) # required pause before reading...
     
         # Now read the ports to confirm
-    
-        rd = wagoClient.protocol.read_holding_registers(do8Addr,maxPorts)
+        
+        rd = await wagoClient.protocol.read_holding_registers(do8Addr,maxPorts)
         outState = wagoDOReg(rd.registers[0],numOut=maxPorts)
-    
+        print(f'out state is {outState}')
         # Changed due to change in HD logic [PM|26Jan2018] 
         for i in range(numDevs):
             if i == 0 or i == 1:  # shutters 
@@ -530,7 +539,7 @@ class IebController:
     
         # All done, clean up and return success
         #self.power_status['updated'] = datetime.datetime.utcnow().isoformat()
-    
+        
         wagoClient.protocol.close()
         return True,'DONE'
 
