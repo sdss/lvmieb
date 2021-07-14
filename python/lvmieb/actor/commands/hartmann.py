@@ -29,16 +29,10 @@ def hartmann(*args):
     pass
 
 @hartmann.command()
-@click.option(
-    "-s",
-    "--side",
-    type=click.Choice(["all", "right", "left"]),
-    default = "all",
-    help="all, right, or left",
-)
-async def open(command: Command, side: str, controllers: dict[str, IebController]):
+async def open(command: Command, controllers: dict[str, IebController]):
     """open the hartmann"""
 
+    side = "left"
     tasks = []
 
     for hartmann in controllers:
@@ -62,16 +56,10 @@ async def open(command: Command, side: str, controllers: dict[str, IebController
     
 
 @hartmann.command()
-@click.option(
-    "-s",
-    "--side",
-    type=click.Choice(["all", "right", "left"]),
-    default = "all",
-    help="all, right, or left",
-)
-async def close(command: Command, side: str, controllers: dict[str, IebController]):
+async def close(command: Command, controllers: dict[str, IebController]):
     """close the hartmann"""
 
+    side = "left"
     tasks = []
 
     for hartmann in controllers:

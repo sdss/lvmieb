@@ -398,6 +398,9 @@ class IebController:
     
         wagoClient = ModbusClient(self.wagohost, self.wagoport)
         
+        await wagoClient.connect()
+        
+        """
         if not wagoClient.connect():
             return False,"** ERROR: Cannot connect to WAGO at %s" % (self.wagohost)
         # Read the output data, and translate into "on" and "off"
@@ -413,7 +416,7 @@ class IebController:
         #     datum = False, power = OFF
         #     datum = True, power = ON
         # Note: this is a change from pre-Jan2018 versions [PM] 
-    
+        """    
         rd = await wagoClient.protocol.read_holding_registers(do8Addr,maxPorts)
         outState = wagoDOReg(rd.registers[0],numOut=maxPorts)
 
