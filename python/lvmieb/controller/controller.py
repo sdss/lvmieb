@@ -40,8 +40,9 @@ expCmds = {"init":"QX1","home":"QX2","open":"QX3","close":"QX4",
 hdCmds = {"init":"QX1","home":"QX2","open":"QX3","close":"QX4","status":"IS"}
 
 # This list is used by the WAGO power control utilities
-powList = ['exp_shutter_power', 
-            'hartmann_left_power', 
+powList = ['shutter_power',  
+            'unused', 
+            'hartmann_left_power',
             'hartmann_right_power']
 
 class IebController:
@@ -64,7 +65,15 @@ class IebController:
             'rtd3(40011)' : -273., 		# Bench temp near collimator
             'rtd4(40012)' : -273. 		# Bench temp near cryostats
           }
-          
+        
+        self.power_status = {
+            'hartmann_left_power' : 'ERROR', # ERROR | ON | OFF
+            'hartmann_right_power' : 'ERROR', # ERROR | ON | OFF
+            'shutter_power' : 'ERROR' # ERROR | ON | OFF
+        }
+        
+        self.wagohost = '10.7.45.28'
+        self.wagoport = 502
         self.__status_event = asyncio.Event()
         self.reader = None
         self.writer = None
@@ -74,8 +83,43 @@ class IebController:
         self.lock = asyncio.Lock()
         self.host = host
         self.port = port
-
-    async def send_command(self, command, SelectTimeout= 1):
+        
+    async def initialize(self):
+        
+        r, w = await asyncio.open_connection(self.host, self.port)
+        
+        # parse the low-level command to the hardware
+        message = 'QX1'
+        SelectTimeout = 1
+        
+        sclHead = chr(0)+chr(7)
+        sclTail = chr(13)
+        sclStr = sclHead + message.upper() + sclTail
+        
+        try:
+            w.write(sclStr.encode())
+            await w.drain()
+        except:
+            w.close()
+            await w.wait_close()                
+            raise LvmIebError(f"Failed to write the data")
+        
+        #read byte stream from the motor controller
+        try:
+            reply = await asyncio.wait_for(r.readuntil(b"\r"), SelectTimeout)
+            print(reply)
+        except:
+            w.close()
+            await w.wait_closed()
+            raise LvmIebError(f"failed to read the data")
+        
+        try:
+            w.close()
+            await w.wait_closed()
+        except:
+            raise LvmIebError(f"Could not disconnect the %s" %self.name)
+    
+    async def send_command(self, command, SelectTimeout= 3.0):
         """
         Parses the high level command (open, close, status) to low level commands and send 
         to the motor controller controlling the exposure shutter, hartmann door. reads the reply from the motor
@@ -90,7 +134,7 @@ class IebController:
         """
         
         current_time = datetime.datetime.now()
-        print('when send command              : %s', current_time)     
+        print('host: %s when send command              : %s', self.port, current_time)     
         
         #check that the device exists
         if self.name in devList == False:
@@ -153,21 +197,12 @@ class IebController:
             if command == "home":
                 SelectTimeout = 4.0
 
-        if command != "status":
-                        
-            #connection
-            current_time = datetime.datetime.now()
-            print('before connection              : %s', current_time)
-            self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
-            current_time = datetime.datetime.now()
-            print('after connection               : %s', current_time)     
-        else:
-            #connection
-            current_time = datetime.datetime.now()
-            print('before connection              : %s', current_time)
-            self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
-            current_time = datetime.datetime.now()
-            print('after connection               : %s', current_time)
+        #connection
+        current_time = datetime.datetime.now()
+        print('host: %s before connection              : %s', self.port, current_time)
+        self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
+        current_time = datetime.datetime.now()
+        print('host: %s after connection               : %s',self.port, current_time)
 
         # parse the low-level command to the hardware
         sclHead = chr(0)+chr(7)
@@ -176,13 +211,13 @@ class IebController:
 
         try:
             current_time = datetime.datetime.now()
-            print('before write command           : %s', current_time)     
+            print('host: %s before write command           : %s', self.port, current_time)     
             self.writer.write(sclStr.encode())        
             current_time = datetime.datetime.now()
-            print('after write command            : %s', current_time)     
+            print('host: %s after write command            : %s', self.port, current_time)     
             await self.writer.drain()        
             current_time = datetime.datetime.now()
-            print('after write drain              : %s', current_time)     
+            print('host: %s after write drain              : %s', self.port, current_time)     
         except:
             self.writer.close()
             await self.writer.wait_close()                
@@ -191,10 +226,13 @@ class IebController:
         #read byte stream from the motor controller
         try:            
             current_time = datetime.datetime.now()
-            print('before readuntil               : %s', current_time)     
-            reply = await asyncio.wait_for(self.reader.readuntil(b"\r"), SelectTimeout)
+            print('host: %s before readuntil               : %s', self.port, current_time)
+            if command == "status" or command == "init" or command == "home":
+                reply = await asyncio.wait_for(self.reader.readuntil(b"\r"), SelectTimeout)
+            elif command == "open" or command == "close":
+                reply = await asyncio.wait_for(self.reader.readuntil(b"DONE\r"), SelectTimeout)
             current_time = datetime.datetime.now()
-            print('after readuntil                : %s', current_time)     
+            print('host: %s after readuntil                : %s', self.port, current_time)     
         except:
             self.writer.close()
             await self.writer.wait_closed()
@@ -203,47 +241,54 @@ class IebController:
         #disconnect device 
         try:
             current_time = datetime.datetime.now()
-            print('before close writer            : %s', current_time)     
+            print('host : %s before close writer            : %s', self.port, current_time)     
             self.writer.close()
             await self.writer.wait_closed()
             current_time = datetime.datetime.now()
-            print('after close writer             : %s', current_time)     
+            print('host : %s after close writer             : %s', self.port, current_time)     
         except:
             raise LvmIebError(f"Could not disconnect the %s" %self.name)
 
-        if command == "status" and reply:
+        print(reply)
+        
+        if command == "status":
             if self.name == "shutter":
                 assert isinstance(reply, bytes)
-                shutter_stat = parse_IS(reply)
+                shutter_stat = parse_IS(self.name, reply)
                 self.shutter_status = shutter_stat
                 return shutter_stat
             elif self.name == "hartmann_left":
                 assert isinstance(reply, bytes)
-                hartmann_stat = parse_IS(reply)
+                hartmann_stat = parse_IS(self.name, reply)
                 self.hartmann_left_status = hartmann_stat
-                return hartmann_stat
+                return hartmann_stat 
             elif self.name == "hartmann_right":
                 assert isinstance(reply, bytes)
-                hartmann_stat = parse_IS(reply)
+                hartmann_stat = parse_IS(self.name, reply)
                 self.hartmann_right_status = hartmann_stat
-                return hartmann_stat        
-        elif b"DONE" in reply:
-            #updating the status of each hardware
-            if self.name == "shutter":
-                self.shutter_status = await self.get_status()
-                return self.shutter_status
-            elif self.name == "hartmann_right":
-                self.hartmann_right_status = await self.get_status()
-                return self.hartmann_right_status
-            elif self.name == "hartmann_left":
-                self.hartmann_left_status = await self.get_status()
-                return self.hartmann_left_status
-        elif b"ERR" in reply:
-            raise LvmIebError(f"Error in the controller, please check the hardware")
+                return hartmann_stat
+        else:                    
+            if b"DONE" in reply:
+                #updating the status of each hardware
+                print("%s done is replied", self.port)
+                if self.name == "shutter":
+                    self.shutter_status = await self.get_status()
+                    return self.shutter_status
+                elif self.name == "hartmann_right":
+                    self.hartmann_right_status = await self.get_status()
+                    return self.hartmann_right_status
+                elif self.name == "hartmann_left":
+                    self.hartmann_left_status = await self.get_status()
+                    return self.hartmann_left_status
+            elif b"ERR" in reply:
+                print("%s error is replied", self.port)
+                #send to home
+                await self.set_home()
+                raise LvmIebError(f"Error in the controller, please check the hardware")
 
 
     async def get_status(self):
-        
+        print(self.host, self.port)
         r, w = await asyncio.open_connection(self.host, self.port)
         
         # parse the low-level command to the hardware
@@ -265,6 +310,7 @@ class IebController:
         #read byte stream from the motor controller
         try:
             reply = await asyncio.wait_for(r.readuntil(b"\r"), SelectTimeout)
+            print(reply)
         except:
             w.close()
             await w.wait_closed()
@@ -278,9 +324,82 @@ class IebController:
         
         if message == "IS" and reply:
             assert isinstance(reply, bytes)
-            stat = parse_IS(reply)
+            stat = parse_IS(self.name, reply)
+            print(stat)
+            if stat == "error":
+                print("error occured.. setting to home")
+                await self.set_home()
             return stat
         
+    async def set_home(self):
+        
+        #print(self.host, self.port)
+        r, w = await asyncio.open_connection(self.host, self.port)
+        
+        # parse the low-level command to the hardware
+        message = 'QX2'
+        SelectTimeout = 1
+        
+        sclHead = chr(0)+chr(7)
+        sclTail = chr(13)
+        sclStr = sclHead + message.upper() + sclTail
+        
+        try:
+            w.write(sclStr.encode())
+            await w.drain()
+        except:
+            w.close()
+            await w.wait_close()                
+            raise LvmIebError(f"Failed to write the data")
+        
+        #read byte stream from the motor controller
+        try:
+            reply = await asyncio.wait_for(r.readuntil(b"\r"), SelectTimeout)
+            print(reply)
+        except:
+            w.close()
+            await w.wait_closed()
+            raise LvmIebError(f"failed to read the data")
+        
+        try:
+            w.close()
+            await w.wait_closed()
+        except:
+            raise LvmIebError(f"Could not disconnect the %s" %self.name)
+        
+        
+        
+        
+#################################################################
+#
+#  WAGO routines 
+#
+#################################################################
+
+#---------------------------------------------------------------------------
+#
+# getWAGOEnv(): read all WAGO unit environmental sensors
+#
+# Read the environmental sensors (temperature and humidity) connected
+# to the WAGO modbus controller and set the approriate values in the
+# self.sensors data dictionary.
+#
+# Temperature is expressed in degrees Celsius
+# Relative Humidity is expressed in Percent (%)
+#
+# Returns:
+#   (status,msgStr)
+# where:
+#   status = True on success, with msgStr = DONE
+#   status = False on errors, with msgStr containing a fault message
+#
+# This is normally invoked by the get() method with what='sensors'
+#
+# Updated to replace the Dwyer RH/T sensors with the E+E sensors that
+# we'll use for the final controller system [rwp/osu]
+#
+#---------------------------------------------------------------------------
+  
     # courutine for receiving data from the WAGO module
 
     async def getWAGOEnv(self):
@@ -305,7 +424,7 @@ class IebController:
         T0 = -30.0
         Ts = RHs
 
-        wagoClient = ModbusClient(self.host, self.port)
+        wagoClient = ModbusClient(self.wagohost, self.wagoport)
         
         await wagoClient.connect()
         
@@ -322,6 +441,27 @@ class IebController:
         wagoClient.protocol.close()
         return True
     
+
+ #---------------------------------------------------------------------------
+ #
+ # getWAGOPower(self)
+ #
+ # Returns the power state of all DESI devices controlled by the
+ # WAGO modbus unit.
+ #
+ # Sets the appropriate entry in the self.controller_status
+ # dictionary with the current state, "on" or "off"
+ #
+ # Returns:
+ #   (status,msgStr)
+ # where:
+ #   status = True on success, with msgStr = DONE
+ #   status = False on errors, with msgStr containing a fault message
+ #
+ # See also: setWAGOPower()
+ #
+ #---------------------------------------------------------------------------
+
     async def getWAGOPower(self):
         
         # 8-port digital output register address
@@ -337,9 +477,13 @@ class IebController:
         # Get a WAGO client handle and connect (port 502 is implicit as
         # per modbus spec).
     
-        wagoClient = mbc(self.wagoHost)
+        wagoClient = ModbusClient(self.wagohost, self.wagoport)
+        
+        await wagoClient.connect()
+        
+        """
         if not wagoClient.connect():
-            return False,"** ERROR: Cannot connect to WAGO at %s" % (self.wagoHost)
+            return False,"** ERROR: Cannot connect to WAGO at %s" % (self.wagohost)
         # Read the output data, and translate into "on" and "off"
         # states. The outputs are different for the shutters and doors. 
         # For the shutters: 
@@ -353,28 +497,129 @@ class IebController:
         #     datum = False, power = OFF
         #     datum = True, power = ON
         # Note: this is a change from pre-Jan2018 versions [PM] 
-    
-        rd = wagoClient.read_holding_registers(do8Addr,maxPorts)
+        """    
+        rd = await wagoClient.protocol.read_holding_registers(do8Addr,maxPorts)
         outState = wagoDOReg(rd.registers[0],numOut=maxPorts)
 
         for i in range(numDevs):
             if i == 0 or i == 1: # shutters 
               if outState[i]:
-                  self.controller_status[powList[i]] = "OFF"
+                  self.power_status[powList[i]] = "OFF"
               else:
-                  self.controller_status[powList[i]] = "ON"
+                  self.power_status[powList[i]] = "ON"
             if i == 2 or i == 3: # shutters 
               if outState[i]:
-                  self.controller_status[powList[i]] = "ON"
+                  self.power_status[powList[i]] = "ON"
               else:
-                  self.controller_status[powList[i]] = "OFF"
-        
-        # All done, clean up and return success
-        self.sensors['updated'] = datetime.datetime.utcnow().isoformat()
+                  self.power_status[powList[i]] = "OFF"
  
-        wagoClient.close()
+        wagoClient.protocol.close()
         return True,'DONE'        
         
+#---------------------------------------------------------------------------
+#
+# setWAGOPower(self,dev,state)
+#
+# Set a WAGO power control state of the named device.
+#
+# Inputs:
+#   dev = name of a DESI device
+#   state = state to set, "on" or "off"
+#
+# Sets the appropriate entry in the self.controller_status
+# dictionary with the state achieved "on" or "off"
+#
+# This function is invoked internally by the power() method
+#
+# Returns:
+#   (status,msgStr)
+# where:
+#   status = True on success, with msgStr = DONE
+#   status = False on errors, with msgStr containing a fault message
+#
+# See also: getWAGOPower()
+#
+#---------------------------------------------------------------------------
+  
+    async def setWAGOPower(self,dev,state):
+  
+        # 8-port digital output register address
+    
+        do8Addr = 512
+        maxPorts = 8
+    
+        # Mapping between 8DO ports and Desi devices
+    
+        numDevs = len(powList)
+    
+        # Validate input parameters
+        
+        print(dev)
+        print(state)
+    
+        if not dev in powList:
+            return False,"Unknown device '%s'" % (dev)
+    
+        if not state in ['ON','OFF']:
+            return False,"Unknown power state '%s', must be ON or OFF" % (state)
+    
+        # Get a WAGO client handle and connect (port 502 is implicit as
+        # per modbus spec).
+    
+        wagoClient = ModbusClient(self.wagohost, self.wagoport)
+        
+        await wagoClient.connect()
+        """
+        if not wagoClient.connect():
+            return False,"** ERROR: Cannot connect to WAGO at %s" % (self.wagoHost)
+        """
+        
+        idev = powList.index(dev)
+ 
+        # relay open == Hartmann Doors powered off
+        if dev == 'hartmann_left_power' or dev == 'hartmann_right_power': 
+          if state == 'ON':
+              reqState = True  # output off, relay opens, power ON
+          else:
+              reqState = False   # output on, relay closes, power OFF
+
+        # relay open == shutters powered on 
+        if dev == 'shutter_power': 
+          if state == 'ON':
+              reqState = False  # output off, relay closes, power ON
+          else:
+              reqState = True   # output on, relay opens, power OFF
+    
+        # Set the output state reqested
+        print(f'idev is {idev}')
+        print(f'reqState is {reqState}')
+        
+        rd = await wagoClient.protocol.write_coil(idev,reqState)
+        #sleep(0.1) # required pause before reading...
+    
+        # Now read the ports to confirm
+        
+        rd = await wagoClient.protocol.read_holding_registers(do8Addr,maxPorts)
+        outState = wagoDOReg(rd.registers[0],numOut=maxPorts)
+        print(f'out state is {outState}')
+        # Changed due to change in HD logic [PM|26Jan2018] 
+        for i in range(numDevs):
+            if i == 0 or i == 1:  # shutters 
+                if outState[i]: 
+                    self.power_status[powList[i]] = "OFF"
+                else:
+                    self.power_status[powList[i]] = "ON"
+            if i == 2 or i == 3:  # doors 
+                if outState[i]:
+                    self.power_status[powList[i]] = "ON"
+                else:
+                    self.power_status[powList[i]] = "OFF"
+    
+        # All done, clean up and return success
+        #self.power_status['updated'] = datetime.datetime.utcnow().isoformat()
+        
+        wagoClient.protocol.close()
+        return True,'DONE'
 
 #---------------------------------------------------------------------------
 #
@@ -429,15 +674,25 @@ def wagoDOReg(rd,numOut=8):
 
 # low level command to parse the byte stream from the motor controller
 
-def parse_IS(reply: bytes):
+def parse_IS(name, reply: bytes):
 
     match = re.search(b"\x00\x07IS=([0-1])([0-1])[0-1]{6}\r$", reply)
     if match is None:
         return False
 
-    if match.groups() == (b"1", b"0"):
-        return "opened"
-    elif match.groups() == (b"0", b"1"):
-        return "closed"
+    #for hartmann_left, 01 was opened, and 10 is closed
+    
+    if name == "hartmann_right" or name == "shutter":        
+        if match.groups() == (b"1", b"0"):
+            return "opened"
+        elif match.groups() == (b"0", b"1"):
+            return "closed"
+        else:
+            return "error"
     else:
-        return False
+        if match.groups() == (b"0", b"1"):
+            return "opened"
+        elif match.groups() == (b"1", b"0"):
+            return "closed"
+        else:
+            return "error"

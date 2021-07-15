@@ -94,6 +94,8 @@ class lvmieb(AMQPActor):
                 )
                 for (ctrname, ctr) in instance.config["controllers"].items()
             )
+            #for c in controllers:
+            #    print(c.name, c.port, c.host)
             instance.controllers = {c.name: c for c in controllers}
             instance.parser_args = [instance.controllers]
             

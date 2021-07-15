@@ -80,7 +80,7 @@ async def close(command: Command, controllers: dict[str, IebController]):
 @shutter.command()
 async def status(command: Command, controllers: dict[str, IebController]):
 #return the status of shutter.
-
+    print(controllers)
     command.info(text="Checking all shutters")
     tasks = []
 
@@ -112,3 +112,28 @@ async def status(command: Command, controllers: dict[str, IebController]):
         except LvmIebError as err:
             return command.fail(error=str(err))
 
+    return command.finish()
+
+@shutter.command()
+async def init(command: Command, controllers: dict[str, IebController]):
+    """open the shutter"""
+
+    tasks = []
+
+    for shutter in controllers:
+        if controllers[shutter].name == 'shutter':
+            try:
+                tasks.append(controllers[shutter].send_command("init"))
+            except LvmIebError as err:
+                return command.fail(error=str(err))
+
+
+    command.info(text="Opening all shutters")
+    print("----open----")
+    current_time = datetime.datetime.now()
+    print('before command gathered        : %s', current_time)     
+    await asyncio.gather(*tasks)
+    current_time = datetime.datetime.now()
+    print('after command gathered         : %s', current_time)     
+        
+    return command.finish(shutter= "opened")
