@@ -40,8 +40,9 @@ expCmds = {"init":"QX1","home":"QX2","open":"QX3","close":"QX4",
 hdCmds = {"init":"QX1","home":"QX2","open":"QX3","close":"QX4","status":"IS"}
 
 # This list is used by the WAGO power control utilities
-powList = ['shutter_power', 
-            'hartmann_left_power', 
+powList = ['shutter_power',  
+            '', 
+            'hartmann_left_power',
             'hartmann_right_power']
 
 class IebController:
@@ -222,17 +223,17 @@ class IebController:
         if command == "status" and reply:
             if self.name == "shutter":
                 assert isinstance(reply, bytes)
-                shutter_stat = parse_IS(reply)
+                shutter_stat = parse_IS(self.name, reply)
                 self.shutter_status = shutter_stat
                 return shutter_stat
             elif self.name == "hartmann_left":
                 assert isinstance(reply, bytes)
-                hartmann_stat = parse_IS(reply)
+                hartmann_stat = parse_IS(self.name, reply)
                 self.hartmann_left_status = hartmann_stat
                 return hartmann_stat
             elif self.name == "hartmann_right":
                 assert isinstance(reply, bytes)
-                hartmann_stat = parse_IS(reply)
+                hartmann_stat = parse_IS(self.name, reply)
                 self.hartmann_right_status = hartmann_stat
                 return hartmann_stat        
         elif b"DONE" in reply:
@@ -273,6 +274,7 @@ class IebController:
         #read byte stream from the motor controller
         try:
             reply = await asyncio.wait_for(r.readuntil(b"\r"), SelectTimeout)
+            print(reply)
         except:
             w.close()
             await w.wait_closed()
@@ -286,7 +288,8 @@ class IebController:
         
         if message == "IS" and reply:
             assert isinstance(reply, bytes)
-            stat = parse_IS(reply)
+            stat = parse_IS(self.name, reply)
+            print(stat)
             return stat
         
 #################################################################
@@ -431,9 +434,6 @@ class IebController:
                   self.power_status[powList[i]] = "ON"
               else:
                   self.power_status[powList[i]] = "OFF"
-        
-        # All done, clean up and return success
-        self.sensors['updated'] = datetime.datetime.utcnow().isoformat()
  
         wagoClient.protocol.close()
         return True,'DONE'        
@@ -596,15 +596,25 @@ def wagoDOReg(rd,numOut=8):
 
 # low level command to parse the byte stream from the motor controller
 
-def parse_IS(reply: bytes):
+def parse_IS(name, reply: bytes):
 
     match = re.search(b"\x00\x07IS=([0-1])([0-1])[0-1]{6}\r$", reply)
     if match is None:
         return False
 
-    if match.groups() == (b"1", b"0"):
-        return "opened"
-    elif match.groups() == (b"0", b"1"):
-        return "closed"
+    #for hartmann_left, 01 was opened, and 10 is closed
+    
+    if name == "hartmann_right" or name == "shutter":        
+        if match.groups() == (b"1", b"0"):
+            return "opened"
+        elif match.groups() == (b"0", b"1"):
+            return "closed"
+        else:
+            return False
     else:
-        return False
+        if match.groups() == (b"0", b"1"):
+            return "opened"
+        elif match.groups() == (b"1", b"0"):
+            return "closed"
+        else:
+            return False

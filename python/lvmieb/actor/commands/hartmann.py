@@ -24,7 +24,7 @@ __all__ = ["hartmann"]
 
 @parser.group()
 def hartmann(*args):
-    """control the hartmann door right."""
+    """control the hartmann door."""
 
     pass
 
@@ -52,7 +52,7 @@ async def open(command: Command, controllers: dict[str, IebController]):
 
     command.info(text="Opening all hartmanns")
     await asyncio.gather(*tasks)
-    return command.finish(hartmann= "open")
+    return command.finish(hartmann= "opened")
     
 
 @hartmann.command()
@@ -102,13 +102,13 @@ async def status(command: Command, controllers: dict[str, IebController]):
 
     for n in result_hartmann:
         try:
-            if "open" in n:
+            if n == "opened":
                 return command.info(
                         status={
                         "open/closed:" : n,
                    }
                 )
-            elif "closed" in n:
+            elif n == "closed":
                 return command.info(
                         status={
                         "open/closed:" : n,
@@ -119,5 +119,5 @@ async def status(command: Command, controllers: dict[str, IebController]):
                 return command.fail(test='hartmann is in a bad state')
         except LvmIebError as err:
             return command.fail(error=str(err))
-        
+    
     return command.finish()

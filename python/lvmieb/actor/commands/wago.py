@@ -92,7 +92,7 @@ async def setpower(command: Command, controllers: dict[str, IebController]):
     for wago in controllers:
         if controllers[wago].name == 'wago':
             try:
-                wago_status1 = await controllers[wago].setWAGOPower("hartmann_left_power", 'OFF')
+                wago_status1 = await controllers[wago].setWAGOPower("hartmann_right_power", 'ON')
                 
                 if wago_status1:
                     command.info(text="Power state of the components are:",status={

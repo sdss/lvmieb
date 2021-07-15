@@ -112,7 +112,7 @@ async def status(command: Command, controllers: dict[str, IebController]):
         except LvmIebError as err:
             return command.fail(error=str(err))
 
-    #return command.finish()
+    return command.finish()
 
 @shutter.command()
 async def init(command: Command, controllers: dict[str, IebController]):
