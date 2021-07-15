@@ -41,7 +41,7 @@ hdCmds = {"init":"QX1","home":"QX2","open":"QX3","close":"QX4","status":"IS"}
 
 # This list is used by the WAGO power control utilities
 powList = ['shutter_power',  
-            '', 
+            'unused', 
             'hartmann_left_power',
             'hartmann_right_power']
 
@@ -83,8 +83,43 @@ class IebController:
         self.lock = asyncio.Lock()
         self.host = host
         self.port = port
-
-    async def send_command(self, command, SelectTimeout= 1.0):
+        
+    async def initialize(self):
+        
+        r, w = await asyncio.open_connection(self.host, self.port)
+        
+        # parse the low-level command to the hardware
+        message = 'QX1'
+        SelectTimeout = 1
+        
+        sclHead = chr(0)+chr(7)
+        sclTail = chr(13)
+        sclStr = sclHead + message.upper() + sclTail
+        
+        try:
+            w.write(sclStr.encode())
+            await w.drain()
+        except:
+            w.close()
+            await w.wait_close()                
+            raise LvmIebError(f"Failed to write the data")
+        
+        #read byte stream from the motor controller
+        try:
+            reply = await asyncio.wait_for(r.readuntil(b"\r"), SelectTimeout)
+            print(reply)
+        except:
+            w.close()
+            await w.wait_closed()
+            raise LvmIebError(f"failed to read the data")
+        
+        try:
+            w.close()
+            await w.wait_closed()
+        except:
+            raise LvmIebError(f"Could not disconnect the %s" %self.name)
+    
+    async def send_command(self, command, SelectTimeout= 3.0):
         """
         Parses the high level command (open, close, status) to low level commands and send 
         to the motor controller controlling the exposure shutter, hartmann door. reads the reply from the motor
@@ -99,7 +134,7 @@ class IebController:
         """
         
         current_time = datetime.datetime.now()
-        print('when send command              : %s', current_time)     
+        print('host: %s when send command              : %s', self.port, current_time)     
         
         #check that the device exists
         if self.name in devList == False:
@@ -162,21 +197,12 @@ class IebController:
             if command == "home":
                 SelectTimeout = 4.0
 
-        if command != "status":
-                        
-            #connection
-            current_time = datetime.datetime.now()
-            print('before connection              : %s', current_time)
-            self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
-            current_time = datetime.datetime.now()
-            print('after connection               : %s', current_time)     
-        else:
-            #connection
-            current_time = datetime.datetime.now()
-            print('before connection              : %s', current_time)
-            self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
-            current_time = datetime.datetime.now()
-            print('after connection               : %s', current_time)
+        #connection
+        current_time = datetime.datetime.now()
+        print('host: %s before connection              : %s', self.port, current_time)
+        self.reader, self.writer = await asyncio.open_connection(self.host, self.port)
+        current_time = datetime.datetime.now()
+        print('host: %s after connection               : %s',self.port, current_time)
 
         # parse the low-level command to the hardware
         sclHead = chr(0)+chr(7)
@@ -185,13 +211,13 @@ class IebController:
 
         try:
             current_time = datetime.datetime.now()
-            print('before write command           : %s', current_time)     
+            print('host: %s before write command           : %s', self.port, current_time)     
             self.writer.write(sclStr.encode())        
             current_time = datetime.datetime.now()
-            print('after write command            : %s', current_time)     
+            print('host: %s after write command            : %s', self.port, current_time)     
             await self.writer.drain()        
             current_time = datetime.datetime.now()
-            print('after write drain              : %s', current_time)     
+            print('host: %s after write drain              : %s', self.port, current_time)     
         except:
             self.writer.close()
             await self.writer.wait_close()                
@@ -200,10 +226,13 @@ class IebController:
         #read byte stream from the motor controller
         try:            
             current_time = datetime.datetime.now()
-            print('before readuntil               : %s', current_time)     
-            reply = await asyncio.wait_for(self.reader.readuntil(b"\r"), SelectTimeout)
+            print('host: %s before readuntil               : %s', self.port, current_time)
+            if command == "status" or command == "init" or command == "home":
+                reply = await asyncio.wait_for(self.reader.readuntil(b"\r"), SelectTimeout)
+            elif command == "open" or command == "close":
+                reply = await asyncio.wait_for(self.reader.readuntil(b"DONE\r"), SelectTimeout)
             current_time = datetime.datetime.now()
-            print('after readuntil                : %s', current_time)     
+            print('host: %s after readuntil                : %s', self.port, current_time)     
         except:
             self.writer.close()
             await self.writer.wait_closed()
@@ -212,15 +241,17 @@ class IebController:
         #disconnect device 
         try:
             current_time = datetime.datetime.now()
-            print('before close writer            : %s', current_time)     
+            print('host : %s before close writer            : %s', self.port, current_time)     
             self.writer.close()
             await self.writer.wait_closed()
             current_time = datetime.datetime.now()
-            print('after close writer             : %s', current_time)     
+            print('host : %s after close writer             : %s', self.port, current_time)     
         except:
             raise LvmIebError(f"Could not disconnect the %s" %self.name)
 
-        if command == "status" and reply:
+        print(reply)
+        
+        if command == "status":
             if self.name == "shutter":
                 assert isinstance(reply, bytes)
                 shutter_stat = parse_IS(self.name, reply)
@@ -230,25 +261,30 @@ class IebController:
                 assert isinstance(reply, bytes)
                 hartmann_stat = parse_IS(self.name, reply)
                 self.hartmann_left_status = hartmann_stat
-                return hartmann_stat
+                return hartmann_stat 
             elif self.name == "hartmann_right":
                 assert isinstance(reply, bytes)
                 hartmann_stat = parse_IS(self.name, reply)
                 self.hartmann_right_status = hartmann_stat
-                return hartmann_stat        
-        elif b"DONE" in reply:
-            #updating the status of each hardware
-            if self.name == "shutter":
-                self.shutter_status = await self.get_status()
-                return self.shutter_status
-            elif self.name == "hartmann_right":
-                self.hartmann_right_status = await self.get_status()
-                return self.hartmann_right_status
-            elif self.name == "hartmann_left":
-                self.hartmann_left_status = await self.get_status()
-                return self.hartmann_left_status
-        elif b"ERR" in reply:
-            raise LvmIebError(f"Error in the controller, please check the hardware")
+                return hartmann_stat
+        else:                    
+            if b"DONE" in reply:
+                #updating the status of each hardware
+                print("%s done is replied", self.port)
+                if self.name == "shutter":
+                    self.shutter_status = await self.get_status()
+                    return self.shutter_status
+                elif self.name == "hartmann_right":
+                    self.hartmann_right_status = await self.get_status()
+                    return self.hartmann_right_status
+                elif self.name == "hartmann_left":
+                    self.hartmann_left_status = await self.get_status()
+                    return self.hartmann_left_status
+            elif b"ERR" in reply:
+                print("%s error is replied", self.port)
+                #send to home
+                await self.set_home()
+                raise LvmIebError(f"Error in the controller, please check the hardware")
 
 
     async def get_status(self):
@@ -290,7 +326,49 @@ class IebController:
             assert isinstance(reply, bytes)
             stat = parse_IS(self.name, reply)
             print(stat)
+            if stat == "error":
+                print("error occured.. setting to home")
+                await self.set_home()
             return stat
+        
+    async def set_home(self):
+        
+        #print(self.host, self.port)
+        r, w = await asyncio.open_connection(self.host, self.port)
+        
+        # parse the low-level command to the hardware
+        message = 'QX2'
+        SelectTimeout = 1
+        
+        sclHead = chr(0)+chr(7)
+        sclTail = chr(13)
+        sclStr = sclHead + message.upper() + sclTail
+        
+        try:
+            w.write(sclStr.encode())
+            await w.drain()
+        except:
+            w.close()
+            await w.wait_close()                
+            raise LvmIebError(f"Failed to write the data")
+        
+        #read byte stream from the motor controller
+        try:
+            reply = await asyncio.wait_for(r.readuntil(b"\r"), SelectTimeout)
+            print(reply)
+        except:
+            w.close()
+            await w.wait_closed()
+            raise LvmIebError(f"failed to read the data")
+        
+        try:
+            w.close()
+            await w.wait_closed()
+        except:
+            raise LvmIebError(f"Could not disconnect the %s" %self.name)
+        
+        
+        
         
 #################################################################
 #
@@ -610,11 +688,11 @@ def parse_IS(name, reply: bytes):
         elif match.groups() == (b"0", b"1"):
             return "closed"
         else:
-            return False
+            return "error"
     else:
         if match.groups() == (b"0", b"1"):
             return "opened"
         elif match.groups() == (b"1", b"0"):
             return "closed"
         else:
-            return False
+            return "error"

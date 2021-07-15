@@ -59,7 +59,7 @@ async def status(command: Command, controllers: dict[str, IebController]):
     return command.finish()
 
 @wago.command()
-async def power(command: Command, controllers: dict[str, IebController]):
+async def getpower(command: Command, controllers: dict[str, IebController]):
     """Returns the status of wago sensor."""
     
     #loop = asyncio.get_running_loop()
