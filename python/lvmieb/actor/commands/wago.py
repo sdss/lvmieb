@@ -25,7 +25,7 @@ from . import parser
 
 @parser.group()
 def wago(*args):
-    """control the shutter."""
+    """control the wago IOModule."""
 
     pass
 
@@ -42,7 +42,7 @@ async def status(command: Command, controllers: dict[str, IebController]):
                 
                 if wago_status1:
                     command.info(text="Temperature & Humidity is:",status={
-                "rhtT1(40001)":controllers[wago].sensors['rhtT1(40001)'],
+                "rhtT1(40001)":controllers[wago].sensors['rhtT1(40001)'], #remove 
                 "rhtRH1(40002)":controllers[wago].sensors['rhtRH1(40002)'],
                 "rhtT2(40003)":controllers[wago].sensors['rhtT2(40003)'],
                 "rhtRH2(40004)":controllers[wago].sensors['rhtRH2(40004)'],
@@ -70,11 +70,11 @@ async def getpower(command: Command, controllers: dict[str, IebController]):
                 wago_status1 = await controllers[wago].getWAGOPower()
                 
                 if wago_status1:
-                    command.info(text="Power state of the components are:",status={
-                        "shutter_power":controllers[wago].power_status["shutter_power"],
-                        "hartmann_right_power":controllers[wago].power_status["hartmann_right_power"],
-                        "hartmann_left_power":controllers[wago].power_status["hartmann_left_power"]
-                })
+                    return command.finish(
+                        shutter_power = controllers[wago].power_status["shutter_power"],
+                        hartmann_right_power = controllers[wago].power_status["hartmann_right_power"],
+                        hartmann_left_power = controllers[wago].power_status["hartmann_left_power"]
+                )
                 else:
                     return command.fail(text=f"ERROR: Did not read sensors/powers")
             except LvmIebError as err:

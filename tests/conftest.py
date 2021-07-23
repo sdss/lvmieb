@@ -70,10 +70,12 @@ async def hartmann_right(request, unused_tcp_port_factory: int):
                 print(f"command is now {cmd}!")
 
                 if cmd == "open":
+                    await asyncio.sleep(1.7)
                     status = 'opened'
                     writer.write(b'\x00\x07%DONE\r')
                     assert status == 'opened'
                 elif cmd == "close":
+                    await asyncio.sleep(1.7)
                     status = 'closed'
                     writer.write(b'\x00\x07%DONE\r')
                     assert status == 'closed'
@@ -121,10 +123,12 @@ async def hartmann_left(request, unused_tcp_port_factory: int):
                 print(f"command is now {cmd}!")
 
                 if cmd == "open":
+                    await asyncio.sleep(1.7)
                     hl_status = 'opened'
                     writer.write(b'\x00\x07%DONE\r')
                     assert hl_status == 'opened'
                 elif cmd == "close":
+                    await asyncio.sleep(1.7)
                     hl_status = 'closed'
                     writer.write(b'\x00\x07%DONE\r')
                     assert hl_status == 'closed'
@@ -170,10 +174,12 @@ async def shutter(request, unused_tcp_port_factory: int):
                 #print(f"command is now {cmd}!")
 
                 if cmd == "open":
+                    await asyncio.sleep(0.61)
                     sh_status = 'opened'
                     writer.write(b'\x00\x07%DONE\r')
                     assert sh_status == 'opened'
                 elif cmd == "close":
+                    await asyncio.sleep(0.61)
                     sh_status = 'closed'
                     writer.write(b'\x00\x07%DONE\r')
                     assert sh_status == 'closed'
@@ -193,54 +199,3 @@ async def shutter(request, unused_tcp_port_factory: int):
         yield hr
         await hr.stop()
     server.close()
-
-"""
-@pytest.fixture
-async def shutter2(request, unused_tcp_port_factory: int):
-    
-    async def handle_connection(
-        reader: asyncio.StreamReader, writer: asyncio.StreamWriter, 
-    ) -> None:
-        global sh_status
-
-        while True:
-
-            data = await reader.readuntil(b'\r')
-            matched = re.search(
-                b"(QX1|QX2|QX3|QX4|IS)", data
-            )
-            print(matched)
-
-            if not matched:
-                continue
-            else:
-                com = matched.group()
-                cmd = com.decode()
-                cmd = hdCmds[cmd]
-                print(f"command is now {cmd}!")
-
-                if cmd == "open":
-                    sh_status = 'opened'
-                    writer.write(b'\x00\x07%DONE\r')
-                    assert sh_status == 'opened'
-                elif cmd == "close":
-                    sh_status = 'closed'
-                    writer.write(b'\x00\x07%DONE\r')
-                    assert sh_status == 'closed'
-                elif cmd == "status":
-                    if sh_status == 'opened':
-                        writer.write(b'\x00\x07IS=10111111\r')
-                    elif sh_status == 'closed':
-                        writer.write(b'\x00\x07IS=01111111\r')
-                await writer.drain()
-
-    port_hart_right = unused_tcp_port_factory()
-    server = await asyncio.start_server(handle_connection, "localhost", port_hart_right)
-
-    async with server:
-        hr = IebController("localhost", port_hart_right, name = "shutter2")
-        await hr.start()
-        yield hr
-        await hr.stop()
-    server.close()
-"""
