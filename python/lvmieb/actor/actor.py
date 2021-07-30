@@ -6,13 +6,18 @@
 # @Filename: actor.py
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 
-from __future__ import annotations, print_function, division, absolute_import
+from __future__ import absolute_import, annotations, division, print_function
+
 import asyncio
 from contextlib import suppress
-from lvmieb import __version__   # added by CK 2021/03/30
-from lvmieb.controller.controller import IebController   # changed by CK 2021/03/30
+
 from clu.actor import AMQPActor
-from .commands import parser as lvm_command_parser   # added by CK 2021/03/30
+
+from lvmieb import __version__  # added by CK 2021/03/30
+from lvmieb.controller.controller import (
+    IebController)  # changed by CK 2021/03/30
+
+from .commands import parser as lvm_command_parser  # added by CK 2021/03/30
 
 
 __all__ = ["lvmieb"]                             # changed by CK 2021/03/30

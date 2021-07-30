@@ -5,7 +5,8 @@
 # @Filename: telemetry.py
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 
-from __future__ import annotations, print_function, division, absolute_import
+from __future__ import absolute_import, annotations, division, print_function
+
 from clu.command import Command
 
 from lvmieb.controller.controller import IebController

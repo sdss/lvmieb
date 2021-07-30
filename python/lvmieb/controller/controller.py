@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 #
 
-from __future__ import annotations, print_function, division, absolute_import
+from __future__ import absolute_import, annotations, division, print_function
 
-import warnings
 import asyncio
-import re
 import datetime
+import re
+import warnings
+
+from pymodbus.client.asynchronous.async_io import (
+    AsyncioModbusTcpClient as ModbusClient)
+
 from lvmieb.exceptions import LvmIebError, LvmIebWarning
-from pymodbus.client.asynchronous.async_io import AsyncioModbusTcpClient as ModbusClient
 
 
 __all__ = ["IebController"]

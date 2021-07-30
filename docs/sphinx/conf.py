@@ -11,9 +11,12 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
-# sys.path.insert(0, os.path.abspath('.'))
 
 from pkg_resources import parse_version
+
+
+# sys.path.insert(0, os.path.abspath('.'))
+
 
 try:
     from lvmieb import __version__

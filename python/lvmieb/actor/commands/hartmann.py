@@ -5,9 +5,10 @@
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 # added by CK 2021/03/30
 
-from __future__ import annotations, print_function, division, absolute_import
+from __future__ import absolute_import, annotations, division, print_function
 
 import asyncio
+
 import click
 from clu.command import Command
 

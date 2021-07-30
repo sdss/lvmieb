@@ -10,10 +10,12 @@ underlying directories. See https://docs.pytest.org/en/2.7.3/plugins.html for
 more information.
 """
 import asyncio
-import pytest as pytest
 import re
 
+import pytest as pytest
+
 from lvmieb.controller.controller import IebController
+
 
 # Exposure shutter commands
 
