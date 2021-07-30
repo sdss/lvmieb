@@ -41,7 +41,7 @@ async def status(command: Command, controllers: dict[str, IebController]):
                 wago_status1 = await controllers[wago].getWAGOEnv()
                 
                 if wago_status1:
-                    command.finish(
+                    return command.finish(
                 rhtT1 = controllers[wago].sensors['rhtT1(40001)'], #remove 
                 rhtRH1 = controllers[wago].sensors['rhtRH1(40002)'],
                 rhtT2 = controllers[wago].sensors['rhtT2(40003)'],
