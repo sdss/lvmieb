@@ -126,7 +126,7 @@ class IebController:
                     elif self.name == 'hartmann_left':
                         self.hartmann_left_status = await self.get_status()
                 except LvmIebError as err:
-                    raise LvmIebError("Could not connect the %s" % self.name)
+                    warnings.warn(str(err), LvmIebWarning)
             # check the shutter& harmann door status before open and close
             if self.name == "shutter":
                 if command == "open":
@@ -139,24 +139,20 @@ class IebController:
                 if command == "open":
                     if self.hartmann_right_status == "opened":
                         raise LvmIebError(
-                            f"The hartmann right door is already {self.hartmann_right_status}!"
-                            )
+                            f"The hartmann right door is already {self.hartmann_right_status}!")
                 elif command == 'close':
                     if self.hartmann_right_status == "closed":
                         raise LvmIebError(
-                            f"The hartmann right door is already {self.hartmann_right_status}!"
-                            )
+                            f"The hartmann right door is already {self.hartmann_right_status}!")
             elif self.name == "hartmann_left":
                 if command == "open":
                     if self.hartmann_left_status == "opened":
                         raise LvmIebError(
-                            f"The hartmann left door is already {self.hartmann_left_status}!"
-                            )
+                            f"The hartmann left door is already {self.hartmann_left_status}!")
                 elif command == "close":
                     if self.hartmann_left_status == "closed":
                         raise LvmIebError(
-                            f"The hartmann left door is already {self.hartmann_left_status}!"
-                            )
+                            f"The hartmann left door is already {self.hartmann_left_status}!")
             # Tweak timeouts
             if self.name == "hartmann_left" or self.name == "hartmann_right":
                 if command == "open" or command == "close" or command == "home":
@@ -173,7 +169,7 @@ class IebController:
             print('host: %s after connection               : %s', self.port, current_time)
 
             # parse the low-level command to the hardware
-            sclHead = chr(0)+chr(7)
+            sclHead = chr(0) + chr(7)
             sclTail = chr(13)
             sclStr = sclHead + c_message.upper() + sclTail
 
@@ -189,7 +185,7 @@ class IebController:
             except LvmIebError as err:
                 self.writer.close()
                 await self.writer.wait_close()
-                raise LvmIebError("Failed to write the data")
+                warnings.warn(str(err), LvmIebWarning)
 
             # read byte stream from the motor controller
             try:
@@ -204,8 +200,7 @@ class IebController:
             except LvmIebError as err:
                 self.writer.close()
                 await self.writer.wait_closed()
-                raise LvmIebError("failed to read the data")
-
+                warnings.warn(str(err), LvmIebWarning)
             # disconnect device
             try:
                 current_time = datetime.datetime.now()
@@ -216,9 +211,7 @@ class IebController:
                 print('host : %s after close writer             : %s', self.port, current_time)
             except LvmIebError("Could not disconnect the %s" % self.name) as err:
                 warnings.warn(str(err), LvmIebWarning)
-
             print(reply)
-            
             if command == "status":
                 if self.name == "shutter":
                     assert isinstance(reply, bytes)
@@ -269,7 +262,7 @@ class IebController:
         except LvmIebError as err:
             w.close()
             await w.wait_close()
-            raise LvmIebError("Failed to write the data")
+            warnings.warn(str(err), LvmIebWarning)
         # read byte stream from the motor controller
         try:
             reply = await asyncio.wait_for(r.readuntil(b"\r"), SelectTimeout)
@@ -277,12 +270,12 @@ class IebController:
         except LvmIebError as err:
             w.close()
             await w.wait_closed()
-            raise LvmIebError("failed to read the data")
+            warnings.warn(str(err), LvmIebWarning)
         try:
             w.close()
             await w.wait_closed()
         except LvmIebError as err:
-            raise LvmIebError("Could not disconnect the %s" % self.name)
+            warnings.warn(str(err), LvmIebWarning)
         if message == "IS" and reply:
             assert isinstance(reply, bytes)
             stat = parse_IS(self.name, reply)
@@ -306,7 +299,7 @@ class IebController:
         except LvmIebError as err:
             w.close()
             await w.wait_close()
-            raise LvmIebError("Failed to write the data")
+            warnings.warn(str(err), LvmIebWarning)
         # read byte stream from the motor controller
         try:
             reply = await asyncio.wait_for(r.readuntil(b"\r"), SelectTimeout)
@@ -314,14 +307,14 @@ class IebController:
         except LvmIebError as err:
             w.close()
             await w.wait_closed()
-            raise LvmIebError("failed to read the data")
+            warnings.warn(str(err), LvmIebWarning)
         try:
             w.close()
             await w.wait_closed()
         except LvmIebError as err:
-            raise LvmIebError("Could not disconnect the %s" % self.name)
-
+            warnings.warn(str(err), LvmIebWarning)
     # courutine for receiving data from the WAGO module
+
     async def getWAGOEnv(self):
         rtdAddr = 8
         rtdKeys = ['rtd1(40009)',
@@ -402,7 +395,7 @@ class IebController:
             else:
                 reqState = False   # output on, relay closes, power OFF
         # relay open is shutters powered on
-        if dev == 'shutter_power': 
+        if dev == 'shutter_power':
             if state == 'ON':
                 reqState = False  # output off, relay closes, power ON
             else:
@@ -415,9 +408,8 @@ class IebController:
         rd = await wagoClient.protocol.read_holding_registers(do8Addr, maxPorts)
         outState = wagoDOReg(rd.registers[0], numOut=maxPorts)
         print(f'out state is {outState}')
-        # Changed due to change in HD logic [PM|26Jan2018] 
         for i in range(numDevs):
-            if i == 0 or i == 1:  # shutters 
+            if i == 0 or i == 1:  # shutters
                 if outState[i]:
                     self.power_status[powList[i]] = "OFF"
                 else:
@@ -426,16 +418,16 @@ class IebController:
                 if outState[i]:
                     self.power_status[powList[i]] = "ON"
                 else:
-                    self.power_status[powList[i]] = "OFF"    
-        # All done, clean up and return success        
+                    self.power_status[powList[i]] = "OFF"
+        # All done, clean up and return success
         wagoClient.protocol.close()
         return True, 'DONE'
 
 
 def ptRTD2C(rawRTD):
-    tempRes = 0.1     # module resolution is 0.1C per ADU
-    tempMax = 850.0   # maximum temperature for a Pt RTD in deg C
-    wrapT = tempRes * ((2.0**16) - 1) # ADU wrap at <0C to 2^16-1
+    tempRes = 0.1                        # module resolution is 0.1C per ADU
+    tempMax = 850.0                      # maximum temperature for a Pt RTD in deg C
+    wrapT = tempRes * ((2.0**16) - 1)    # ADU wrap at <0C to 2^16-1
     temp = tempRes * rawRTD
     if temp > tempMax:
         temp -= wrapT

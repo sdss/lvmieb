@@ -44,7 +44,7 @@ async def test_hartmann_door_right_open_close_again(hartmann_right: IebControlle
     await hartmann_right.send_command('close')
     assert hartmann_right.hartmann_right_status == 'closed'
 
-    
+
 @pytest.mark.asyncio
 async def test_hartmann_door_left_open_close(hartmann_left: IebController):
     assert hartmann_left.host == "localhost"
@@ -73,8 +73,8 @@ async def test_shutter_exposure(shutter: IebController):
 
 @pytest.mark.asyncio
 async def test_hartmann_and_shutters(
-    hartmann_right: IebController, hartmann_left: IebController, shutter: IebController
-    ):
+    hartmann_right: IebController,
+    hartmann_left: IebController, shutter: IebController):
     assert shutter.host == "localhost"
     assert shutter.name == "shutter"
     assert hartmann_left.host == "localhost"

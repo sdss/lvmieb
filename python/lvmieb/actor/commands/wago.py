@@ -27,7 +27,6 @@ async def status(command: Command, controllers: dict[str, IebController]):
         if controllers[wago].name == 'wago':
             try:
                 wago_status1 = await controllers[wago].getWAGOEnv()
-                
                 if wago_status1:
                     return command.finish(
                         rhtT1=controllers[wago].sensors['rhtT1(40001)'],
@@ -55,8 +54,7 @@ async def getpower(command: Command, controllers: dict[str, IebController]):
                 if wago_status1:
                     return command.finish(
                         shutter_power=controllers[wago].power_status["shutter_power"],
-                        hartmann_right_power=controllers[wago].power_status["hartmann_right_power"]
-                        ,
+                        hartmann_right_power=controllers[wago].power_status["hartmann_right_power"],
                         hartmann_left_power=controllers[wago].power_status["hartmann_left_power"])
                 else:
                     return command.fail(text="ERROR: Did not read sensors/powers")

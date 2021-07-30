@@ -18,7 +18,8 @@ from lvmieb.controller.controller import IebController
 # Exposure shutter commands
 
 expCmds = {"QX1": "init", "QX2": "home", "QX3": "open", "QX4": "close",
-           "flash": "QX5", "QX8": "on", "QX9": "off", "QX10": "ssroff", "QX11": "ssron", "IS": "status"}
+           "flash": "QX5", "QX8": "on", "QX9": "off",
+           "QX10": "ssroff", "QX11": "ssron", "IS": "status"}
 
 # Hartmann Door commands
 
