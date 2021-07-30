@@ -124,16 +124,7 @@ class IebController:
         Parses the high level command (open, close, status) to low level commands and send 
         to the motor controller controlling the exposure shutter, hartmann door. reads the reply from the motor
         """
-        """
-        print(f"initial count : {self.count}")
-        if self.count > 0:
-            await self.lock.acquire()
-            print(f"after acquire count : {self.count}")
-        
-        self.count +=1
-        """
-        
-        #
+
         async with self.lock:
             
             current_time = datetime.datetime.now()
@@ -190,7 +181,7 @@ class IebController:
                         raise LvmIebError(f"The hartmann left door is already {self.hartmann_left_status}!")
                 elif command == "close":
                     if self.hartmann_left_status == "closed":
-                        raise LvmIebError(f"The hartmann right door is already {self.hartmann_left_status}!")
+                        raise LvmIebError(f"The hartmann left door is already {self.hartmann_left_status}!")
 
             #Tweak timeouts
             if self.name == "hartmann_left" or self.name == "hartmann_right":
