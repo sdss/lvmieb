@@ -72,9 +72,8 @@ async def test_shutter_exposure(shutter: IebController):
 
 
 @pytest.mark.asyncio
-async def test_hartmann_and_shutters(
-    hartmann_right: IebController,
-    hartmann_left: IebController, shutter: IebController):
+async def test_hartmann_and_shutters(hartmann_right: IebController,
+                                     hartmann_left: IebController, shutter: IebController):
     assert shutter.host == "localhost"
     assert shutter.name == "shutter"
     assert hartmann_left.host == "localhost"

@@ -50,7 +50,7 @@ class IebController:
             'rtd2(40010)': -273.,		# Bench temp near NIR camera
             'rtd3(40011)': -273., 		# Bench temp near collimator
             'rtd4(40012)': -273.} 		# Bench temp near cryostats
-        self.power_status = {
+        self.power = {
             'hartmann_left_power': 'ERROR',   # ERROR | ON | OFF
             'hartmann_right_power': 'ERROR',  # ERROR | ON | OFF
             'shutter_power': 'ERROR'          # ERROR | ON | OFF
@@ -359,14 +359,14 @@ class IebController:
         for i in range(numDevs):
             if i == 0 or i == 1:  # shutters
                 if outState[i]:
-                    self.power_status[powList[i]] = "OFF"
+                    self.power[powList[i]] = "OFF"
                 else:
-                    self.power_status[powList[i]] = "ON"
+                    self.power[powList[i]] = "ON"
             if i == 2 or i == 3:  # shutters
                 if outState[i]:
-                    self.power_status[powList[i]] = "ON"
+                    self.power[powList[i]] = "ON"
                 else:
-                    self.power_status[powList[i]] = "OFF"
+                    self.power[powList[i]] = "OFF"
         wagoClient.protocol.close()
         return True, 'DONE'
 
@@ -411,14 +411,14 @@ class IebController:
         for i in range(numDevs):
             if i == 0 or i == 1:  # shutters
                 if outState[i]:
-                    self.power_status[powList[i]] = "OFF"
+                    self.power[powList[i]] = "OFF"
                 else:
-                    self.power_status[powList[i]] = "ON"
+                    self.power[powList[i]] = "ON"
             if i == 2 or i == 3:  # doors
                 if outState[i]:
-                    self.power_status[powList[i]] = "ON"
+                    self.power[powList[i]] = "ON"
                 else:
-                    self.power_status[powList[i]] = "OFF"
+                    self.power[powList[i]] = "OFF"
         # All done, clean up and return success
         wagoClient.protocol.close()
         return True, 'DONE'
