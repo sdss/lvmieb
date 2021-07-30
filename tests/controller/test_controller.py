@@ -22,7 +22,7 @@ from lvmieb.exceptions import (
     LvmIebDeprecationWarning,
 )
 
-
+"""
 @pytest.mark.asyncio
 async def test_shutter_command_multiple_times(hartmann_left: IebController):
     
@@ -32,16 +32,16 @@ async def test_shutter_command_multiple_times(hartmann_left: IebController):
     tasks_open = []
     for i in range(1):
         tasks_open.append(hartmann_left.send_command('status'))
-        #tasks_open.append(shutter.send_command('open'))
+        #tasks_open.append(hartmann_left.send_command('open'))
         #tasks_open.append(shutter.send_command('open'))
 
     await asyncio.gather(*tasks_open)
     
     #assert shutter.shutter_status == 'closed'
     #assert shutter.shutter_status == 'opened'
-
-    
 """
+    
+
 # check the normal sequence of opening the hartmann_door and closing the door after opening
 @pytest.mark.asyncio
 async def test_hartmann_door_right_exposure(hartmann_right: IebController):
@@ -49,17 +49,15 @@ async def test_hartmann_door_right_exposure(hartmann_right: IebController):
     assert hartmann_right.name == "hartmann_right"
     assert hartmann_right.hartmann_right_status == None
     
-    for i in range(1):
-        await hartmann_right.send_command('open')
-        assert hartmann_right.hartmann_right_status == 'opened'
-        
-        #1 second exposure
-        await asyncio.sleep(1)
-        
-        await hartmann_right.send_command('close')
-        assert hartmann_right.hartmann_right_status == 'closed'
+    tasks = []
+    
+    for i in range(5):
+        tasks.append(hartmann_right.send_command('open'))
+        tasks.append(hartmann_right.send_command('close'))
 
-
+    await asyncio.gather(*tasks)
+    
+"""
 @pytest.mark.asyncio
 async def test_hartmann_door_right_open_close_again(hartmann_right: IebController):
     assert hartmann_right.host == "localhost"

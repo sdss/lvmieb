@@ -51,7 +51,9 @@ async def open(command: Command, controllers: dict[str, IebController]):
     current_time = datetime.datetime.now()
     print('after command gathered         : %s', current_time)     
         
-    return command.finish(shutter= "opened")
+    command.finish(shutter= "opened")
+    
+    return
     
 
 @shutter.command()
@@ -74,7 +76,9 @@ async def close(command: Command, controllers: dict[str, IebController]):
     await asyncio.gather(*tasks)
     current_time = datetime.datetime.now()
     print('after command gathered         : %s', current_time)     
-    return command.finish(shutter= "closed")
+    command.finish(shutter= "closed")
+    
+    return
    
 
 @shutter.command()
@@ -96,27 +100,24 @@ async def status(command: Command, controllers: dict[str, IebController]):
     for n in result_shutter:
         try:
             if n == "opened":
-                return command.info(
-                        status={
-                        "opened/closed:" : n,
-                   }
+                return command.finish(
+                        shutter=n
                 )
             elif n == "closed":
-                return command.info(
-                        status={
-                        "opened/closed:" : n,
-                   }
+                return command.finish(
+                        shutter=n
                 )
             else:
                 return command.fail(test='shutter is in a bad state')
         except LvmIebError as err:
             return command.fail(error=str(err))
 
-    return command.finish()
+    command.finish()
+    return
 
 @shutter.command()
 async def init(command: Command, controllers: dict[str, IebController]):
-    """open the shutter"""
+    """initialize the shutter"""
 
     tasks = []
 
@@ -128,7 +129,7 @@ async def init(command: Command, controllers: dict[str, IebController]):
                 return command.fail(error=str(err))
 
 
-    command.info(text="Opening all shutters")
+    command.info(text="initializing all shutters")
     print("----open----")
     current_time = datetime.datetime.now()
     print('before command gathered        : %s', current_time)     
@@ -136,4 +137,4 @@ async def init(command: Command, controllers: dict[str, IebController]):
     current_time = datetime.datetime.now()
     print('after command gathered         : %s', current_time)     
         
-    return command.finish(shutter= "opened")
+    return command.finish()
