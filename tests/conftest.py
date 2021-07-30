@@ -40,7 +40,7 @@ expCmds = {"QX1":"init","QX2":"home","QX3":"open","QX4":"close",
 
 hdCmds = {"QX1":"init","QX2":"home","QX3":"open","QX4":"close","IS":"status"}
 
-status = 'closed'
+hr_status = 'closed'
 hl_status = 'closed'
 sh_status = 'closed'
 
@@ -51,7 +51,7 @@ async def hartmann_right(request, unused_tcp_port_factory: int):
     async def handle_connection(
         reader: asyncio.StreamReader, writer: asyncio.StreamWriter, 
     ) -> None:
-        global status
+        global hr_status
 
         while True:
 
@@ -71,30 +71,28 @@ async def hartmann_right(request, unused_tcp_port_factory: int):
 
                 if cmd == "open":
                     await asyncio.sleep(1.7)
-                    status = 'opened'
+                    hr_status = 'opened'
                     writer.write(b'\x00\x07%DONE\r')
-                    assert status == 'opened'
+                    assert hr_status == 'opened'
                 elif cmd == "close":
                     await asyncio.sleep(1.7)
-                    status = 'closed'
+                    hr_status = 'closed'
                     writer.write(b'\x00\x07%DONE\r')
-                    assert status == 'closed'
+                    assert hr_status == 'closed'
                 elif cmd == "status":
-                    if status == 'opened':
+                    if hr_status == 'opened':
                         writer.write(b'\x00\x07IS=10111111\r')
-                    elif status == 'closed':
+                    elif hr_status == 'closed':
                         writer.write(b'\x00\x07IS=01111111\r')
                 await writer.drain()
-                print(status)
+                print(hr_status)
 
     port_hart_right = unused_tcp_port_factory()
     server = await asyncio.start_server(handle_connection, "localhost", port_hart_right)
 
     async with server:
         hr = IebController(host = "localhost", port = port_hart_right, name = 'hartmann_right')
-        #await hr.start()
         yield hr
-        #await hr.stop()
     server.close()
 
 
@@ -107,7 +105,7 @@ async def hartmann_left(request, unused_tcp_port_factory: int):
         global hl_status
 
         while True:
-
+    
             data = await reader.readuntil(b'\r')
             matched = re.search(
                 b"(QX1|QX2|QX3|QX4|IS)", data
@@ -134,19 +132,17 @@ async def hartmann_left(request, unused_tcp_port_factory: int):
                     assert hl_status == 'closed'
                 elif cmd == "status":
                     if hl_status == 'opened':
-                        writer.write(b'\x00\x07IS=10111111\r')
-                    elif hl_status == 'closed':
                         writer.write(b'\x00\x07IS=01111111\r')
+                    elif hl_status == 'closed':
+                        writer.write(b'\x00\x07IS=10111111\r')
                 await writer.drain()
 
-    port_hart_right = unused_tcp_port_factory()
-    server = await asyncio.start_server(handle_connection, "localhost", port_hart_right)
+    port_hart_left = unused_tcp_port_factory()
+    server = await asyncio.start_server(handle_connection, "localhost", port_hart_left)
 
     async with server:
-        hr = IebController("localhost", port_hart_right, name = "hartmann_left")
-        #await hr.start()
+        hr = IebController("localhost", port_hart_left, name = "hartmann_left")
         yield hr
-        #await hr.stop()
     server.close()
 
 @pytest.fixture
@@ -163,7 +159,6 @@ async def shutter(request, unused_tcp_port_factory: int):
             matched = re.search(
                 b"(QX1|QX2|QX3|QX4|IS)", data
             )
-            #print(matched)
 
             if not matched:
                 continue
@@ -171,7 +166,6 @@ async def shutter(request, unused_tcp_port_factory: int):
                 com = matched.group()
                 cmd = com.decode()
                 cmd = hdCmds[cmd]
-                #print(f"command is now {cmd}!")
 
                 if cmd == "open":
                     await asyncio.sleep(0.61)
@@ -190,12 +184,10 @@ async def shutter(request, unused_tcp_port_factory: int):
                         writer.write(b'\x00\x07IS=01111111\r')
                 await writer.drain()
 
-    port_hart_right = unused_tcp_port_factory()
-    server = await asyncio.start_server(handle_connection, "localhost", port_hart_right)
+    port_shutter = unused_tcp_port_factory()
+    server = await asyncio.start_server(handle_connection, "localhost", port_shutter)
 
     async with server:
-        hr = IebController("localhost", port_hart_right, name = "shutter")
-        await hr.start()
+        hr = IebController("localhost", port_shutter, name = "shutter")
         yield hr
-        await hr.stop()
     server.close()

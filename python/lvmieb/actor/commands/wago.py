@@ -1,7 +1,3 @@
-#We have to change this code to interact with controller.py _CK
-#Please refer to open.py and close.py
-
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # @Author: Changgon Kim, Mingyeong YANG, Taeeun Kim

@@ -22,42 +22,35 @@ from lvmieb.exceptions import (
     LvmIebDeprecationWarning,
 )
 
-"""
 @pytest.mark.asyncio
-async def test_shutter_command_multiple_times(hartmann_left: IebController):
+async def test_shutter_status(shutter: IebController):
     
-    assert hartmann_left.host == "localhost"
-    assert hartmann_left.name == "hartmann_left"
+    assert shutter.host == "localhost"
+    assert shutter.name == "shutter"
     
     tasks_open = []
     for i in range(1):
-        tasks_open.append(hartmann_left.send_command('status'))
-        #tasks_open.append(hartmann_left.send_command('open'))
-        #tasks_open.append(shutter.send_command('open'))
+        tasks_open.append(shutter.send_command('status'))
 
     await asyncio.gather(*tasks_open)
     
-    #assert shutter.shutter_status == 'closed'
-    #assert shutter.shutter_status == 'opened'
-"""
-    
 
-# check the normal sequence of opening the hartmann_door and closing the door after opening
+# check the pending time of normal sequence of opening the hartmann_door and closing the door after opening
 @pytest.mark.asyncio
-async def test_hartmann_door_right_exposure(hartmann_right: IebController):
+async def test_hartmann_door_open_close_lock_test(hartmann_right: IebController):
     assert hartmann_right.host == "localhost"
     assert hartmann_right.name == "hartmann_right"
     assert hartmann_right.hartmann_right_status == None
     
     tasks = []
     
-    for i in range(5):
+    for i in range(1):
         tasks.append(hartmann_right.send_command('open'))
         tasks.append(hartmann_right.send_command('close'))
 
     await asyncio.gather(*tasks)
     
-"""
+
 @pytest.mark.asyncio
 async def test_hartmann_door_right_open_close_again(hartmann_right: IebController):
     assert hartmann_right.host == "localhost"
@@ -70,25 +63,22 @@ async def test_hartmann_door_right_open_close_again(hartmann_right: IebControlle
     await hartmann_right.send_command('close')
     assert hartmann_right.hartmann_right_status == 'closed'
     
-    #to test the error handling is working right
-    #await hartmann_right.send_command('close')
     
 @pytest.mark.asyncio
-async def test_hartmann_door_left_exposure(hartmann_left: IebController):
+async def test_hartmann_door_left_open_close(hartmann_left: IebController):
 
     assert hartmann_left.host == "localhost"
     assert hartmann_left.name == "hartmann_left"
-  
-    for i in range(1):
-        await hartmann_left.send_command('open')
-        assert hartmann_left.hartmann_left_status == 'opened'
-        
-        #1 second exposure
-        await asyncio.sleep(1)
-        
-        await hartmann_left.send_command('close')
-        assert hartmann_left.hartmann_left_status == 'closed'
     
+    assert hartmann_left.hartmann_left_status == None
+    await hartmann_left.send_command('status')
+    assert hartmann_left.hartmann_left_status == 'closed'
+  
+    await hartmann_left.send_command('open')
+    assert hartmann_left.hartmann_left_status == 'opened'
+    
+    await hartmann_left.send_command('close')
+    assert hartmann_left.hartmann_left_status == 'closed'
     
 @pytest.mark.asyncio
 async def test_shutter_exposure(shutter: IebController):
@@ -140,4 +130,3 @@ async def test_hartmann_and_shutters(hartmann_right: IebController, hartmann_lef
     assert hartmann_right.hartmann_right_status == 'closed'
     assert hartmann_left.hartmann_left_status == 'closed'
     assert shutter.shutter_status == 'closed'
-"""
