@@ -11,7 +11,6 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
-#import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
 from pkg_resources import parse_version
@@ -37,11 +36,8 @@ release = __version__
 # Are we building in RTD?
 on_rtd = os.environ.get("READTHEDOCS") == "True"
 
-#Sphinc template selected in cookiecutter
+# Sphinc template selected in cookiecutter
 sphinx_template = 'alabaster'
-
-if sphinx_template == "sphinx-bootstrap":
-    import sphinx_bootstrap_theme
 
 # -- General configuration ---------------------------------------------------
 
@@ -114,7 +110,7 @@ intersphinx_mapping = {
 
 autodoc_mock_imports = ["_tkinter", "asynctest", "numpy", "pymodbus"]
 autodoc_member_order = "groupwise"
-#autodoc_default_options = {"members": None, "show-inheritance": None}
+# autodoc_default_options = {"members": None, "show-inheritance": None}
 autodoc_typehints = "description"
 
 napoleon_use_rtype = False
