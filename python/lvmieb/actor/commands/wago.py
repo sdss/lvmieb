@@ -37,8 +37,7 @@ async def status(command: Command, controllers: dict[str, IebController]):
                         rtd1=controllers[wago].sensors['rtd1(40009)'],
                         rtd2=controllers[wago].sensors['rtd2(40010)'],
                         rtd3=controllers[wago].sensors['rtd3(40011)'],
-                        rtd4=controllers[wago].sensors['rtd4(40012)']
-                        )
+                        rtd4=controllers[wago].sensors['rtd4(40012)'])
                 else:
                     return command.fail(text="ERROR: Did not read sensors/powers")
             except LvmIebError as err:
@@ -56,9 +55,9 @@ async def getpower(command: Command, controllers: dict[str, IebController]):
                 if wago_status1:
                     return command.finish(
                         shutter_power=controllers[wago].power_status["shutter_power"],
-                        hartmann_right_power=controllers[wago].power_status["hartmann_right_power"],
-                        hartmann_left_power=controllers[wago].power_status["hartmann_left_power"]
-                        )
+                        hartmann_right_power=controllers[wago].power_status["hartmann_right_power"]
+                        ,
+                        hartmann_left_power=controllers[wago].power_status["hartmann_left_power"])
                 else:
                     return command.fail(text="ERROR: Did not read sensors/powers")
             except LvmIebError as err:
@@ -73,13 +72,12 @@ async def setpower(command: Command, controllers: dict[str, IebController]):
         if controllers[wago].name == 'wago':
             try:
                 wago_status1 = await controllers[wago].setWAGOPower("hartmann_right_power", 'ON')
-                
                 if wago_status1:
                     command.finish(
                         shutter_power=controllers[wago].power_status["shutter_power"],
-                        hartmann_right_power=controllers[wago].power_status["hartmann_right_power"],
-                        hartmann_left_power=controllers[wago].power_status["hartmann_left_power"]
-                        )
+                        hartmann_right_power=controllers[wago].power_status["hartmann_right_power"]
+                        ,
+                        hartmann_left_power=controllers[wago].power_status["hartmann_left_power"])
                 else:
                     return command.fail(text="ERROR: Did not read sensors/powers")
             except LvmIebError as err:

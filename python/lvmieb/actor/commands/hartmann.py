@@ -57,7 +57,6 @@ async def open(command: Command, controllers: dict[str, IebController], side: st
 
     command.info(text=f"Opening {side} hartmanns")
     await asyncio.gather(*tasks)
-    
     if side == "all":
         return command.finish(hartmann_left="opened",
                               hartmann_right="opened")
@@ -169,7 +168,7 @@ async def home(command: Command, controllers: dict[str, IebController]):
             try:
                 tasks.append(controllers[h].set_home())
             except LvmIebError as err:
-                return command.fail(error=str(err)) 
+                return command.fail(error=str(err))
         if controllers[h].name == 'hartmann_left':
             try:
                 tasks.append(controllers[h].set_home())

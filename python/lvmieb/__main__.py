@@ -12,6 +12,7 @@ from clu.tools import cli_coro as cli_coro_lvm
 from sdsstools.daemonizer import DaemonGroup
 from lvmieb.actor.actor import lvmieb as lvmiebInstance
 
+
 @click.group(cls=DefaultGroup, default="actor", default_if_no_args=True)
 @click.option(
     "-c",

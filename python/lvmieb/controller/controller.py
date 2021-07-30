@@ -20,7 +20,8 @@ devList = ["shutter", "hartmann_left", "hartmann_right"]
 
 # Exposure shutter commands
 expCmds = {"init": "QX1", "home": "QX2", "open": "QX3", "close": "QX4",
-           "flash": "QX5", "on": "QX8", "off": "QX9", "ssroff":"QX10", "ssron": "QX11", "status": "IS"}
+           "flash": "QX5", "on": "QX8", "off": "QX9",
+           "ssroff": "QX10", "ssron": "QX11", "status": "IS"}
 
 # Hartmann Door commands
 hdCmds = {"init": "QX1", "home": "QX2", "open": "QX3", "close": "QX4", "status": "IS"}
@@ -37,7 +38,7 @@ class IebController:
             Talks to an Ieb controller over TCP/IP
     """
     count = 0
-    
+
     def __init__(self, host: str, port: int, name: str = ""):
         self.name = name
         self.sensors = {
@@ -48,8 +49,7 @@ class IebController:
             'rtd1(40009)': -273., 		# IEB internal temp
             'rtd2(40010)': -273.,		# Bench temp near NIR camera
             'rtd3(40011)': -273., 		# Bench temp near collimator
-            'rtd4(40012)': -273. 		# Bench temp near cryostats
-            }
+            'rtd4(40012)': -273.} 		# Bench temp near cryostats
         self.power_status = {
             'hartmann_left_power': 'ERROR',   # ERROR | ON | OFF
             'hartmann_right_power': 'ERROR',  # ERROR | ON | OFF
@@ -95,13 +95,8 @@ class IebController:
             await w.wait_closed()
         except LvmIebError as err:
             warnings.warn(str(err), LvmIebWarning)
-    
+
     async def send_command(self, command, SelectTimeout=3.0):
-        """
-        Parses the high level command (open, close, status) to low level commands and send
-        to the motor controller controlling the exposure shutter, hartmann door. 
-        reads the reply from the motor
-        """
         async with self.lock:
             current_time = datetime.datetime.now()
             print('host: %s when send command              : %s', self.port, current_time)
@@ -109,65 +104,65 @@ class IebController:
             if self.name in devList is False:
                 raise LvmIebError("%s is not a valid device" % self.name)
             # check that the command is legal for the device
-            if self.name is "shutter":
+            if self.name == "shutter":
                 if command in expCmds is False:
                     raise LvmIebError("%s is not a valid %s command" % (command, self.name))
                 else:
                     c_message = expCmds[command]
-            elif self.name is "hartmann_left" or self.name is "hartmann_right":
+            elif self.name == "hartmann_left" or self.name == "hartmann_right":
                 if command in hdCmds is False:
                     raise LvmIebError("%s is not a valid %s command" % (command, self.name))
                 else:
                     c_message = hdCmds[command]
             else:
-                raise LvmIebError(f"%s and %s combination not found" % (command, self.name))
-            # get the status from the hardware 
+                raise LvmIebError("%s and %s combination not found" % (command, self.name))
+            # get the status from the hardware
             if command != 'status':
                 try:
-                    if self.name is 'shutter':
+                    if self.name == 'shutter':
                         self.shutter_status = await self.get_status()
-                    elif self.name is 'hartmann_right':
+                    elif self.name == 'hartmann_right':
                         self.hartmann_right_status = await self.get_status()
-                    elif self.name is 'hartmann_left':
+                    elif self.name == 'hartmann_left':
                         self.hartmann_left_status = await self.get_status()
                 except LvmIebError as err:
                     raise LvmIebError("Could not connect the %s" % self.name)
             # check the shutter& harmann door status before open and close
-            if self.name is "shutter":
-                if command is "open":
-                    if self.shutter_status is "opened":
+            if self.name == "shutter":
+                if command == "open":
+                    if self.shutter_status == "opened":
                         raise LvmIebError(f"The shutter is already {self.shutter_status}!")
-                elif command is "close":
-                    if self.shutter_status is "closed":
+                elif command == "close":
+                    if self.shutter_status == "closed":
                         raise LvmIebError(f"The shutter is already {self.shutter_status}!")
-            elif self.name is "hartmann_right":
-                if command is "open":
-                    if self.hartmann_right_status is "opened":
+            elif self.name == "hartmann_right":
+                if command == "open":
+                    if self.hartmann_right_status == "opened":
                         raise LvmIebError(
                             f"The hartmann right door is already {self.hartmann_right_status}!"
                             )
-                elif command is 'close':
-                    if self.hartmann_right_status is "closed":
+                elif command == 'close':
+                    if self.hartmann_right_status == "closed":
                         raise LvmIebError(
                             f"The hartmann right door is already {self.hartmann_right_status}!"
                             )
-            elif self.name is "hartmann_left":
-                if command is "open":
-                    if self.hartmann_left_status is "opened":
+            elif self.name == "hartmann_left":
+                if command == "open":
+                    if self.hartmann_left_status == "opened":
                         raise LvmIebError(
                             f"The hartmann left door is already {self.hartmann_left_status}!"
                             )
-                elif command is "close":
-                    if self.hartmann_left_status is "closed":
+                elif command == "close":
+                    if self.hartmann_left_status == "closed":
                         raise LvmIebError(
                             f"The hartmann left door is already {self.hartmann_left_status}!"
                             )
             # Tweak timeouts
-            if self.name is "hartmann_left" or self.name is "hartmann_right":
-                if command is "open" or command is "close" or command is "home":
+            if self.name == "hartmann_left" or self.name == "hartmann_right":
+                if command == "open" or command == "close" or command == "home":
                     SelectTimeout = 4.0
-            if self.name is "shutter":
-                if command is "home":
+            if self.name == "shutter":
+                if command == "home":
                     SelectTimeout = 4.0
 
             # connection
@@ -200,9 +195,9 @@ class IebController:
             try:
                 current_time = datetime.datetime.now()
                 print('host: %s before readuntil               : %s', self.port, current_time)
-                if command is "status" or command is "init" or command is "home":
+                if command == "status" or command == "init" or command == "home":
                     reply = await asyncio.wait_for(self.reader.readuntil(b"\r"), SelectTimeout)
-                elif command is "open" or command is "close":
+                elif command == "open" or command == "close":
                     reply = await asyncio.wait_for(self.reader.readuntil(b"DONE\r"), SelectTimeout)
                 current_time = datetime.datetime.now()
                 print('host: %s after readuntil                : %s', self.port, current_time)
@@ -224,18 +219,18 @@ class IebController:
 
             print(reply)
             
-            if command is "status":
-                if self.name is "shutter":
+            if command == "status":
+                if self.name == "shutter":
                     assert isinstance(reply, bytes)
                     shutter_stat = parse_IS(self.name, reply)
                     self.shutter_status = shutter_stat
                     return shutter_stat
-                elif self.name is "hartmann_left":
+                elif self.name == "hartmann_left":
                     assert isinstance(reply, bytes)
                     hartmann_stat = parse_IS(self.name, reply)
                     self.hartmann_left_status = hartmann_stat
                     return hartmann_stat
-                elif self.name is "hartmann_right":
+                elif self.name == "hartmann_right":
                     assert isinstance(reply, bytes)
                     hartmann_stat = parse_IS(self.name, reply)
                     self.hartmann_right_status = hartmann_stat
@@ -244,13 +239,13 @@ class IebController:
                 if b"DONE" in reply:
                     # updating the status of each hardware
                     print("%s done is replied", self.port)
-                    if self.name is "shutter":
+                    if self.name == "shutter":
                         self.shutter_status = await self.get_status()
                         return self.shutter_status
-                    elif self.name is "hartmann_right":
+                    elif self.name == "hartmann_right":
                         self.hartmann_right_status = await self.get_status()
                         return self.hartmann_right_status
-                    elif self.name is "hartmann_left":
+                    elif self.name == "hartmann_left":
                         self.hartmann_left_status = await self.get_status()
                         return self.hartmann_left_status
                 elif b"ERR" in reply:
@@ -288,11 +283,11 @@ class IebController:
             await w.wait_closed()
         except LvmIebError as err:
             raise LvmIebError("Could not disconnect the %s" % self.name)
-        if message is "IS" and reply:
+        if message == "IS" and reply:
             assert isinstance(reply, bytes)
             stat = parse_IS(self.name, reply)
             print(stat)
-            if stat is "error":
+            if stat == "error":
                 print("error occured.. setting to home")
                 await self.set_home()
             return stat
@@ -369,12 +364,12 @@ class IebController:
         rd = await wagoClient.protocol.read_holding_registers(do8Addr, maxPorts)
         outState = wagoDOReg(rd.registers[0], numOut=maxPorts)
         for i in range(numDevs):
-            if i is 0 or i is 1:  # shutters
+            if i == 0 or i == 1:  # shutters
                 if outState[i]:
                     self.power_status[powList[i]] = "OFF"
                 else:
                     self.power_status[powList[i]] = "ON"
-            if i is 2 or i is 3:  # shutters
+            if i == 2 or i == 3:  # shutters
                 if outState[i]:
                     self.power_status[powList[i]] = "ON"
                 else:
@@ -401,14 +396,14 @@ class IebController:
         await wagoClient.connect()
         idev = powList.index(dev)
         # relay open is Hartmann Doors powered off
-        if dev is 'hartmann_left_power' or dev is 'hartmann_right_power':
-            if state is 'ON':
+        if dev == 'hartmann_left_power' or dev == 'hartmann_right_power':
+            if state == 'ON':
                 reqState = True  # output off, relay opens, power ON
             else:
                 reqState = False   # output on, relay closes, power OFF
         # relay open is shutters powered on
-        if dev is 'shutter_power': 
-            if state is 'ON':
+        if dev == 'shutter_power': 
+            if state == 'ON':
                 reqState = False  # output off, relay closes, power ON
             else:
                 reqState = True   # output on, relay opens, power OFF
@@ -422,12 +417,12 @@ class IebController:
         print(f'out state is {outState}')
         # Changed due to change in HD logic [PM|26Jan2018] 
         for i in range(numDevs):
-            if i is 0 or i is 1:  # shutters 
+            if i == 0 or i == 1:  # shutters 
                 if outState[i]:
                     self.power_status[powList[i]] = "OFF"
                 else:
                     self.power_status[powList[i]] = "ON"
-            if i is 2 or i is 3:  # doors
+            if i == 2 or i == 3:  # doors
                 if outState[i]:
                     self.power_status[powList[i]] = "ON"
                 else:
@@ -460,17 +455,17 @@ def parse_IS(name, reply: bytes):
     if match is None:
         return False
     # for hartmann_left, 01 was opened, and 10 is closed
-    if name is "hartmann_right" or name is "shutter":
-        if match.groups() is (b"1", b"0"):
+    if name == "hartmann_right" or name == "shutter":
+        if match.groups() == (b"1", b"0"):
             return "opened"
-        elif match.groups() is (b"0", b"1"):
+        elif match.groups() == (b"0", b"1"):
             return "closed"
         else:
             return "error"
     else:
-        if match.groups() is (b"0", b"1"):
+        if match.groups() == (b"0", b"1"):
             return "opened"
-        elif match.groups() is (b"1", b"0"):
+        elif match.groups() == (b"1", b"0"):
             return "closed"
         else:
             return "error"
