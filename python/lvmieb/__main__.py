@@ -1,6 +1,3 @@
-#added by CK 2021/03/30
-
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # @Author: Changging Kim, Mingyeong Yang, Taeeun Kim
@@ -8,9 +5,8 @@
 # @Filename: __main__.py
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 
-import sys
 import os
-import asyncio
+
 import click
 from click_default_group import DefaultGroup
 from clu.tools import cli_coro as cli_coro_lvm
@@ -18,6 +14,7 @@ from clu.tools import cli_coro as cli_coro_lvm
 from sdsstools.daemonizer import DaemonGroup
 
 from lvmieb.actor.actor import lvmieb as lvmiebInstance
+
 
 @click.group(cls=DefaultGroup, default="actor", default_if_no_args=True)
 @click.option(
@@ -36,7 +33,6 @@ from lvmieb.actor.actor import lvmieb as lvmiebInstance
 @click.pass_context
 def lvmieb(ctx, config_file, verbose):
     """lvm controller"""
-
     ctx.obj = {"verbose": verbose, "config_file": config_file}
 
 
@@ -45,16 +41,13 @@ def lvmieb(ctx, config_file, verbose):
 @cli_coro_lvm
 async def actor(ctx):
     """Runs the actor."""
-   
     default_config_file = os.path.join(os.path.dirname(__file__), "etc/lvmieb.yml")
     config_file = ctx.obj["config_file"] or default_config_file
-
     lvmieb_obj = lvmiebInstance.from_config(config_file)
     if ctx.obj["verbose"]:
         lvmieb_obj.log.fh.setLevel(0)
         lvmieb_obj.log.sh.setLevel(0)
     await lvmieb_obj.start()
     await lvmieb_obj.run_forever()
-    
 if __name__ == "__main__":
     lvmieb()

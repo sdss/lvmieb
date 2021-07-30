@@ -1,4 +1,3 @@
-# !usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # Licensed under a 3-clause BSD license.
@@ -6,9 +5,8 @@
 # @Author: Changgon Kim, Mingeyong Yang, Taeeun Kim
 # @Date:    2021-04-26 17:14
 # @Last modified by:   Changgon Kim
-# @Last Modified time: 
 
-from __future__ import print_function, division, absolute_import
+from __future__ import absolute_import, division, print_function
 
 
 class LvmIebError(Exception):
