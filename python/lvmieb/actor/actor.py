@@ -14,8 +14,7 @@ from contextlib import suppress
 from clu.actor import AMQPActor
 
 from lvmieb import __version__  # added by CK 2021/03/30
-from lvmieb.controller.controller import (
-    IebController)  # changed by CK 2021/03/30
+from lvmieb.controller.controller import IebController  # changed by CK 2021/03/30
 
 from .commands import parser as lvm_command_parser  # added by CK 2021/03/30
 
