@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 #
 
+"""
+isort:skip_file
+"""
+
 from __future__ import absolute_import, annotations, division, print_function
 
 import asyncio
@@ -8,9 +12,9 @@ import datetime
 import re
 import warnings
 
-from pymodbus.client.asynchronous.async_io import (
+from pymodbus.client.asynchronous.async_io import (  # isort:skip
     AsyncioModbusTcpClient as ModbusClient,
-)  # isort:skip
+)
 
 from lvmieb.exceptions import LvmIebError, LvmIebWarning
 
