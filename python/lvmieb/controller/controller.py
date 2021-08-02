@@ -8,7 +8,8 @@ import datetime
 import re
 import warnings
 
-from pymodbus.client.asynchronous.async_io import AsyncioModbusTcpClient as ModbusClient
+from pymodbus.client.asynchronous.async_io import (
+    AsyncioModbusTcpClient as ModbusClient)
 
 from lvmieb.exceptions import LvmIebError, LvmIebWarning
 
