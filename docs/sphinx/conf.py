@@ -28,9 +28,9 @@ except ModuleNotFoundError:
 
 # -- Project information -----------------------------------------------------
 
-project = 'lvmieb'
-copyright = '{0}, {1}'.format('2021', 'SDSS LVMI softwareteam in Kyung Hee university')
-author = 'Changgon Kim, Mingyeong Yang, Taeeun Kim'
+project = "lvmieb"
+copyright = "{0}, {1}".format("2021", "SDSS LVMI softwareteam in Kyung Hee university")
+author = "Changgon Kim, Mingyeong Yang, Taeeun Kim"
 
 # The full version, including alpha/beta/rc tags
 version = parse_version(__version__).base_version
@@ -40,7 +40,7 @@ release = __version__
 on_rtd = os.environ.get("READTHEDOCS") == "True"
 
 # Sphinc template selected in cookiecutter
-sphinx_template = 'alabaster'
+sphinx_template = "alabaster"
 
 # -- General configuration ---------------------------------------------------
 
@@ -62,18 +62,18 @@ extensions = [
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # The suffix(es) of source filenames.
-source_suffix = '.rst'
+source_suffix = ".rst"
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -125,7 +125,7 @@ napoleon_numpy_docstring = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = "alabaster"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the

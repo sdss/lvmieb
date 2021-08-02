@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 __all__ = [
-        "IebController",
+    "IebController",
 ]
 
 from .controller import IebController

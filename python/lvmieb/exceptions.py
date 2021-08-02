@@ -14,8 +14,7 @@ class LvmIebError(Exception):
 
     def __init__(self, message=None):
 
-        message = 'There has been an error' \
-            if not message else message
+        message = "There has been an error" if not message else message
 
         super(LvmIebError, self).__init__(message)
 
@@ -25,8 +24,7 @@ class LvmIebNotImplemented(LvmIebError):
 
     def __init__(self, message=None):
 
-        message = 'This feature is not implemented yet.' \
-            if not message else message
+        message = "This feature is not implemented yet." if not message else message
 
         super(LvmIebNotImplemented, self).__init__(message)
 
@@ -36,20 +34,22 @@ class LvmIebAPIError(LvmIebError):
 
     def __init__(self, message=None):
         if not message:
-            message = 'Error with Http Response from LvmIeb API'
+            message = "Error with Http Response from LvmIeb API"
         else:
-            message = 'Http response error from LvmIeb API. {0}'.format(message)
+            message = "Http response error from LvmIeb API. {0}".format(message)
 
         super(LvmIebAPIError, self).__init__(message)
 
 
 class LvmIebApiAuthError(LvmIebAPIError):
     """A custom exception for API authentication errors"""
+
     pass
 
 
 class LvmIebMissingDependency(LvmIebError):
     """A custom exception for missing dependencies."""
+
     pass
 
 
@@ -59,14 +59,17 @@ class LvmIebWarning(Warning):
 
 class LvmIebUserWarning(UserWarning, LvmIebWarning):
     """The primary warning class."""
+
     pass
 
 
 class LvmIebSkippedTestWarning(LvmIebUserWarning):
     """A warning for when a test is skipped."""
+
     pass
 
 
 class LvmIebDeprecationWarning(LvmIebUserWarning):
     """A warning for deprecated features."""
+
     pass
