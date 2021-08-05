@@ -4,7 +4,7 @@ Controller
 Introduction
 ------------
 
-This module communicates with OsuController.
+This module communicates with the hardwares under OsuController.
 
 
 Controller
