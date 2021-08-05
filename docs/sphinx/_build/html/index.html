@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OsuActor’s documentation &#8212; osuactor 0.1.0-alpha.0 documentation</title>
+    <title>lvmieb’s documentation &#8212; lvmieb 0.1.1 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -19,7 +19,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Osuactor" href="Osuactor.html" />
+    <link rel="next" title="lvmieb" href="lvmieb.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -36,21 +36,21 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="osuactor-s-documentation">
-<h1>OsuActor’s documentation<a class="headerlink" href="#osuactor-s-documentation" title="Permalink to this headline">¶</a></h1>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip install osuactor
+  <div class="section" id="lvmieb-s-documentation">
+<h1>lvmieb’s documentation<a class="headerlink" href="#lvmieb-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip install lvmieb
 
-<span class="gp">$ </span>git clone https://github.com/sdss/osuactor.git
+<span class="gp">$ </span>git clone https://github.com/sdss/lvmieb.git
 </pre></div>
 </div>
-<p>Refer to the <a class="reference external" href="https://github.com/sdss/osuactor.git">repository</a> for details on how to develop the code and for issue tracking.</p>
+<p>Refer to the <a class="reference external" href="https://github.com/sdss/lvmieb.git">repository</a> for details on how to develop the code and for issue tracking.</p>
 <div class="section" id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Osuactor.html">Osuactor</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Osuactor.html#introduction">Introduction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Osuactor.html#module-osuactor.actor.actor">Actor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lvmieb.html">lvmieb</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lvmieb.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lvmieb.html#module-lvmieb.actor.actor">Actor</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Controller.html">Controller</a><ul>
@@ -59,19 +59,31 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Commands.html">Commands</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Commands.html#osuactor">osuactor</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Commands.html#osuactor-help">help</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Commands.html#osuactor-ping">ping</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Commands.html#osuactor-shutter">shutter</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Commands.html#osuactor-shutter-close">close</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Commands.html#osuactor-shutter-connect">connect</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Commands.html#osuactor-shutter-disconnect">disconnect</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Commands.html#osuactor-shutter-open">open</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Commands.html#osuactor-shutter-status">status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Commands.html#lvmieb">lvmieb</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Commands.html#lvmieb-hartmann">hartmann</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Commands.html#lvmieb-hartmann-close">close</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Commands.html#lvmieb-hartmann-home">home</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Commands.html#lvmieb-hartmann-init">init</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Commands.html#lvmieb-hartmann-open">open</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Commands.html#lvmieb-hartmann-status">status</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Commands.html#osuactor-telemetry">telemetry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="Commands.html#osuactor-version">version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Commands.html#lvmieb-help">help</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Commands.html#lvmieb-ping">ping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Commands.html#lvmieb-shutter">shutter</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Commands.html#lvmieb-shutter-close">close</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Commands.html#lvmieb-shutter-init">init</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Commands.html#lvmieb-shutter-open">open</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Commands.html#lvmieb-shutter-status">status</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Commands.html#lvmieb-version">version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Commands.html#lvmieb-wago">wago</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Commands.html#lvmieb-wago-getpower">getpower</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Commands.html#lvmieb-wago-setpower">setpower</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Commands.html#lvmieb-wago-status">status</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -112,7 +124,7 @@
 
 
 <p>
-<iframe src="https://ghbtns.com/github-btn.html?user=sdss&repo=osuactor&type=star&count=true&size=large&v=2"
+<iframe src="https://ghbtns.com/github-btn.html?user=sdss&repo=lvmieb&type=star&count=true&size=large&v=2"
   allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
 </p>
 
@@ -122,7 +134,7 @@
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Osuactor.html">Osuactor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lvmieb.html">lvmieb</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Controller.html">Controller</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Commands.html">Commands</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Exceptions.html">Exceptions</a></li>
@@ -132,7 +144,7 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="Osuactor.html" title="next chapter">Osuactor</a></li>
+      <li>Next: <a href="lvmieb.html" title="next chapter">lvmieb</a></li>
   </ul></li>
 </ul>
 </div>
@@ -163,7 +175,7 @@
     </div>
 
     
-    <a href="https://github.com/sdss/osuactor" class="github">
+    <a href="https://github.com/sdss/lvmieb" class="github">
         <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
     </a>
     

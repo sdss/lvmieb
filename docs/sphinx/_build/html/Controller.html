@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Controller &#8212; osuactor 0.1.0-alpha.0 documentation</title>
+    <title>Controller &#8212; lvmieb 0.1.1 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Commands" href="Commands.html" />
-    <link rel="prev" title="Osuactor" href="Osuactor.html" />
+    <link rel="prev" title="lvmieb" href="lvmieb.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -45,36 +45,49 @@
 </div>
 <div class="section" id="id1">
 <h2>Controller<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-osuactor.controller"></span><dl class="py class">
-<dt id="osuactor.controller.OsuController">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.controller.</span></code><code class="sig-name descname"><span class="pre">OsuController</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/controller/controller.html#OsuController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.controller.OsuController" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">clu.device.Device</span></code></p>
-<p>Talks to an OSU controller over TCP/IP</p>
+<span class="target" id="module-lvmieb.controller"></span><dl class="py class">
+<dt id="lvmieb.controller.IebController">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">lvmieb.controller.</span></code><code class="sig-name descname"><span class="pre">IebController</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/controller/controller.html#IebController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.controller.IebController" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Talks to an Ieb controller over TCP/IP</p>
 <dl class="py method">
-<dt id="osuactor.controller.OsuController.connect">
-<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">connect</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/controller/controller.html#OsuController.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.controller.OsuController.connect" title="Permalink to this definition">¶</a></dt>
-<dd><p>connect with devices</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="osuactor.controller.OsuController.disconnect">
-<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">disconnect</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/controller/controller.html#OsuController.disconnect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.controller.OsuController.disconnect" title="Permalink to this definition">¶</a></dt>
-<dd><p>close the connect</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="osuactor.controller.OsuController.getWAGOEnv">
-<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">getWAGOEnv</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/controller/controller.html#OsuController.getWAGOEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.controller.OsuController.getWAGOEnv" title="Permalink to this definition">¶</a></dt>
+<dt id="lvmieb.controller.IebController.getWAGOEnv">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">getWAGOEnv</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/controller/controller.html#IebController.getWAGOEnv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.controller.IebController.getWAGOEnv" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="osuactor.controller.OsuController.receive_status">
-<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">receive_status</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">areader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/controller/controller.html#OsuController.receive_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.controller.OsuController.receive_status" title="Permalink to this definition">¶</a></dt>
+<dt id="lvmieb.controller.IebController.getWAGOPower">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">getWAGOPower</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/controller/controller.html#IebController.getWAGOPower"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.controller.IebController.getWAGOPower" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="osuactor.controller.OsuController.send_command">
-<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">send_command</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SelectTimeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/controller/controller.html#OsuController.send_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.controller.OsuController.send_command" title="Permalink to this definition">¶</a></dt>
+<dt id="lvmieb.controller.IebController.get_status">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">get_status</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/controller/controller.html#IebController.get_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.controller.IebController.get_status" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="lvmieb.controller.IebController.initialize">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">initialize</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/controller/controller.html#IebController.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.controller.IebController.initialize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="lvmieb.controller.IebController.send_command">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">send_command</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SelectTimeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/controller/controller.html#IebController.send_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.controller.IebController.send_command" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="lvmieb.controller.IebController.setWAGOPower">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">setWAGOPower</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dev</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/controller/controller.html#IebController.setWAGOPower"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.controller.IebController.setWAGOPower" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="lvmieb.controller.IebController.set_home">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">set_home</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/controller/controller.html#IebController.set_home"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.controller.IebController.set_home" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="lvmieb.controller.IebController.count">
+<code class="sig-name descname"><span class="pre">count</span></code><em class="property"> <span class="pre">=</span> <span class="pre">0</span></em><a class="headerlink" href="#lvmieb.controller.IebController.count" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -102,7 +115,7 @@
 
 
 <p>
-<iframe src="https://ghbtns.com/github-btn.html?user=sdss&repo=osuactor&type=star&count=true&size=large&v=2"
+<iframe src="https://ghbtns.com/github-btn.html?user=sdss&repo=lvmieb&type=star&count=true&size=large&v=2"
   allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
 </p>
 
@@ -112,7 +125,7 @@
 
 <h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="Osuactor.html">Osuactor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lvmieb.html">lvmieb</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Controller</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id1">Controller</a></li>
@@ -126,7 +139,7 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="Osuactor.html" title="previous chapter">Osuactor</a></li>
+      <li>Previous: <a href="lvmieb.html" title="previous chapter">lvmieb</a></li>
       <li>Next: <a href="Commands.html" title="next chapter">Commands</a></li>
   </ul></li>
 </ul>
@@ -158,7 +171,7 @@
     </div>
 
     
-    <a href="https://github.com/sdss/osuactor" class="github">
+    <a href="https://github.com/sdss/lvmieb" class="github">
         <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
     </a>
     

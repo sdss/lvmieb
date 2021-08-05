@@ -5,7 +5,7 @@ Exceptions
 -------------
 
 
-.. automodule:: osuactor.exceptions
+.. automodule:: lvmieb.exceptions
    :members:
    :undoc-members:
    :show-inheritance:
