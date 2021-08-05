@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Commands &#8212; osuactor 0.1.0-alpha.0 documentation</title>
+    <title>Commands &#8212; lvmieb 0.1.1 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -39,86 +39,163 @@
             
   <div class="section" id="commands">
 <span id="id1"></span><h1>Commands<a class="headerlink" href="#commands" title="Permalink to this headline">¶</a></h1>
-<p>The <code class="docutils literal notranslate"><span class="pre">osuactor</span></code> replies to the follwing commands.</p>
-<div class="section" id="osuactor">
-<h2>osuactor<a class="headerlink" href="#osuactor" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>osuactor <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
+<p>The <code class="docutils literal notranslate"><span class="pre">lvmieb</span></code> replies to the follwing commands.</p>
+<div class="section" id="lvmieb">
+<h2>lvmieb<a class="headerlink" href="#lvmieb" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
 </pre></div>
 </div>
-<div class="section" id="osuactor-help">
-<h3>help<a class="headerlink" href="#osuactor-help" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="lvmieb-hartmann">
+<h3>hartmann<a class="headerlink" href="#lvmieb-hartmann" title="Permalink to this headline">¶</a></h3>
+<p>control the hartmann door.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb hartmann <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
+</pre></div>
+</div>
+<div class="section" id="lvmieb-hartmann-close">
+<h4>close<a class="headerlink" href="#lvmieb-hartmann-close" title="Permalink to this headline">¶</a></h4>
+<p>close the hartmann</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb hartmann close <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt id="cmdoption-lvmieb-hartmann-close-s">
+<span id="cmdoption-lvmieb-hartmann-close-side"></span><code class="sig-name descname"><span class="pre">-s</span></code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname"><span class="pre">,</span> </code><code class="sig-name descname"><span class="pre">--side</span></code><code class="sig-prename descclassname"> <span class="pre">&lt;side&gt;</span></code><a class="headerlink" href="#cmdoption-lvmieb-hartmann-close-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>all, right, or left</p>
+<dl class="field-list simple">
+<dt class="field-odd">Options</dt>
+<dd class="field-odd"><p>all | right | left</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="lvmieb-hartmann-home">
+<h4>home<a class="headerlink" href="#lvmieb-hartmann-home" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb hartmann home <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="lvmieb-hartmann-init">
+<h4>init<a class="headerlink" href="#lvmieb-hartmann-init" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb hartmann init <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="lvmieb-hartmann-open">
+<h4>open<a class="headerlink" href="#lvmieb-hartmann-open" title="Permalink to this headline">¶</a></h4>
+<p>open the hartmann</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb hartmann open <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt id="cmdoption-lvmieb-hartmann-open-s">
+<span id="cmdoption-lvmieb-hartmann-open-side"></span><code class="sig-name descname"><span class="pre">-s</span></code><code class="sig-prename descclassname"></code><code class="sig-prename descclassname"><span class="pre">,</span> </code><code class="sig-name descname"><span class="pre">--side</span></code><code class="sig-prename descclassname"> <span class="pre">&lt;side&gt;</span></code><a class="headerlink" href="#cmdoption-lvmieb-hartmann-open-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>all, right, or left</p>
+<dl class="field-list simple">
+<dt class="field-odd">Options</dt>
+<dd class="field-odd"><p>all | right | left</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="lvmieb-hartmann-status">
+<h4>status<a class="headerlink" href="#lvmieb-hartmann-status" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb hartmann status <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="lvmieb-help">
+<h3>help<a class="headerlink" href="#lvmieb-help" title="Permalink to this headline">¶</a></h3>
 <p>Shows the help.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>osuactor <span class="nb">help</span> <span class="o">[</span>OPTIONS<span class="o">]</span> <span class="o">[</span>PARSER_COMMAND<span class="o">]</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb <span class="nb">help</span> <span class="o">[</span>OPTIONS<span class="o">]</span> <span class="o">[</span>PARSER_COMMAND<span class="o">]</span>
 </pre></div>
 </div>
 <p class="rubric">Arguments</p>
 <dl class="std option">
-<dt id="cmdoption-osuactor-help-arg-PARSER_COMMAND">
-<span id="cmdoption-osuactor-help-arg-parser-command"></span><code class="sig-name descname"><span class="pre">PARSER_COMMAND</span></code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-osuactor-help-arg-PARSER_COMMAND" title="Permalink to this definition">¶</a></dt>
+<dt id="cmdoption-lvmieb-help-arg-PARSER_COMMAND">
+<span id="cmdoption-lvmieb-help-arg-parser-command"></span><code class="sig-name descname"><span class="pre">PARSER_COMMAND</span></code><code class="sig-prename descclassname"></code><a class="headerlink" href="#cmdoption-lvmieb-help-arg-PARSER_COMMAND" title="Permalink to this definition">¶</a></dt>
 <dd><p>Optional argument</p>
 </dd></dl>
 
 </div>
-<div class="section" id="osuactor-ping">
-<h3>ping<a class="headerlink" href="#osuactor-ping" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="lvmieb-ping">
+<h3>ping<a class="headerlink" href="#lvmieb-ping" title="Permalink to this headline">¶</a></h3>
 <p>Pings the actor.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>osuactor ping <span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb ping <span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="osuactor-shutter">
-<h3>shutter<a class="headerlink" href="#osuactor-shutter" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="lvmieb-shutter">
+<h3>shutter<a class="headerlink" href="#lvmieb-shutter" title="Permalink to this headline">¶</a></h3>
 <p>control the shutter.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>osuactor shutter <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb shutter <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
 </pre></div>
 </div>
-<div class="section" id="osuactor-shutter-close">
-<h4>close<a class="headerlink" href="#osuactor-shutter-close" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="lvmieb-shutter-close">
+<h4>close<a class="headerlink" href="#lvmieb-shutter-close" title="Permalink to this headline">¶</a></h4>
 <p>close the shutter</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>osuactor shutter close <span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb shutter close <span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="osuactor-shutter-connect">
-<h4>connect<a class="headerlink" href="#osuactor-shutter-connect" title="Permalink to this headline">¶</a></h4>
-<p>open the connection with the shutter.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>osuactor shutter connect <span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="section" id="lvmieb-shutter-init">
+<h4>init<a class="headerlink" href="#lvmieb-shutter-init" title="Permalink to this headline">¶</a></h4>
+<p>initialize the shutter</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb shutter init <span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="osuactor-shutter-disconnect">
-<h4>disconnect<a class="headerlink" href="#osuactor-shutter-disconnect" title="Permalink to this headline">¶</a></h4>
-<p>close the connection with the shutter</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>osuactor shutter disconnect <span class="o">[</span>OPTIONS<span class="o">]</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="osuactor-shutter-open">
-<h4>open<a class="headerlink" href="#osuactor-shutter-open" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="lvmieb-shutter-open">
+<h4>open<a class="headerlink" href="#lvmieb-shutter-open" title="Permalink to this headline">¶</a></h4>
 <p>open the shutter</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>osuactor shutter open <span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb shutter open <span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="osuactor-shutter-status">
-<h4>status<a class="headerlink" href="#osuactor-shutter-status" title="Permalink to this headline">¶</a></h4>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>osuactor shutter status <span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="section" id="lvmieb-shutter-status">
+<h4>status<a class="headerlink" href="#lvmieb-shutter-status" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb shutter status <span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
 </div>
 </div>
 </div>
-<div class="section" id="osuactor-telemetry">
-<h3>telemetry<a class="headerlink" href="#osuactor-telemetry" title="Permalink to this headline">¶</a></h3>
-<p>Returns the status of wago sensor.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>osuactor telemetry <span class="o">[</span>OPTIONS<span class="o">]</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="osuactor-version">
-<h3>version<a class="headerlink" href="#osuactor-version" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="lvmieb-version">
+<h3>version<a class="headerlink" href="#lvmieb-version" title="Permalink to this headline">¶</a></h3>
 <p>Reports the version.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>osuactor version <span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb version <span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
+</div>
+</div>
+<div class="section" id="lvmieb-wago">
+<h3>wago<a class="headerlink" href="#lvmieb-wago" title="Permalink to this headline">¶</a></h3>
+<p>control the wago IOModule.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb wago <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
+</pre></div>
+</div>
+<div class="section" id="lvmieb-wago-getpower">
+<h4>getpower<a class="headerlink" href="#lvmieb-wago-getpower" title="Permalink to this headline">¶</a></h4>
+<p>Returns the status of wago sensor.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb wago getpower <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="lvmieb-wago-setpower">
+<h4>setpower<a class="headerlink" href="#lvmieb-wago-setpower" title="Permalink to this headline">¶</a></h4>
+<p>Returns the status of wago sensor.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb wago setpower <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="lvmieb-wago-status">
+<h4>status<a class="headerlink" href="#lvmieb-wago-status" title="Permalink to this headline">¶</a></h4>
+<p>Returns the status of wago sensor.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>lvmieb wago status <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -144,7 +221,7 @@
 
 
 <p>
-<iframe src="https://ghbtns.com/github-btn.html?user=sdss&repo=osuactor&type=star&count=true&size=large&v=2"
+<iframe src="https://ghbtns.com/github-btn.html?user=sdss&repo=lvmieb&type=star&count=true&size=large&v=2"
   allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
 </p>
 
@@ -154,22 +231,34 @@
 
 <h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="Osuactor.html">Osuactor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lvmieb.html">lvmieb</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Controller.html">Controller</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Commands</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#osuactor">osuactor</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#osuactor-help">help</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#osuactor-ping">ping</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#osuactor-shutter">shutter</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#osuactor-shutter-close">close</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#osuactor-shutter-connect">connect</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#osuactor-shutter-disconnect">disconnect</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#osuactor-shutter-open">open</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#osuactor-shutter-status">status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lvmieb">lvmieb</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#lvmieb-hartmann">hartmann</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lvmieb-hartmann-close">close</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lvmieb-hartmann-home">home</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lvmieb-hartmann-init">init</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lvmieb-hartmann-open">open</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lvmieb-hartmann-status">status</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#osuactor-telemetry">telemetry</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#osuactor-version">version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lvmieb-help">help</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lvmieb-ping">ping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lvmieb-shutter">shutter</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lvmieb-shutter-close">close</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lvmieb-shutter-init">init</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lvmieb-shutter-open">open</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lvmieb-shutter-status">status</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#lvmieb-version">version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lvmieb-wago">wago</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#lvmieb-wago-getpower">getpower</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lvmieb-wago-setpower">setpower</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#lvmieb-wago-status">status</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -213,7 +302,7 @@
     </div>
 
     
-    <a href="https://github.com/sdss/osuactor" class="github">
+    <a href="https://github.com/sdss/lvmieb" class="github">
         <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
     </a>
     

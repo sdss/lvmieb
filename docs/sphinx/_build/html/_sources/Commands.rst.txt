@@ -3,8 +3,8 @@
 Commands
 =============
 
-The ``osuactor`` replies to the follwing commands.
+The ``lvmieb`` replies to the follwing commands.
 
-.. click:: osuactor.actor.commands:parser
-  :prog: osuactor
+.. click:: lvmieb.actor.commands:parser
+  :prog: lvmieb
   :show-nested:

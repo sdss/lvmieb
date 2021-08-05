@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Exceptions &#8212; osuactor 0.1.0-alpha.0 documentation</title>
+    <title>Exceptions &#8212; lvmieb 0.1.1 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -40,67 +40,67 @@
 <h1>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
 <h2>Exceptions<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<span class="target" id="module-osuactor.exceptions"></span><dl class="py exception">
-<dt id="osuactor.exceptions.OsuActorAPIError">
-<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorAPIError</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorAPIError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorAPIError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#osuactor.exceptions.OsuActorError" title="osuactor.exceptions.OsuActorError"><code class="xref py py-class docutils literal notranslate"><span class="pre">osuactor.exceptions.OsuActorError</span></code></a></p>
+<span class="target" id="module-lvmieb.exceptions"></span><dl class="py exception">
+<dt id="lvmieb.exceptions.LvmIebAPIError">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">lvmieb.exceptions.</span></code><code class="sig-name descname"><span class="pre">LvmIebAPIError</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/exceptions.html#LvmIebAPIError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.exceptions.LvmIebAPIError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lvmieb.exceptions.LvmIebError" title="lvmieb.exceptions.LvmIebError"><code class="xref py py-class docutils literal notranslate"><span class="pre">lvmieb.exceptions.LvmIebError</span></code></a></p>
 <p>A custom exception for API errors</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="osuactor.exceptions.OsuActorApiAuthError">
-<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorApiAuthError</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorApiAuthError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorApiAuthError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#osuactor.exceptions.OsuActorAPIError" title="osuactor.exceptions.OsuActorAPIError"><code class="xref py py-class docutils literal notranslate"><span class="pre">osuactor.exceptions.OsuActorAPIError</span></code></a></p>
+<dt id="lvmieb.exceptions.LvmIebApiAuthError">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">lvmieb.exceptions.</span></code><code class="sig-name descname"><span class="pre">LvmIebApiAuthError</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/exceptions.html#LvmIebApiAuthError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.exceptions.LvmIebApiAuthError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lvmieb.exceptions.LvmIebAPIError" title="lvmieb.exceptions.LvmIebAPIError"><code class="xref py py-class docutils literal notranslate"><span class="pre">lvmieb.exceptions.LvmIebAPIError</span></code></a></p>
 <p>A custom exception for API authentication errors</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="osuactor.exceptions.OsuActorDeprecationWarning">
-<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorDeprecationWarning</span></code><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorDeprecationWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorDeprecationWarning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#osuactor.exceptions.OsuActorUserWarning" title="osuactor.exceptions.OsuActorUserWarning"><code class="xref py py-class docutils literal notranslate"><span class="pre">osuactor.exceptions.OsuActorUserWarning</span></code></a></p>
+<dt id="lvmieb.exceptions.LvmIebDeprecationWarning">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">lvmieb.exceptions.</span></code><code class="sig-name descname"><span class="pre">LvmIebDeprecationWarning</span></code><a class="reference internal" href="_modules/lvmieb/exceptions.html#LvmIebDeprecationWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.exceptions.LvmIebDeprecationWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lvmieb.exceptions.LvmIebUserWarning" title="lvmieb.exceptions.LvmIebUserWarning"><code class="xref py py-class docutils literal notranslate"><span class="pre">lvmieb.exceptions.LvmIebUserWarning</span></code></a></p>
 <p>A warning for deprecated features.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="osuactor.exceptions.OsuActorError">
-<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorError</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorError" title="Permalink to this definition">¶</a></dt>
+<dt id="lvmieb.exceptions.LvmIebError">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">lvmieb.exceptions.</span></code><code class="sig-name descname"><span class="pre">LvmIebError</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/exceptions.html#LvmIebError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.exceptions.LvmIebError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
-<p>A custom core OsuActor exception</p>
+<p>A custom core LvmIeb exception</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="osuactor.exceptions.OsuActorMissingDependency">
-<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorMissingDependency</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorMissingDependency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorMissingDependency" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#osuactor.exceptions.OsuActorError" title="osuactor.exceptions.OsuActorError"><code class="xref py py-class docutils literal notranslate"><span class="pre">osuactor.exceptions.OsuActorError</span></code></a></p>
+<dt id="lvmieb.exceptions.LvmIebMissingDependency">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">lvmieb.exceptions.</span></code><code class="sig-name descname"><span class="pre">LvmIebMissingDependency</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/exceptions.html#LvmIebMissingDependency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.exceptions.LvmIebMissingDependency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lvmieb.exceptions.LvmIebError" title="lvmieb.exceptions.LvmIebError"><code class="xref py py-class docutils literal notranslate"><span class="pre">lvmieb.exceptions.LvmIebError</span></code></a></p>
 <p>A custom exception for missing dependencies.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="osuactor.exceptions.OsuActorNotImplemented">
-<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorNotImplemented</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorNotImplemented"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorNotImplemented" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#osuactor.exceptions.OsuActorError" title="osuactor.exceptions.OsuActorError"><code class="xref py py-class docutils literal notranslate"><span class="pre">osuactor.exceptions.OsuActorError</span></code></a></p>
+<dt id="lvmieb.exceptions.LvmIebNotImplemented">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">lvmieb.exceptions.</span></code><code class="sig-name descname"><span class="pre">LvmIebNotImplemented</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/exceptions.html#LvmIebNotImplemented"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.exceptions.LvmIebNotImplemented" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lvmieb.exceptions.LvmIebError" title="lvmieb.exceptions.LvmIebError"><code class="xref py py-class docutils literal notranslate"><span class="pre">lvmieb.exceptions.LvmIebError</span></code></a></p>
 <p>A custom exception for not yet implemented features.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="osuactor.exceptions.OsuActorSkippedTestWarning">
-<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorSkippedTestWarning</span></code><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorSkippedTestWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorSkippedTestWarning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#osuactor.exceptions.OsuActorUserWarning" title="osuactor.exceptions.OsuActorUserWarning"><code class="xref py py-class docutils literal notranslate"><span class="pre">osuactor.exceptions.OsuActorUserWarning</span></code></a></p>
+<dt id="lvmieb.exceptions.LvmIebSkippedTestWarning">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">lvmieb.exceptions.</span></code><code class="sig-name descname"><span class="pre">LvmIebSkippedTestWarning</span></code><a class="reference internal" href="_modules/lvmieb/exceptions.html#LvmIebSkippedTestWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.exceptions.LvmIebSkippedTestWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#lvmieb.exceptions.LvmIebUserWarning" title="lvmieb.exceptions.LvmIebUserWarning"><code class="xref py py-class docutils literal notranslate"><span class="pre">lvmieb.exceptions.LvmIebUserWarning</span></code></a></p>
 <p>A warning for when a test is skipped.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="osuactor.exceptions.OsuActorUserWarning">
-<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorUserWarning</span></code><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorUserWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorUserWarning" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#UserWarning" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserWarning</span></code></a>, <a class="reference internal" href="#osuactor.exceptions.OsuActorWarning" title="osuactor.exceptions.OsuActorWarning"><code class="xref py py-class docutils literal notranslate"><span class="pre">osuactor.exceptions.OsuActorWarning</span></code></a></p>
+<dt id="lvmieb.exceptions.LvmIebUserWarning">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">lvmieb.exceptions.</span></code><code class="sig-name descname"><span class="pre">LvmIebUserWarning</span></code><a class="reference internal" href="_modules/lvmieb/exceptions.html#LvmIebUserWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.exceptions.LvmIebUserWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#UserWarning" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">UserWarning</span></code></a>, <a class="reference internal" href="#lvmieb.exceptions.LvmIebWarning" title="lvmieb.exceptions.LvmIebWarning"><code class="xref py py-class docutils literal notranslate"><span class="pre">lvmieb.exceptions.LvmIebWarning</span></code></a></p>
 <p>The primary warning class.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="osuactor.exceptions.OsuActorWarning">
-<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">osuactor.exceptions.</span></code><code class="sig-name descname"><span class="pre">OsuActorWarning</span></code><a class="reference internal" href="_modules/osuactor/exceptions.html#OsuActorWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#osuactor.exceptions.OsuActorWarning" title="Permalink to this definition">¶</a></dt>
+<dt id="lvmieb.exceptions.LvmIebWarning">
+<em class="property"><span class="pre">exception</span> </em><code class="sig-prename descclassname"><span class="pre">lvmieb.exceptions.</span></code><code class="sig-name descname"><span class="pre">LvmIebWarning</span></code><a class="reference internal" href="_modules/lvmieb/exceptions.html#LvmIebWarning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.exceptions.LvmIebWarning" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Warning" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Warning</span></code></a></p>
-<p>Base warning for OsuActor.</p>
+<p>Base warning for LvmIeb.</p>
 </dd></dl>
 
 </div>
@@ -126,7 +126,7 @@
 
 
 <p>
-<iframe src="https://ghbtns.com/github-btn.html?user=sdss&repo=osuactor&type=star&count=true&size=large&v=2"
+<iframe src="https://ghbtns.com/github-btn.html?user=sdss&repo=lvmieb&type=star&count=true&size=large&v=2"
   allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
 </p>
 
@@ -136,7 +136,7 @@
 
 <h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="Osuactor.html">Osuactor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lvmieb.html">lvmieb</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Controller.html">Controller</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Commands.html">Commands</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Exceptions</a><ul>
@@ -180,7 +180,7 @@
     </div>
 
     
-    <a href="https://github.com/sdss/osuactor" class="github">
+    <a href="https://github.com/sdss/lvmieb" class="github">
         <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
     </a>
     
