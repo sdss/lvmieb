@@ -77,7 +77,7 @@ async def setpower(command: Command, controllers: dict[str, IebController]):
         if controllers[wago].name == "wago":
             try:
                 wago_status1 = await controllers[wago].setWAGOPower(
-                    "hartmann_right_power", "ON"
+                    "hartmann_left_power", "ON"
                 )
                 if wago_status1:
                     command.finish(
@@ -93,4 +93,4 @@ async def setpower(command: Command, controllers: dict[str, IebController]):
                     return command.fail(text="ERROR: Did not read sensors/powers")
             except LvmIebError as err:
                 return command.fail(error=str(err))
-    return command.finish()
+    return
