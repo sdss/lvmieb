@@ -5,7 +5,7 @@
 [![Travis (.org)](https://img.shields.io/travis/sdss/lvmieb)](https://travis-ci.org/sdss/lvmieb)
 [![codecov](https://codecov.io/gh/sdss/lvmieb/branch/main/graph/badge.svg)](https://codecov.io/gh/sdss/lvmieb)
 
-Simple Template package for creating SDSS Python projects
+SDSS-V LVM(Local Volume Mapper) IEB(Integrated Electronics Box) control software for the Spectrograpgh
 
 ## Quick Start
 
