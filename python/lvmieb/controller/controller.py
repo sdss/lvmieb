@@ -387,7 +387,7 @@ class IebController:
         except LvmIebError as err:
             warnings.warn(str(err), LvmIebWarning)
 
-    # courutine for receiving data from the WAGO module
+    # courutine for receiving data from the WAGO modules
 
     async def getWAGOEnv(self):
         rtdAddr = 8
