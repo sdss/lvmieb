@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.9]
+        python-version: [3.8,3.9]
 
     steps:
     - uses: actions/checkout@v2
@@ -63,12 +63,6 @@ jobs:
       run: |
         poetry run isort -c . -vvv
 
-    - name: Run type checking
-      continue-on-error: true
-      run: |
-        npm install -g pyright
-        poetry run pyright
-
     - name: Test with pytest
       run: |
         poetry run pytest
@@ -76,4 +70,5 @@ jobs:
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1.0.3
       with:
+        token: ${{ secrets.CODECOV_TOKEN }}
         file: ./coverage.xml
