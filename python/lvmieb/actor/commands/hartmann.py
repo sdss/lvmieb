@@ -42,19 +42,20 @@ async def open(command: Command, controllers: dict[str, IebController], side: st
     tasks = []
 
     for hartmann in controllers:
-        if side == "all" or side == "left":
-            if controllers[hartmann].name == "hartmann_left":
-                try:
-                    tasks.append(controllers[hartmann].send_command("open"))
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
+        if controllers[hartmann].spec == "sp1":
+            if side == "all" or side == "left":
+                if controllers[hartmann].name == "hartmann_left":
+                    try:
+                        tasks.append(controllers[hartmann].send_command("open"))
+                    except LvmIebError as err:
+                        return command.fail(error=str(err))
 
-        if side == "all" or side == "right":
-            if controllers[hartmann].name == "hartmann_right":
-                try:
-                    tasks.append(controllers[hartmann].send_command("open"))
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
+            if side == "all" or side == "right":
+                if controllers[hartmann].name == "hartmann_right":
+                    try:
+                        tasks.append(controllers[hartmann].send_command("open"))
+                    except LvmIebError as err:
+                        return command.fail(error=str(err))
 
     command.info(text=f"Opening {side} hartmanns")
     await asyncio.gather(*tasks)
@@ -81,19 +82,20 @@ async def close(command: Command, controllers: dict[str, IebController], side: s
     tasks = []
 
     for hartmann in controllers:
-        if side == "all" or side == "right":
-            if controllers[hartmann].name == "hartmann_right":
-                try:
-                    tasks.append(controllers[hartmann].send_command("close"))
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
+        if controllers[hartmann].spec == "sp1":
+            if side == "all" or side == "right":
+                if controllers[hartmann].name == "hartmann_right":
+                    try:
+                        tasks.append(controllers[hartmann].send_command("close"))
+                    except LvmIebError as err:
+                        return command.fail(error=str(err))
 
-        if side == "all" or side == "left":
-            if controllers[hartmann].name == "hartmann_left":
-                try:
-                    tasks.append(controllers[hartmann].send_command("close"))
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
+            if side == "all" or side == "left":
+                if controllers[hartmann].name == "hartmann_left":
+                    try:
+                        tasks.append(controllers[hartmann].send_command("close"))
+                    except LvmIebError as err:
+                        return command.fail(error=str(err))
 
     command.info(text=f"Closing {side} hartmanns")
     await asyncio.gather(*tasks)
@@ -115,18 +117,19 @@ async def status(command: Command, controllers: dict[str, IebController]):
     print(controllers)
     for h in controllers:
         print(controllers[h].name)
-        if controllers[h].name == "hartmann_right":
-            print(controllers[h].name, controllers[h].host, controllers[h].port)
-            try:
-                tasks.append(controllers[h].get_status())
-            except LvmIebError as err:
-                return command.fail(error=str(err))
-        if controllers[h].name == "hartmann_left":
-            print(controllers[h].name, controllers[h].host, controllers[h].port)
-            try:
-                tasks.append(controllers[h].get_status())
-            except LvmIebError as err:
-                return command.fail(error=str(err))
+        if controllers[h].spec == "sp1":
+            if controllers[h].name == "hartmann_right":
+                print(controllers[h].name, controllers[h].host, controllers[h].port)
+                try:
+                    tasks.append(controllers[h].get_status())
+                except LvmIebError as err:
+                    return command.fail(error=str(err))
+            if controllers[h].name == "hartmann_left":
+                print(controllers[h].name, controllers[h].host, controllers[h].port)
+                try:
+                    tasks.append(controllers[h].get_status())
+                except LvmIebError as err:
+                    return command.fail(error=str(err))
     result_hartmann = await asyncio.gather(*tasks)
     print(result_hartmann)
     try:
@@ -143,16 +146,17 @@ async def init(command: Command, controllers: dict[str, IebController]):
     command.info(text="Checking all hartmanns")
     tasks = []
     for h in controllers:
-        if controllers[h].name == "hartmann_right":
-            try:
-                tasks.append(controllers[h].initialize())
-            except LvmIebError as err:
-                return command.fail(error=str(err))
-        if controllers[h].name == "hartmann_left":
-            try:
-                tasks.append(controllers[h].initialize())
-            except LvmIebError as err:
-                return command.fail(error=str(err))
+        if controllers[h].spec == "sp1":
+            if controllers[h].name == "hartmann_right":
+                try:
+                    tasks.append(controllers[h].initialize())
+                except LvmIebError as err:
+                    return command.fail(error=str(err))
+            if controllers[h].name == "hartmann_left":
+                try:
+                    tasks.append(controllers[h].initialize())
+                except LvmIebError as err:
+                    return command.fail(error=str(err))
     await asyncio.gather(*tasks)
     return command.finish()
 
@@ -162,15 +166,16 @@ async def home(command: Command, controllers: dict[str, IebController]):
     command.info(text="Checking all hartmanns")
     tasks = []
     for h in controllers:
-        if controllers[h].name == "hartmann_right":
-            try:
-                tasks.append(controllers[h].set_home())
-            except LvmIebError as err:
-                return command.fail(error=str(err))
-        if controllers[h].name == "hartmann_left":
-            try:
-                tasks.append(controllers[h].set_home())
-            except LvmIebError as err:
-                return command.fail(error=str(err))
+        if controllers[h].spec == "sp1":
+            if controllers[h].name == "hartmann_right":
+                try:
+                    tasks.append(controllers[h].set_home())
+                except LvmIebError as err:
+                    return command.fail(error=str(err))
+            if controllers[h].name == "hartmann_left":
+                try:
+                    tasks.append(controllers[h].set_home())
+                except LvmIebError as err:
+                    return command.fail(error=str(err))
     await asyncio.gather(*tasks)
     return command.finish()
