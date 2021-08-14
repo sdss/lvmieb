@@ -16,7 +16,6 @@ from pymodbus.client.asynchronous.async_io import (
     AsyncioModbusTcpClient as ModbusClient,
 )  # isort:skip
 
-
 from lvmieb.exceptions import LvmIebError, LvmIebWarning
 
 
@@ -55,13 +54,15 @@ class IebController:
 
     count = 0
 
-    def __init__(self, host: str, port: int, name: str = ""):
+    def __init__(self, host: str, port: int, name: str = "", pres_id=253, spec=""):
         self.name = name
         self.sensors = {
-            "rhtT1(40001)": -273.0,  # Temperatures in C
-            "rhtRH1(40002)": -1.0,  # Humidity in percent
-            "rhtT2(40003)": -273.0,
-            "rhtRH2(40004)": -1.0,
+            "rhtRH1(40001)": -1.0,  # Temperatures in C
+            "rhtT1(40002)": -273.0,  # Humidity in percent
+            "rhtRH2(40003)": -1.0,
+            "rhtT2(40004)": -273.0,
+            "rhtRH3(40005)": -1.0,
+            "rhtT3(40006)": -273.0,
             "rtd1(40009)": -273.0,  # IEB internal temp
             "rtd2(40010)": -273.0,  # Bench temp near NIR camera
             "rtd3(40011)": -273.0,  # Bench temp near collimator
@@ -72,8 +73,6 @@ class IebController:
             "hartmann_right_power": "ERROR",  # ERROR | ON | OFF
             "shutter_power": "ERROR",  # ERROR | ON | OFF
         }
-        self.wagohost = "10.7.45.28"
-        self.wagoport = 502
         self.__status_event = asyncio.Event()
         self.reader = None
         self.writer = None
@@ -83,6 +82,10 @@ class IebController:
         self.lock = asyncio.Lock()
         self.host = host
         self.port = port
+        self.pres_id = pres_id
+        self.spec = spec
+        self.trans_temp = -1.0
+        self.trans_pressure = -1.0
 
     async def initialize(self):
         r, w = await asyncio.open_connection(self.host, self.port)
@@ -393,21 +396,23 @@ class IebController:
         rtdAddr = 8
         rtdKeys = ["rtd1(40009)", "rtd2(40010)", "rtd3(40011)", "rtd4(40012)"]
         numRTDs = len(rtdKeys)
-        rhtRHKeys = ["rhtRH1(40002)", "rhtRH2(40004)"]
-        rhtTKeys = ["rhtT1(40001)", "rhtT2(40003)"]
+        rhtRHKeys = ["rhtRH1(40001)", "rhtRH2(40003)", "rhtRH3(40005)"]
+        rhtTKeys = ["rhtT1(40002)", "rhtT2(40004)", "rhtT3(40006)"]
         numRHT = len(rhtTKeys)
-        rhtAddr = 8
+        rhtAddr = 0
         RH0 = 0.0
         RHs = 100.0 / 32767.0
         T0 = -30.0
         Ts = RHs
-        wagoClient = ModbusClient(self.wagohost, self.wagoport)
+        wagoClient = ModbusClient(self.host, self.port)
         await wagoClient.connect()
         rd = await wagoClient.protocol.read_holding_registers(rtdAddr, numRTDs)
-        for i in range(4):
+
+        for i in range(numRTDs):
             self.sensors[rtdKeys[i]] = round(ptRTD2C(float(rd.registers[i])), 2)
         rd = await wagoClient.protocol.read_holding_registers(rhtAddr, 2 * numRHT)
-        for i in range(2):
+        print("registers", rd.registers)
+        for i in range(numRHT):
             self.sensors[rhtRHKeys[i]] = round(
                 RH0 + RHs * float(rd.registers[2 * i]), 2
             )
@@ -425,7 +430,7 @@ class IebController:
         numDevs = len(powList)
         # Get a WAGO client handle and connect (port 502 is implicit as
         # per modbus spec).
-        wagoClient = ModbusClient(self.wagohost, self.wagoport)
+        wagoClient = ModbusClient(self.host, self.port)
         await wagoClient.connect()
         rd = await wagoClient.protocol.read_holding_registers(do8Addr, maxPorts)
         outState = wagoDOReg(rd.registers[0], numOut=maxPorts)
@@ -458,7 +463,7 @@ class IebController:
             return False, "Unknown power state '%s', must be ON or OFF" % (state)
         # Get a WAGO client handle and connect (port 502 is implicit as
         # per modbus spec).
-        wagoClient = ModbusClient(self.wagohost, self.wagoport)
+        wagoClient = ModbusClient(self.host, self.port)
         await wagoClient.connect()
         idev = powList.index(dev)
         # relay open is Hartmann Doors powered off
@@ -477,6 +482,8 @@ class IebController:
         print(f"idev is {idev}")
         print(f"reqState is {reqState}")
         rd = await wagoClient.protocol.write_coil(idev, reqState)
+        await asyncio.sleep(0.1)
+
         # Now read the ports to confirm
         rd = await wagoClient.protocol.read_holding_registers(do8Addr, maxPorts)
         outState = wagoDOReg(rd.registers[0], numOut=maxPorts)
@@ -493,8 +500,55 @@ class IebController:
                 else:
                     self.power[powList[i]] = "OFF"
         # All done, clean up and return success
+        print(self.power)
         wagoClient.protocol.close()
         return True, "DONE"
+
+    async def read_pressure(self, ccdname):
+        try:
+            r, w = await asyncio.wait_for(
+                asyncio.open_connection(self.host, self.port), 1
+            )
+        except Exception:
+            return False
+
+        w.write(b"@" + str(self.pres_id).encode() + b"P?\\")
+        await w.drain()
+        finder = ccdname + "_pressure"
+        try:
+            reply = await asyncio.wait_for(r.readuntil(b"\\"), 1)
+            match = re.search(r"@[0-9]{1,3}ACK([0-9.E+-]+)\\$".encode(), reply)
+
+            if not match:
+                return False
+            self.trans_pressure = float(match.groups()[0])
+            pressure_dict = {finder: self.trans_pressure}
+            return pressure_dict
+        except Exception:
+            return False
+
+    async def read_temp(self, ccdname):
+        try:
+            r, w = await asyncio.wait_for(
+                asyncio.open_connection(self.host, self.port), 1
+            )
+        except Exception:
+            return False
+
+        w.write(b"@" + str(self.pres_id).encode() + b"T?\\")
+        await w.drain()
+        finder = ccdname + "_temperature"
+        try:
+            reply = await asyncio.wait_for(r.readuntil(b"\\"), 1)
+            match = re.search(r"@[0-9]{1,3}ACK([0-9.E+-]+)\\$".encode(), reply)
+
+            if not match:
+                return False
+            self.trans_temp = float(match.groups()[0])
+            temp_dict = {finder: self.trans_temp}
+            return temp_dict
+        except Exception:
+            return False
 
 
 def ptRTD2C(rawRTD):

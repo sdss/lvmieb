@@ -1099,6 +1099,18 @@ prompt_toolkit = ">=3.0.6,<4.0.0"
 sdsstools = ">=0.2.0"
 
 [[package]]
+name = "sdss-drift"
+version = "0.2.5"
+description = "Modbus PLC control library"
+category = "main"
+optional = false
+python-versions = ">=3.7,<4.0"
+
+[package.dependencies]
+pymodbus = ">=2.5.0,<3.0.0"
+sdsstools = ">=0.4.1"
+
+[[package]]
 name = "sdss-tree"
 version = "3.0.7"
 description = "Control and setup of SDSS tree environment and modules"
@@ -1461,7 +1473,7 @@ docs = ["Sphinx", "sphinx_bootstrap_theme"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "a7562b4f8c5afe04a10786cc2bbebbf7d757444bf5398c2050228cc379609919"
+content-hash = "69183bd671e78e93439703fda104abd5a39f6bc959c4f3ee8607c07e4edc6b42"
 
 [metadata.files]
 aio-pika = [
@@ -2197,6 +2209,10 @@ sdss-access = [
 sdss-clu = [
     {file = "sdss-clu-1.2.1.tar.gz", hash = "sha256:b0246b1e273d1161b9646eff0e3921b6e39eea094d2aecdff5ab835536d82c4e"},
     {file = "sdss_clu-1.2.1-py3-none-any.whl", hash = "sha256:c37395e1f1a4992ea54b56b6fe420a0fc05cdb0a20630bafcece815b133ffce1"},
+]
+sdss-drift = [
+    {file = "sdss-drift-0.2.5.tar.gz", hash = "sha256:483b75d50c8494bb6c4664b7df51324ba6208bc9db063c3543f5bdd34d5b9214"},
+    {file = "sdss_drift-0.2.5-py3-none-any.whl", hash = "sha256:eb9bf7340d689ba3c72293648dd9f1ffa79ef7103047f66dd0bf7c418bceb6a6"},
 ]
 sdss-tree = [
     {file = "sdss-tree-3.0.7.tar.gz", hash = "sha256:7bd707fc200576429f9fbc914336417a447dd5e8571d38cae5f3d57336ad9199"},

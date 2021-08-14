@@ -22,7 +22,6 @@ from lvmieb.controller.controller import IebController  # isort:skip
 
 from .commands import parser as lvm_command_parser  # added by CK 2021/03/30
 
-
 __all__ = ["lvmieb"]  # changed by CK 2021/03/30
 
 
@@ -43,6 +42,7 @@ class lvmieb(AMQPActor):
         self,
         *args,
         controllers: tuple[IebController, ...] = (),
+        wago_controllers: tuple[IebController, ...] = (),
         **kwargs,
     ):
         self.controllers = {c.name: c for c in controllers}
@@ -69,15 +69,49 @@ class lvmieb(AMQPActor):
         instance = super(lvmieb, cls).from_config(config, *args, **kwargs)
         assert isinstance(instance, lvmieb)
         assert isinstance(instance.config, dict)
-        if "controllers" in instance.config:
+        # print(instance.config["devices"]["motor_controllers"]["sp1"])
+
+        if "sp1" in instance.config["devices"]["motor_controllers"]:
+            controllers = (
+                IebController(
+                    host=ctr["host"], port=ctr["port"], name=ctrname, spec="sp1"
+                )
+                for (ctrname, ctr) in instance.config["devices"]["motor_controllers"][
+                    "sp1"
+                ].items()
+            )
+            instance.controllers = {c.name: c for c in controllers}
+            # print(instance.controllers)
+            # instance.parser_args = [instance.controllers]
+
+        if "sp1" in instance.config["devices"]["wago"]["controllers"]:
+            controllers = (
+                IebController(
+                    host=ctr["address"], port=ctr["port"], name=ctrname, spec="sp1"
+                )
+                for (ctrname, ctr) in instance.config["devices"]["wago"][
+                    "controllers"
+                ].items()
+            )
+            instance.controllers.update({c.name: c for c in controllers})
+            # print(instance.controllers)
+            # instance.parser_args = [instance.controllers]
+
+        if "sp1" in instance.config["devices"]["pressure"]:
             controllers = (
                 IebController(
                     host=ctr["host"],
                     port=ctr["port"],
+                    pres_id=ctr["id"],
                     name=ctrname,
+                    spec="sp1",
                 )
-                for (ctrname, ctr) in instance.config["controllers"].items()
+                for (ctrname, ctr) in instance.config["devices"]["pressure"][
+                    "sp1"
+                ].items()
             )
-            instance.controllers = {c.name: c for c in controllers}
+            instance.controllers.update({c.name: c for c in controllers})
+            print(instance.controllers)
             instance.parser_args = [instance.controllers]
+
         return instance

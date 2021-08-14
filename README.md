@@ -1,9 +1,11 @@
 # lvmieb
 
-![Versions](https://img.shields.io/badge/python->3.7-blue)
-[![Documentation Status](https://readthedocs.org/projects/sdss-lvmieb/badge/?version=latest)](https://sdss-lvmieb.readthedocs.io/en/latest/?badge=latest)
-[![Travis (.org)](https://img.shields.io/travis/sdss/lvmieb)](https://travis-ci.org/sdss/lvmieb)
-[![codecov](https://codecov.io/gh/sdss/lvmieb/branch/main/graph/badge.svg)](https://codecov.io/gh/sdss/lvmieb)
+![Versions](https://img.shields.io/badge/python->3.8-blue)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Documentation Status](https://readthedocs.org/projects/lvmieb/badge/?version=latest)](https://lvmieb.readthedocs.io/en/latest/?badge=latest)
+[![Test](https://github.com/sdss/lvmieb/actions/workflows/test.yml/badge.svg)](https://github.com/sdss/lvmieb/actions/workflows/test.yml)
+[![Docker](https://github.com/sdss/lvmieb/actions/workflows/docker.yml/badge.svg)](https://github.com/sdss/lvmieb/actions/workflows/docker.yml)
+[![codecov](https://codecov.io/gh/sdss/lvmieb/branch/master/graph/badge.svg?token=IyQglaQYSF)](https://codecov.io/gh/sdss/lvmieb)
 
 SDSS-V LVM(Local Volume Mapper) IEB(Integrated Electronics Box) control software for the Spectrograpgh
 
