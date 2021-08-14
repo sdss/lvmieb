@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sdss-lvmieb"
-version = "1.0.0"
+version = "0.2.0"
 
 description = "Simple Template package for creating SDSS Python projects"
 authors = ["Changgon Kim <changgonkim@khu.ac.kr>"]

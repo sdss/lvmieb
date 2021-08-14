@@ -75,7 +75,7 @@ async def close(command: Command, controllers: dict[str, IebController]):
 
 @shutter.command()
 async def status(command: Command, controllers: dict[str, IebController]):
-    
+
     command.info(text="Checking all shutters")
     tasks = []
 

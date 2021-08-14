@@ -54,7 +54,7 @@ class IebController:
 
     count = 0
 
-    def __init__(self, host: str, port: int, name: str = "", pres_id = 253, spec=""):
+    def __init__(self, host: str, port: int, name: str = "", pres_id=253, spec=""):
         self.name = name
         self.sensors = {
             "rhtRH1(40001)": -1.0,  # Temperatures in C
@@ -407,7 +407,7 @@ class IebController:
         wagoClient = ModbusClient(self.host, self.port)
         await wagoClient.connect()
         rd = await wagoClient.protocol.read_holding_registers(rtdAddr, numRTDs)
-        
+
         for i in range(numRTDs):
             self.sensors[rtdKeys[i]] = round(ptRTD2C(float(rd.registers[i])), 2)
         rd = await wagoClient.protocol.read_holding_registers(rhtAddr, 2 * numRHT)
@@ -483,7 +483,7 @@ class IebController:
         print(f"reqState is {reqState}")
         rd = await wagoClient.protocol.write_coil(idev, reqState)
         await asyncio.sleep(0.1)
-        
+
         # Now read the ports to confirm
         rd = await wagoClient.protocol.read_holding_registers(do8Addr, maxPorts)
         outState = wagoDOReg(rd.registers[0], numOut=maxPorts)
@@ -503,13 +503,15 @@ class IebController:
         print(self.power)
         wagoClient.protocol.close()
         return True, "DONE"
-    
+
     async def read_pressure(self, ccdname):
         try:
-            r, w = await asyncio.wait_for(asyncio.open_connection(self.host, self.port), 1)
+            r, w = await asyncio.wait_for(
+                asyncio.open_connection(self.host, self.port), 1
+            )
         except Exception:
             return False
-        
+
         w.write(b"@" + str(self.pres_id).encode() + b"P?\\")
         await w.drain()
         finder = ccdname + "_pressure"
@@ -520,19 +522,19 @@ class IebController:
             if not match:
                 return False
             self.trans_pressure = float(match.groups()[0])
-            pressure_dict = {
-                finder: self.trans_pressure
-            }
+            pressure_dict = {finder: self.trans_pressure}
             return pressure_dict
         except Exception:
             return False
 
     async def read_temp(self, ccdname):
         try:
-            r, w = await asyncio.wait_for(asyncio.open_connection(self.host, self.port), 1)
+            r, w = await asyncio.wait_for(
+                asyncio.open_connection(self.host, self.port), 1
+            )
         except Exception:
             return False
-        
+
         w.write(b"@" + str(self.pres_id).encode() + b"T?\\")
         await w.drain()
         finder = ccdname + "_temperature"
@@ -543,12 +545,11 @@ class IebController:
             if not match:
                 return False
             self.trans_temp = float(match.groups()[0])
-            temp_dict = {
-                finder: self.trans_temp
-            }
+            temp_dict = {finder: self.trans_temp}
             return temp_dict
         except Exception:
             return False
+
 
 def ptRTD2C(rawRTD):
     tempRes = 0.1  # module resolution is 0.1C per ADU

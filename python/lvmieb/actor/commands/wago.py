@@ -24,7 +24,7 @@ def wago(*args):
 @wago.command()
 async def status(command: Command, controllers: dict[str, IebController]):
     """Returns the status of wago sensor."""
-    
+
     for sp1 in controllers:
         if controllers[sp1].name == "sp1":
             try:
@@ -92,7 +92,9 @@ async def getpower(command: Command, controllers: dict[str, IebController]):
     required=True,
     help="Turn off device",
 )
-async def setpower(command: Command, controllers: dict[str, IebController], device: str, action: str):
+async def setpower(
+    command: Command, controllers: dict[str, IebController], device: str, action: str
+):
     """Returns the status of wago sensor."""
     device_string = device + "_power"
     for sp1 in controllers:

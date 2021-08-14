@@ -141,9 +141,6 @@ html_theme_options = {
     "page_width": "80%",
 }
 
-[tool.poetry.dev-dependencies]
-docker = "^4.4.0"
-pytest = "^6.2.1"
 html_favicon = "./_static/favicon.ico"
 
 # Add any paths that contain custom static files (such as style sheets) here,

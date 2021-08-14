@@ -69,35 +69,33 @@ class lvmieb(AMQPActor):
         instance = super(lvmieb, cls).from_config(config, *args, **kwargs)
         assert isinstance(instance, lvmieb)
         assert isinstance(instance.config, dict)
-        #print(instance.config["devices"]["motor_controllers"]["sp1"])
-        
+        # print(instance.config["devices"]["motor_controllers"]["sp1"])
+
         if "sp1" in instance.config["devices"]["motor_controllers"]:
             controllers = (
                 IebController(
-                    host=ctr["host"],
-                    port=ctr["port"],
-                    name=ctrname,
-                    spec="sp1"
+                    host=ctr["host"], port=ctr["port"], name=ctrname, spec="sp1"
                 )
-                for (ctrname, ctr) in instance.config["devices"]["motor_controllers"]["sp1"].items()
+                for (ctrname, ctr) in instance.config["devices"]["motor_controllers"][
+                    "sp1"
+                ].items()
             )
             instance.controllers = {c.name: c for c in controllers}
-            #print(instance.controllers)
-            #instance.parser_args = [instance.controllers]
-            
+            # print(instance.controllers)
+            # instance.parser_args = [instance.controllers]
+
         if "sp1" in instance.config["devices"]["wago"]["controllers"]:
             controllers = (
                 IebController(
-                    host=ctr["address"],
-                    port=ctr["port"],
-                    name=ctrname,
-                    spec="sp1"
+                    host=ctr["address"], port=ctr["port"], name=ctrname, spec="sp1"
                 )
-                for (ctrname, ctr) in instance.config["devices"]["wago"]["controllers"].items()
+                for (ctrname, ctr) in instance.config["devices"]["wago"][
+                    "controllers"
+                ].items()
             )
             instance.controllers.update({c.name: c for c in controllers})
-            #print(instance.controllers)
-            #instance.parser_args = [instance.controllers]
+            # print(instance.controllers)
+            # instance.parser_args = [instance.controllers]
 
         if "sp1" in instance.config["devices"]["pressure"]:
             controllers = (
@@ -106,9 +104,11 @@ class lvmieb(AMQPActor):
                     port=ctr["port"],
                     pres_id=ctr["id"],
                     name=ctrname,
-                    spec="sp1"
+                    spec="sp1",
                 )
-                for (ctrname, ctr) in instance.config["devices"]["pressure"]["sp1"].items()
+                for (ctrname, ctr) in instance.config["devices"]["pressure"][
+                    "sp1"
+                ].items()
             )
             instance.controllers.update({c.name: c for c in controllers})
             print(instance.controllers)

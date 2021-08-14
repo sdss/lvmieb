@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Controller &#8212; lvmieb 0.1.1 documentation</title>
+    <title>Controller &#8212; lvmieb 1.0.0 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
@@ -47,7 +47,7 @@
 <h2>Controller<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-lvmieb.controller"></span><dl class="py class">
 <dt id="lvmieb.controller.IebController">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">lvmieb.controller.</span></code><code class="sig-name descname"><span class="pre">IebController</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/controller/controller.html#IebController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.controller.IebController" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">lvmieb.controller.</span></code><code class="sig-name descname"><span class="pre">IebController</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pres_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">253</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/controller/controller.html#IebController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.controller.IebController" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Talks to an Ieb controller over TCP/IP</p>
 <dl class="py method">
@@ -68,6 +68,16 @@
 <dl class="py method">
 <dt id="lvmieb.controller.IebController.initialize">
 <em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">initialize</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/controller/controller.html#IebController.initialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.controller.IebController.initialize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="lvmieb.controller.IebController.read_pressure">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">read_pressure</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ccdname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/controller/controller.html#IebController.read_pressure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.controller.IebController.read_pressure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="lvmieb.controller.IebController.read_temp">
+<em class="property"><span class="pre">async</span> </em><code class="sig-name descname"><span class="pre">read_temp</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ccdname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/lvmieb/controller/controller.html#IebController.read_temp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#lvmieb.controller.IebController.read_temp" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
