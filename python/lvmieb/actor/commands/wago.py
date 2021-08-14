@@ -7,11 +7,12 @@
 
 from __future__ import absolute_import, annotations, division, print_function
 
+import click
 from clu.command import Command
 
 from lvmieb.controller.controller import IebController
 from lvmieb.exceptions import LvmIebError
-import click
+
 from . import parser
 
 

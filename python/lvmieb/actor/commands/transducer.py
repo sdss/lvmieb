@@ -1,11 +1,14 @@
 from __future__ import absolute_import, annotations, division, print_function
 
+import asyncio
+
 from clu.command import Command
 
 from lvmieb.controller.controller import IebController
 from lvmieb.exceptions import LvmIebError
+
 from . import parser
-import asyncio
+
 
 CCDLIST = ["r1", "b1", "z1"]
 
