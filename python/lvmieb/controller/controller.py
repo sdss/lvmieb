@@ -523,8 +523,12 @@ class IebController:
                 return False
             self.trans_pressure = float(match.groups()[0])
             pressure_dict = {finder: self.trans_pressure}
+            w.close()
+            await w.wait_closed()
             return pressure_dict
         except Exception:
+            w.close()
+            await w.wait_closed()
             return False
 
     async def read_temp(self, ccdname):
@@ -546,6 +550,8 @@ class IebController:
                 return False
             self.trans_temp = float(match.groups()[0])
             temp_dict = {finder: self.trans_temp}
+            w.close()
+            await w.wait_closed()
             return temp_dict
         except Exception:
             return False
