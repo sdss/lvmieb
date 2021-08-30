@@ -23,11 +23,17 @@ def wago(*args):
 
 
 @wago.command()
-async def status(command: Command, controllers: dict[str, IebController]):
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
+async def status(command: Command, controllers: dict[str, IebController], spectro: str):
     """Returns the status of wago sensor."""
 
     for sp1 in controllers:
-        if controllers[sp1].name == "sp1":
+        if controllers[sp1].name == spectro:
             try:
                 wago_status1 = await controllers[sp1].getWAGOEnv()
                 if wago_status1:
@@ -51,10 +57,18 @@ async def status(command: Command, controllers: dict[str, IebController]):
 
 
 @wago.command()
-async def getpower(command: Command, controllers: dict[str, IebController]):
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
+async def getpower(
+    command: Command, controllers: dict[str, IebController], spectro: str
+):
     """Returns the status of wago sensor."""
     for sp1 in controllers:
-        if controllers[sp1].name == "sp1":
+        if controllers[sp1].name == spectro:
             try:
                 wago_status1 = await controllers[sp1].getWAGOPower()
                 if wago_status1:
@@ -93,13 +107,23 @@ async def getpower(command: Command, controllers: dict[str, IebController]):
     required=True,
     help="Turn off device",
 )
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
 async def setpower(
-    command: Command, controllers: dict[str, IebController], device: str, action: str
+    command: Command,
+    controllers: dict[str, IebController],
+    device: str,
+    action: str,
+    spectro: str,
 ):
     """Returns the status of wago sensor."""
     device_string = device + "_power"
     for sp1 in controllers:
-        if controllers[sp1].name == "sp1":
+        if controllers[sp1].name == spectro:
             try:
                 wago_status1 = await controllers[sp1].setWAGOPower(
                     device_string, action

@@ -36,13 +36,21 @@ def hartmann(*args):
     default="all",
     help="all, right, or left",
 )
-async def open(command: Command, controllers: dict[str, IebController], side: str):
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
+async def open(
+    command: Command, controllers: dict[str, IebController], side: str, spectro: str
+):
     """open the hartmann"""
 
     tasks = []
 
     for hartmann in controllers:
-        if controllers[hartmann].spec == "sp1":
+        if controllers[hartmann].spec == spectro:
             if side == "all" or side == "left":
                 if controllers[hartmann].name == "hartmann_left":
                     try:
@@ -77,12 +85,20 @@ async def open(command: Command, controllers: dict[str, IebController], side: st
     default="all",
     help="all, right, or left",
 )
-async def close(command: Command, controllers: dict[str, IebController], side: str):
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
+async def close(
+    command: Command, controllers: dict[str, IebController], side: str, spectro: str
+):
     """close the hartmann"""
     tasks = []
 
     for hartmann in controllers:
-        if controllers[hartmann].spec == "sp1":
+        if controllers[hartmann].spec == spectro:
             if side == "all" or side == "right":
                 if controllers[hartmann].name == "hartmann_right":
                     try:
@@ -111,13 +127,19 @@ async def close(command: Command, controllers: dict[str, IebController], side: s
 
 
 @hartmann.command()
-async def status(command: Command, controllers: dict[str, IebController]):
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
+async def status(command: Command, controllers: dict[str, IebController], spectro: str):
     command.info(text="Checking all hartmanns")
     tasks = []
     print(controllers)
     for h in controllers:
         print(controllers[h].name)
-        if controllers[h].spec == "sp1":
+        if controllers[h].spec == spectro:
             if controllers[h].name == "hartmann_right":
                 print(controllers[h].name, controllers[h].host, controllers[h].port)
                 try:
@@ -142,11 +164,17 @@ async def status(command: Command, controllers: dict[str, IebController]):
 
 
 @hartmann.command()
-async def init(command: Command, controllers: dict[str, IebController]):
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
+async def init(command: Command, controllers: dict[str, IebController], spectro: str):
     command.info(text="Checking all hartmanns")
     tasks = []
     for h in controllers:
-        if controllers[h].spec == "sp1":
+        if controllers[h].spec == spectro:
             if controllers[h].name == "hartmann_right":
                 try:
                     tasks.append(controllers[h].initialize())
@@ -162,11 +190,17 @@ async def init(command: Command, controllers: dict[str, IebController]):
 
 
 @hartmann.command()
-async def home(command: Command, controllers: dict[str, IebController]):
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
+async def home(command: Command, controllers: dict[str, IebController], spectro: str):
     command.info(text="Checking all hartmanns")
     tasks = []
     for h in controllers:
-        if controllers[h].spec == "sp1":
+        if controllers[h].spec == spectro:
             if controllers[h].name == "hartmann_right":
                 try:
                     tasks.append(controllers[h].set_home())

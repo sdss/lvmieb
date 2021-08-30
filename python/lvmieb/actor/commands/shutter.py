@@ -11,6 +11,7 @@ from __future__ import absolute_import, annotations, division, print_function
 import asyncio
 import datetime
 
+import click
 from clu.command import Command
 
 from lvmieb.controller.controller import IebController
@@ -29,12 +30,18 @@ def shutter(*args):
     pass
 
 
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
 @shutter.command()
-async def open(command: Command, controllers: dict[str, IebController]):
+async def open(command: Command, controllers: dict[str, IebController], spectro: str):
     """open the shutter"""
     tasks = []
     for shutter in controllers:
-        if controllers[shutter].spec == "sp1":
+        if controllers[shutter].spec == spectro:
             if controllers[shutter].name == "shutter":
                 try:
                     tasks.append(controllers[shutter].send_command("open"))
@@ -51,12 +58,18 @@ async def open(command: Command, controllers: dict[str, IebController]):
     return
 
 
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
 @shutter.command()
-async def close(command: Command, controllers: dict[str, IebController]):
+async def close(command: Command, controllers: dict[str, IebController], spectro: str):
     """close the shutter"""
     tasks = []
     for shutter in controllers:
-        if controllers[shutter].spec == "sp1":
+        if controllers[shutter].spec == spectro:
             if controllers[shutter].name == "shutter":
                 try:
                     tasks.append(controllers[shutter].send_command("close"))
@@ -73,14 +86,20 @@ async def close(command: Command, controllers: dict[str, IebController]):
     return
 
 
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
 @shutter.command()
-async def status(command: Command, controllers: dict[str, IebController]):
+async def status(command: Command, controllers: dict[str, IebController], spectro: str):
 
     command.info(text="Checking all shutters")
     tasks = []
-
+    print(spectro)
     for shutter in controllers:
-        if controllers[shutter].spec == "sp1":
+        if controllers[shutter].spec == spectro:
             if controllers[shutter].name == "shutter":
                 try:
                     tasks.append(controllers[shutter].send_command("status"))
@@ -102,12 +121,18 @@ async def status(command: Command, controllers: dict[str, IebController]):
     return
 
 
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
 @shutter.command()
-async def init(command: Command, controllers: dict[str, IebController]):
+async def init(command: Command, controllers: dict[str, IebController], spectro: str):
     """initialize the shutter"""
     tasks = []
     for shutter in controllers:
-        if controllers[shutter].spec == "sp1":
+        if controllers[shutter].spec == spectro:
             if controllers[shutter].name == "shutter":
                 try:
                     tasks.append(controllers[shutter].send_command("init"))

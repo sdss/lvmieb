@@ -2,6 +2,7 @@ from __future__ import absolute_import, annotations, division, print_function
 
 import asyncio
 
+import click
 from clu.command import Command
 
 from lvmieb.controller.controller import IebController
@@ -20,14 +21,20 @@ def transducer(*args):
 
 
 @transducer.command()
-async def status(command: Command, controllers: dict[str, IebController]):
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
+async def status(command: Command, controllers: dict[str, IebController], spectro: str):
     """Returns the status of transducer."""
 
     tasks = []
     pres_result = {}
 
     for pres in controllers:
-        if controllers[pres].spec == "sp1":
+        if controllers[pres].spec == spectro:
             if controllers[pres].name in CCDLIST:
                 try:
                     tasks.append(controllers[pres].read_temp(controllers[pres].name))
