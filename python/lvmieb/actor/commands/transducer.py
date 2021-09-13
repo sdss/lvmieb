@@ -50,17 +50,18 @@ async def status(command: Command, controllers: dict[str, IebController], spectr
         pres_result.update(i)
 
     try:
-        command.info({spectro: {
-            "r1_pressure": pres_result["r1_pressure"],
-            "b1_pressure": pres_result["b1_pressure"],
-            "z1_pressure": pres_result["z1_pressure"],
-            "r1_temperature": pres_result["r1_temperature"],
-            "b1_temperature": pres_result["b1_temperature"],
-            "z1_temperature": pres_result["z1_temperature"],
+        command.info(
+            {
+                spectro: {
+                    "r1_pressure": pres_result["r1_pressure"],
+                    "b1_pressure": pres_result["b1_pressure"],
+                    "z1_pressure": pres_result["z1_pressure"],
+                    "r1_temperature": pres_result["r1_temperature"],
+                    "b1_temperature": pres_result["b1_temperature"],
+                    "z1_temperature": pres_result["z1_temperature"],
+                }
             }
-                      }
-                     )
+        )
     except LvmIebError as err:
         return command.fail(error=str(err))
     return command.finish()
-    

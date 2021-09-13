@@ -54,8 +54,9 @@ async def open(command: Command, controllers: dict[str, IebController], spectro:
     await asyncio.gather(*tasks)
     current_time = datetime.datetime.now()
     print("after command gathered         : %s", current_time)
-    
-    return command.finish({spectro : {"shutter" :"opened"}})
+
+    return command.finish({spectro: {"shutter": "opened"}})
+
 
 @click.argument(
     "spectro",
@@ -81,7 +82,7 @@ async def close(command: Command, controllers: dict[str, IebController], spectro
     await asyncio.gather(*tasks)
     current_time = datetime.datetime.now()
     print("after command gathered         : %s", current_time)
-    return command.finish({spectro : {"shutter" : "closed"}})
+    return command.finish({spectro: {"shutter": "closed"}})
 
 
 @click.argument(
@@ -109,14 +110,14 @@ async def status(command: Command, controllers: dict[str, IebController], spectr
         print(f"status is {n}")
         try:
             if n == "opened":
-                command.info({spectro : {"shutter" : n}})
+                command.info({spectro: {"shutter": n}})
             elif n == "closed":
-                command.info({spectro : {"shutter" : n}})
+                command.info({spectro: {"shutter": n}})
             else:
                 return command.fail(test="shutter is in a bad state")
         except LvmIebError as err:
             return command.fail(error=str(err))
-    
+
     return command.finish()
 
 

@@ -67,6 +67,7 @@ async def amqp_client(rabbitmq, amqp_actor, event_loop):
 
     await client.stop()
 
+
 @pytest.fixture
 async def hartmann_right(request, unused_tcp_port_factory: int):
     """Mocks a 'hartmann door right' that replies to commands with predefined replies."""

@@ -38,20 +38,28 @@ async def status(command: Command, controllers: dict[str, IebController], spectr
                 try:
                     wago_status1 = await controllers[wago].getWAGOEnv()
                     if wago_status1:
-                        command.info({spectro:{
-                            "rhtRH1":controllers[wago].sensors["rhtRH1(40001)"],
-                            "rhtT1":controllers[wago].sensors["rhtT1(40002)"],
-                            "rhtRH2":controllers[wago].sensors["rhtRH2(40003)"],
-                            "rhtT2":controllers[wago].sensors["rhtT2(40004)"],
-                            "rhtRH3":controllers[wago].sensors["rhtRH3(40005)"],
-                            "rhtT3":controllers[wago].sensors["rhtT3(40006)"],
-                            "rtd1":controllers[wago].sensors["rtd1(40009)"],
-                            "rtd2":controllers[wago].sensors["rtd2(40010)"],
-                            "rtd3":controllers[wago].sensors["rtd3(40011)"],
-                            "rtd4":controllers[wago].sensors["rtd4(40012)"],
+                        command.info(
+                            {
+                                spectro: {
+                                    "rhtRH1": controllers[wago].sensors[
+                                        "rhtRH1(40001)"
+                                    ],
+                                    "rhtT1": controllers[wago].sensors["rhtT1(40002)"],
+                                    "rhtRH2": controllers[wago].sensors[
+                                        "rhtRH2(40003)"
+                                    ],
+                                    "rhtT2": controllers[wago].sensors["rhtT2(40004)"],
+                                    "rhtRH3": controllers[wago].sensors[
+                                        "rhtRH3(40005)"
+                                    ],
+                                    "rhtT3": controllers[wago].sensors["rhtT3(40006)"],
+                                    "rtd1": controllers[wago].sensors["rtd1(40009)"],
+                                    "rtd2": controllers[wago].sensors["rtd2(40010)"],
+                                    "rtd3": controllers[wago].sensors["rtd3(40011)"],
+                                    "rtd4": controllers[wago].sensors["rtd4(40012)"],
+                                }
                             }
-                                    }
-                                    )
+                        )
                     else:
                         return command.fail(text="ERROR: Did not read sensors/powers")
                 except LvmIebError as err:
@@ -76,15 +84,20 @@ async def getpower(
                 try:
                     wago_status1 = await controllers[wago].getWAGOPower()
                     if wago_status1:
-                        command.info({spectro:{
-                            "shutter_power" : controllers[wago].power["shutter_power"],
-                            "hartmann_right_power" : controllers[wago].power[
-                                "hartmann_right_power"
-                            ],
-                            "hartmann_left_power": controllers[wago].power[
-                                "hartmann_left_power"
-                            ],                        
-                        }}
+                        command.info(
+                            {
+                                spectro: {
+                                    "shutter_power": controllers[wago].power[
+                                        "shutter_power"
+                                    ],
+                                    "hartmann_right_power": controllers[wago].power[
+                                        "hartmann_right_power"
+                                    ],
+                                    "hartmann_left_power": controllers[wago].power[
+                                        "hartmann_left_power"
+                                    ],
+                                }
+                            }
                         )
                     else:
                         return command.fail(text="ERROR: Did not read sensors/powers")
@@ -135,16 +148,20 @@ async def setpower(
                         device_string, action
                     )
                     if wago_status1:
-                        command.info({spectro:{
-                            "shutter_power" : controllers[wago].power["shutter_power"],
-                            "hartmann_right_power" : controllers[wago].power[
-                                "hartmann_right_power"
-                            ],
-                            "hartmann_left_power": controllers[wago].power[
-                                "hartmann_left_power"
-                            ],   
-                        }
-                        }
+                        command.info(
+                            {
+                                spectro: {
+                                    "shutter_power": controllers[wago].power[
+                                        "shutter_power"
+                                    ],
+                                    "hartmann_right_power": controllers[wago].power[
+                                        "hartmann_right_power"
+                                    ],
+                                    "hartmann_left_power": controllers[wago].power[
+                                        "hartmann_left_power"
+                                    ],
+                                }
+                            }
                         )
                     else:
                         return command.fail(text="ERROR: Did not read sensors/powers")
