@@ -13,6 +13,7 @@ import asyncio
 import re
 
 import pytest as pytest
+from clu import AMQPActor, AMQPClient
 
 from lvmieb.controller.controller import IebController
 
@@ -40,6 +41,31 @@ hr_status = "closed"
 hl_status = "closed"
 sh_status = "closed"
 
+
+@pytest.fixture
+async def amqp_actor(rabbitmq, event_loop):
+
+    port = rabbitmq.args["port"]
+
+    actor = AMQPActor(name="amqp_actor", port=port)
+    await actor.start()
+
+    yield actor
+
+    await actor.stop()
+
+
+@pytest.fixture
+async def amqp_client(rabbitmq, amqp_actor, event_loop):
+
+    port = rabbitmq.args["port"]
+
+    client = AMQPClient(name="amqp_client", models=["amqp_actor"], port=port)
+    await client.start()
+
+    yield client
+
+    await client.stop()
 
 @pytest.fixture
 async def hartmann_right(request, unused_tcp_port_factory: int):

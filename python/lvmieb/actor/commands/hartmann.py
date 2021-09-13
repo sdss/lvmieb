@@ -68,13 +68,13 @@ async def open(
     command.info(text=f"Opening {side} hartmanns")
     await asyncio.gather(*tasks)
     if side == "all":
-        return command.finish(hartmann_left="opened", hartmann_right="opened")
+        command.info({spectro : {"hartmann_left" : "opened", "hartmann_right" : "opened"}})
     elif side == "right":
-        return command.finish(hartmann_right="opened")
+        command.info({spectro : {"hartmann_right" : "opened"}})
     elif side == "left":
-        return command.finish(hartmann_left="opened")
-    command.finish()
-    return
+        command.info({spectro : {"hartmann_left" : "opened"}})
+    
+    return command.finish()
 
 
 @hartmann.command()
@@ -117,13 +117,13 @@ async def close(
     await asyncio.gather(*tasks)
 
     if side == "all":
-        return command.finish(hartmann_left="closed", hartmann_right="closed")
+        command.info({spectro : {"hartmann_left" : "closed", "hartmann_right" : "closed"}})
     elif side == "right":
-        return command.finish(hartmann_right="closed")
+        command.info({spectro : {"hartmann_right" : "closed"}})
     elif side == "left":
-        return command.finish(hartmann_left="closed")
-    command.finish()
-    return
+        command.info({spectro : {"hartmann_left" : "closed"}})
+    
+    return command.finish()
 
 
 @hartmann.command()
@@ -153,11 +153,12 @@ async def status(command: Command, controllers: dict[str, IebController], spectr
                 except LvmIebError as err:
                     return command.fail(error=str(err))
     result_hartmann = await asyncio.gather(*tasks)
-    print(result_hartmann)
     try:
-        return command.finish(
-            hartmann_left=result_hartmann[0], hartmann_right=result_hartmann[1]
-        )
+        command.info({spectro : {
+            "hartmann_left" : result_hartmann[0], "hartmann_right" : result_hartmann[1]
+            }
+                               }
+                              )
     except LvmIebError as err:
         return command.fail(error=str(err))
     return command.finish()
@@ -171,7 +172,7 @@ async def status(command: Command, controllers: dict[str, IebController], spectr
     required=False,
 )
 async def init(command: Command, controllers: dict[str, IebController], spectro: str):
-    command.info(text="Checking all hartmanns")
+    command.info(text="Initializing all hartmanns")
     tasks = []
     for h in controllers:
         if controllers[h].spec == spectro:
@@ -186,6 +187,7 @@ async def init(command: Command, controllers: dict[str, IebController], spectro:
                 except LvmIebError as err:
                     return command.fail(error=str(err))
     await asyncio.gather(*tasks)
+    command.info(text= "done")
     return command.finish()
 
 
@@ -197,7 +199,7 @@ async def init(command: Command, controllers: dict[str, IebController], spectro:
     required=False,
 )
 async def home(command: Command, controllers: dict[str, IebController], spectro: str):
-    command.info(text="Checking all hartmanns")
+    command.info(text="Homing all hartmanns")
     tasks = []
     for h in controllers:
         if controllers[h].spec == spectro:
@@ -212,4 +214,5 @@ async def home(command: Command, controllers: dict[str, IebController], spectro:
                 except LvmIebError as err:
                     return command.fail(error=str(err))
     await asyncio.gather(*tasks)
+    command.info(text= "done")
     return command.finish()

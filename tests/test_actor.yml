@@ -1,0 +1,71 @@
+# A dictionary of controller name to OSU Spectrograph controller connection parameters.
+# Osu Controller host : 10.7.45.27
+# exp_shutter port : 7776
+# hartman_door_left port : 7777
+# hartman_door_right port : 7778
+# WAGO(temperature & humidity sensor connectted) : 502
+
+devices:
+  motor_controllers:
+    sp1:
+      shutter:
+        name: "sp1.shutter"
+      hartmann_left:
+        name: "sp1.hartmann.left"
+      hartmann_right:
+        name: "sp1.hartmann.right"
+    sp2:
+      shutter:
+        name: "sp2.shutter"
+      hartmann_left:
+        name: "sp2.hartmann.left"
+      hartmann_right:
+        name: "sp2.hartmann.right"
+    sp3:
+      shutter:
+        name: "sp3.shutter"
+      hartmann_left:
+        name: "sp3.hartmann.left"
+      hartmann_right:
+        name: "sp3.hartmann.right"
+  pressure:
+    sp1:        
+      r1:
+        name: "sp1.r1.transducer"
+      b1:
+        name: "sp1.b1.transducer"
+      z1:
+        name: "sp1.z1.transducer"
+    sp2:
+      r1:
+        name: "sp2.r1.transducer"
+      b1:
+        name: "sp2.b1.transducer"
+      z1:
+        name: "sp2.z1.transducer"
+    sp3:
+      r1:
+        name: "sp3.r1.transducer"
+      b1:
+        name: "sp3.b1.transducer"
+      z1:
+        name: "sp3.z1.transducer"
+  wago:
+    controllers:
+      sp1:
+        name: "sp1.wago"
+      sp2:
+        name: "sp2.wago"
+      sp3:
+        name: "sp3.wago"
+
+#added by CK 2021/03/30
+timeouts:
+    controller_connect: 1
+
+# Actor configuration for the AMQPActor class
+actor:
+    name: lvmieb
+    host: localhost
+    port: 5672
+    log_dir: '~/tmp/log'

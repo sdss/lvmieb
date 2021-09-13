@@ -84,14 +84,14 @@ class lvmieb(AMQPActor):
             # print(instance.controllers)
             # instance.parser_args = [instance.controllers]
 
-        if "sp1" in instance.config["devices"]["wago"]["controllers"]:
+        if "sp1" in instance.config["devices"]["modules"]["controllers"]:
             controllers = (
                 IebController(
                     host=ctr["address"], port=ctr["port"], name=ctrname, spec="sp1"
                 )
-                for (ctrname, ctr) in instance.config["devices"]["wago"][
+                for (ctrname, ctr) in instance.config["devices"]["modules"][
                     "controllers"
-                ].items()
+                ]["sp1"].items()
             )
             instance.controllers.update({c.name: c for c in controllers})
             # print(instance.controllers)

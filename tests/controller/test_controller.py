@@ -21,6 +21,8 @@ async def test_shutter_status(shutter: IebController):
     for i in range(1):
         tasks_open.append(shutter.send_command("status"))
     await asyncio.gather(*tasks_open)
+    
+    assert shutter.shutter_status == "closed"
 
 
 @pytest.mark.asyncio
