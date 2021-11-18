@@ -31,6 +31,11 @@ devices:
         host: 10.7.45.30
         port: 1115
         id: 253
+  depth:
+    sp1:
+      host: 10.7.45.30
+      port: 1116
+      channel: null
   modules:
     controllers:
       sp1:

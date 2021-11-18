@@ -55,7 +55,8 @@ async def open(command: Command, controllers: dict[str, IebController], spectro:
     current_time = datetime.datetime.now()
     print("after command gathered         : %s", current_time)
 
-    return command.finish({spectro: {"shutter": "opened"}})
+    command.info({spectro: {"shutter": "opened"}})
+    return command.finish()
 
 
 @click.argument(
@@ -82,7 +83,8 @@ async def close(command: Command, controllers: dict[str, IebController], spectro
     await asyncio.gather(*tasks)
     current_time = datetime.datetime.now()
     print("after command gathered         : %s", current_time)
-    return command.finish({spectro: {"shutter": "closed"}})
+    command.info({spectro: {"shutter": "opened"}})
+    return command.finish()
 
 
 @click.argument(

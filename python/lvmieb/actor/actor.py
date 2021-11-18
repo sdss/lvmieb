@@ -97,6 +97,18 @@ class lvmieb(AMQPActor):
             # print(instance.controllers)
             # instance.parser_args = [instance.controllers]
 
+        if "sp1" in instance.config["devices"]["depth"]:
+            controllers = (
+                IebController(
+                    host=ctr["host"],
+                    port=ctr["port"],
+                    name=ctrname,
+                    spec="sp1",
+                )
+                for (ctrname, ctr) in instance.config["devices"]["depth"].items()
+            )
+            instance.controllers.update({c.name: c for c in controllers})
+
         if "sp1" in instance.config["devices"]["pressure"]:
             controllers = (
                 IebController(

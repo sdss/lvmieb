@@ -24,11 +24,12 @@ async def send_command(actor, command_string):
     await command
     assert command.status.is_done
 
-    # print("number of swithces are ",len(actor.parser_args[0]))
     status_reply = actor.mock_replies[-1]
-    # print(status_reply)
-    # print(f"status reply is {status_reply}")
     return status_reply
+
+
+# 20210916 changgon working on unit testing for shutter.
+# need to add more unit tests. Don't use JsonActor -> Jose's comment..
 
 
 @pytest.mark.asyncio

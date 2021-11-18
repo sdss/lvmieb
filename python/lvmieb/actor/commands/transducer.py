@@ -31,7 +31,14 @@ async def status(command: Command, controllers: dict[str, IebController], spectr
     """Returns the status of transducer."""
 
     tasks = []
-    pres_result = {}
+    pres_result = {
+        "r1_pressure": -1.0,
+        "b1_pressure": -1.0,
+        "z1_pressure": -1.0,
+        "r1_temperature": -1.0,
+        "b1_temperature": -1.0,
+        "z1_temperature": -1.0,
+    }
 
     for pres in controllers:
         if controllers[pres].spec == spectro:
@@ -45,9 +52,10 @@ async def status(command: Command, controllers: dict[str, IebController], spectr
                     return command.fail(error=str(err))
 
     pres_list = await asyncio.gather(*tasks)
-
+    print(pres_list)
     for i in pres_list:
-        pres_result.update(i)
+        if i:
+            pres_result.update(i)
 
     try:
         command.info(
