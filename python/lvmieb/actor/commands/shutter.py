@@ -11,6 +11,7 @@ from __future__ import absolute_import, annotations, division, print_function
 import asyncio
 import datetime
 
+import click
 from clu.command import Command
 
 from lvmieb.controller.controller import IebController
@@ -29,12 +30,18 @@ def shutter(*args):
     pass
 
 
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
 @shutter.command()
-async def open(command: Command, controllers: dict[str, IebController]):
+async def open(command: Command, controllers: dict[str, IebController], spectro: str):
     """open the shutter"""
     tasks = []
     for shutter in controllers:
-        if controllers[shutter].spec == "sp1":
+        if controllers[shutter].spec == spectro:
             if controllers[shutter].name == "shutter":
                 try:
                     tasks.append(controllers[shutter].send_command("open"))
@@ -47,16 +54,23 @@ async def open(command: Command, controllers: dict[str, IebController]):
     await asyncio.gather(*tasks)
     current_time = datetime.datetime.now()
     print("after command gathered         : %s", current_time)
-    command.finish(shutter="opened")
-    return
+
+    command.info({spectro: {"shutter": "opened"}})
+    return command.finish()
 
 
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
 @shutter.command()
-async def close(command: Command, controllers: dict[str, IebController]):
+async def close(command: Command, controllers: dict[str, IebController], spectro: str):
     """close the shutter"""
     tasks = []
     for shutter in controllers:
-        if controllers[shutter].spec == "sp1":
+        if controllers[shutter].spec == spectro:
             if controllers[shutter].name == "shutter":
                 try:
                     tasks.append(controllers[shutter].send_command("close"))
@@ -69,18 +83,24 @@ async def close(command: Command, controllers: dict[str, IebController]):
     await asyncio.gather(*tasks)
     current_time = datetime.datetime.now()
     print("after command gathered         : %s", current_time)
-    command.finish(shutter="closed")
-    return
+    command.info({spectro: {"shutter": "opened"}})
+    return command.finish()
 
 
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
 @shutter.command()
-async def status(command: Command, controllers: dict[str, IebController]):
+async def status(command: Command, controllers: dict[str, IebController], spectro: str):
 
     command.info(text="Checking all shutters")
     tasks = []
-
+    print(spectro)
     for shutter in controllers:
-        if controllers[shutter].spec == "sp1":
+        if controllers[shutter].spec == spectro:
             if controllers[shutter].name == "shutter":
                 try:
                     tasks.append(controllers[shutter].send_command("status"))
@@ -89,25 +109,32 @@ async def status(command: Command, controllers: dict[str, IebController]):
 
     result_shutter = await asyncio.gather(*tasks)
     for n in result_shutter:
+        print(f"status is {n}")
         try:
             if n == "opened":
-                return command.finish(shutter=n)
+                command.info({spectro: {"shutter": n}})
             elif n == "closed":
-                return command.finish(shutter=n)
+                command.info({spectro: {"shutter": n}})
             else:
                 return command.fail(test="shutter is in a bad state")
         except LvmIebError as err:
             return command.fail(error=str(err))
-    command.finish()
-    return
+
+    return command.finish()
 
 
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
 @shutter.command()
-async def init(command: Command, controllers: dict[str, IebController]):
+async def init(command: Command, controllers: dict[str, IebController], spectro: str):
     """initialize the shutter"""
     tasks = []
     for shutter in controllers:
-        if controllers[shutter].spec == "sp1":
+        if controllers[shutter].spec == spectro:
             if controllers[shutter].name == "shutter":
                 try:
                     tasks.append(controllers[shutter].send_command("init"))

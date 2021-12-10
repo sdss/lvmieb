@@ -2,6 +2,7 @@ from __future__ import absolute_import, annotations, division, print_function
 
 import asyncio
 
+import click
 from clu.command import Command
 
 from lvmieb.controller.controller import IebController
@@ -20,14 +21,27 @@ def transducer(*args):
 
 
 @transducer.command()
-async def status(command: Command, controllers: dict[str, IebController]):
+@click.argument(
+    "spectro",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    default="sp1",
+    required=False,
+)
+async def status(command: Command, controllers: dict[str, IebController], spectro: str):
     """Returns the status of transducer."""
 
     tasks = []
-    pres_result = {}
+    pres_result = {
+        "r1_pressure": -1.0,
+        "b1_pressure": -1.0,
+        "z1_pressure": -1.0,
+        "r1_temperature": -1.0,
+        "b1_temperature": -1.0,
+        "z1_temperature": -1.0,
+    }
 
     for pres in controllers:
-        if controllers[pres].spec == "sp1":
+        if controllers[pres].spec == spectro:
             if controllers[pres].name in CCDLIST:
                 try:
                     tasks.append(controllers[pres].read_temp(controllers[pres].name))
@@ -38,20 +52,24 @@ async def status(command: Command, controllers: dict[str, IebController]):
                     return command.fail(error=str(err))
 
     pres_list = await asyncio.gather(*tasks)
-
+    print(pres_list)
     for i in pres_list:
-        pres_result.update(i)
+        if i:
+            pres_result.update(i)
 
     try:
-        return command.finish(
-            r1_pressure=pres_result["r1_pressure"],
-            b1_pressure=pres_result["b1_pressure"],
-            z1_pressure=pres_result["z1_pressure"],
-            r1_temperature=pres_result["r1_temperature"],
-            b1_temperature=pres_result["b1_temperature"],
-            z1_temperature=pres_result["z1_temperature"],
+        command.info(
+            {
+                spectro: {
+                    "r1_pressure": pres_result["r1_pressure"],
+                    "b1_pressure": pres_result["b1_pressure"],
+                    "z1_pressure": pres_result["z1_pressure"],
+                    "r1_temperature": pres_result["r1_temperature"],
+                    "b1_temperature": pres_result["b1_temperature"],
+                    "z1_temperature": pres_result["z1_temperature"],
+                }
+            }
         )
     except LvmIebError as err:
         return command.fail(error=str(err))
-    command.finish()
-    return
+    return command.finish()

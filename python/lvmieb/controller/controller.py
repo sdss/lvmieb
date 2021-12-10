@@ -523,8 +523,12 @@ class IebController:
                 return False
             self.trans_pressure = float(match.groups()[0])
             pressure_dict = {finder: self.trans_pressure}
+            w.close()
+            await w.wait_closed()
             return pressure_dict
         except Exception:
+            w.close()
+            await w.wait_closed()
             return False
 
     async def read_temp(self, ccdname):
@@ -546,9 +550,44 @@ class IebController:
                 return False
             self.trans_temp = float(match.groups()[0])
             temp_dict = {finder: self.trans_temp}
+            w.close()
+            await w.wait_closed()
             return temp_dict
         except Exception:
             return False
+
+    async def read_depth_probes(self):
+        """Returns the measured values from the depth probes."""
+
+        depth = {"A": -999.0, "B": -999.0, "C": -999.0}
+        for channel in depth:
+            try:
+                print(self.host, self.port)
+                print(channel)
+                r, w = await asyncio.wait_for(
+                    asyncio.open_connection(self.host, self.port), 1
+                )
+                w.write(("SEND " + channel + "\n").encode())
+                await w.drain()
+                delimeter = b"\n"
+                reply = await asyncio.wait_for(r.readuntil(delimeter), 1)
+                print(reply)
+            except Exception:
+                return False
+            finally:
+                if w is not None:
+                    w.close()
+                    await w.wait_closed()
+            if reply is False:
+                raise ValueError("Failed retrieving data from depth probes.")
+            if match := re.match(f"\r{channel} ([+\\-0-9\\.]+) mm".encode(), reply):
+                if match:
+                    depth[channel] = float(match.group(1).decode())
+                else:
+                    raise ValueError(
+                        f"Failed parting depth probe for channel {channel}"
+                    )
+        return depth
 
 
 def ptRTD2C(rawRTD):
@@ -573,7 +612,7 @@ def parse_IS(name, reply: bytes):
     match = re.search(b"\x00\x07IS=([0-1])([0-1])[0-1]{6}\r$", reply)
     if match is None:
         return False
-    # for hartmann_left, 01 was opened, and 10 is closed
+    # for hartmann_left, 01 is opened, and 10 is closed
     if name == "hartmann_right" or name == "shutter":
         if match.groups() == (b"1", b"0"):
             return "opened"

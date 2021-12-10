@@ -31,11 +31,17 @@ devices:
         host: 10.7.45.30
         port: 1115
         id: 253
-  wago:
+  depth:
+    sp1:
+      host: 10.7.45.30
+      port: 1116
+      channel: null
+  modules:
     controllers:
       sp1:
-        address: 10.7.45.28
-        port: 502
+        wago:
+          address: 10.7.45.28
+          port: 502
     modules:
       ANALOG1:
         model: 750-497

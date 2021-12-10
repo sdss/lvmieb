@@ -22,6 +22,8 @@ async def test_shutter_status(shutter: IebController):
         tasks_open.append(shutter.send_command("status"))
     await asyncio.gather(*tasks_open)
 
+    assert shutter.shutter_status == "closed"
+
 
 @pytest.mark.asyncio
 async def test_hartmann_door_open_close_lock_test(hartmann_right: IebController):
