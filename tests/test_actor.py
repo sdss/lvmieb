@@ -1,8 +1,5 @@
 import pytest
-from clu import JSONActor
-from clu.testing import setup_test_actor
 
-from lvmieb.actor.commands import parser as lvmieb_command_parser
 from lvmieb.controller.controller import IebController
 
 
@@ -30,20 +27,3 @@ async def send_command(actor, command_string):
 
 # 20210916 changgon working on unit testing for shutter.
 # need to add more unit tests. Don't use JsonActor -> Jose's comment..
-
-
-@pytest.mark.asyncio
-async def test_actor(controllers):
-
-    test_actor = await setup_test_actor(
-        JSONActor("lvmieb", host="localhost", port=9999)
-    )
-
-    test_actor.parser = lvmieb_command_parser
-    test_actor.parser_args = [controllers]
-
-    status = await send_command(test_actor, "shutter open sp1")
-    assert status["sp1"]["shutter"] == "opened"
-
-    status = await send_command(test_actor, "shutter close sp1")
-    assert status["sp1"]["shutter"] == "closed"
