@@ -83,7 +83,7 @@ async def close(command: Command, controllers: dict[str, IebController], spectro
     await asyncio.gather(*tasks)
     current_time = datetime.datetime.now()
     print("after command gathered         : %s", current_time)
-    command.info({spectro: {"shutter": "opened"}})
+    command.info({spectro: {"shutter": "closed"}})
     return command.finish()
 
 
