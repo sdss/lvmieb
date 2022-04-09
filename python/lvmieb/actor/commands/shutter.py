@@ -51,7 +51,8 @@ async def open(command: Command, controllers: dict[str, IebController], spectro:
     print("----open----")
     current_time = datetime.datetime.now()
     print("before command gathered        : %s", current_time)
-    await asyncio.gather(*tasks)
+    result = await asyncio.gather(*tasks)
+    print(result)
     current_time = datetime.datetime.now()
     print("after command gathered         : %s", current_time)
 
@@ -83,7 +84,7 @@ async def close(command: Command, controllers: dict[str, IebController], spectro
     await asyncio.gather(*tasks)
     current_time = datetime.datetime.now()
     print("after command gathered         : %s", current_time)
-    command.info({spectro: {"shutter": "opened"}})
+    command.info({spectro: {"shutter": "closed"}})
     return command.finish()
 
 
@@ -100,14 +101,18 @@ async def status(command: Command, controllers: dict[str, IebController], spectr
     tasks = []
     print(spectro)
     for shutter in controllers:
+        print(controllers[shutter].spec)
         if controllers[shutter].spec == spectro:
+            print(controllers[shutter].name)
             if controllers[shutter].name == "shutter":
+                print("in here")
                 try:
                     tasks.append(controllers[shutter].send_command("status"))
                 except LvmIebError as err:
                     return command.fail(error=str(err))
 
     result_shutter = await asyncio.gather(*tasks)
+    print(result_shutter)
     for n in result_shutter:
         print(f"status is {n}")
         try:
@@ -147,4 +152,5 @@ async def init(command: Command, controllers: dict[str, IebController], spectro:
     await asyncio.gather(*tasks)
     current_time = datetime.datetime.now()
     print("after command gathered         : %s", current_time)
+    command.info(text="shutters all initialized")
     return command.finish()

@@ -105,7 +105,7 @@ class IebController:
         # read byte stream from the motor controller
         try:
             reply = await asyncio.wait_for(r.readuntil(b"\r"), SelectTimeout)
-            print(reply)
+            print(f"reply is {reply}")
         except LvmIebError as err:
             w.close()
             await w.wait_closed()
@@ -113,10 +113,16 @@ class IebController:
         try:
             w.close()
             await w.wait_closed()
+            print("closed successfully!")
         except LvmIebError as err:
             warnings.warn(str(err), LvmIebWarning)
+        if self.name == "hartmann_right":
+            self.hartmann_right_status = await self.get_status()
+        elif self.name == "hartmann_left":
+            self.hartmann_left_status = await self.get_status()
 
     async def send_command(self, command, SelectTimeout=3.0):
+        print("in send_command")
         async with self.lock:
             current_time = datetime.datetime.now()
             print(
@@ -389,6 +395,10 @@ class IebController:
             await w.wait_closed()
         except LvmIebError as err:
             warnings.warn(str(err), LvmIebWarning)
+        if self.name == "hartmann_right":
+            self.hartmann_right_status = await self.get_status()
+        elif self.name == "hartmann_left":
+            self.hartmann_left_status = await self.get_status()
 
     # courutine for receiving data from the WAGO modules
 
