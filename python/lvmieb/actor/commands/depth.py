@@ -11,7 +11,7 @@ from . import parser
 
 @parser.group()
 def depth(*args):
-    """control the wago IOModule."""
+    """control the linear gauge depth."""
     pass
 
 

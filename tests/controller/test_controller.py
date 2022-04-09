@@ -17,10 +17,13 @@ from lvmieb.controller.controller import IebController
 async def test_shutter_status(shutter: IebController):
     assert shutter.host == "localhost"
     assert shutter.name == "shutter"
+    print(shutter.shutter_status)
+
     tasks_open = []
     for i in range(1):
         tasks_open.append(shutter.send_command("status"))
     await asyncio.gather(*tasks_open)
+    print(shutter.shutter_status)
 
     assert shutter.shutter_status == "closed"
 

@@ -1,29 +1,27 @@
 import pytest
 
-from lvmieb.controller.controller import IebController
+from lvmieb.actor.actor import lvmieb as IebActor
 
 
-@pytest.fixture
-def controllers(
-    shutter: IebController, hartmann_left: IebController, hartmann_right: IebController
-):
+@pytest.mark.asyncio
+async def test_actor(actor: IebActor):
 
-    controllers = {}
-    controllers.update({shutter.name: shutter})
-    controllers.update({hartmann_right.name: hartmann_right})
-    controllers.update({hartmann_left.name: hartmann_left})
-
-    return controllers
+    assert actor
 
 
-async def send_command(actor, command_string):
-    command = actor.invoke_mock_command(command_string)
+@pytest.mark.asyncio
+async def test_ping(actor: IebActor):
+
+    command = await actor.invoke_mock_command("ping")
     await command
-    assert command.status.is_done
 
-    status_reply = actor.mock_replies[-1]
-    return status_reply
+    assert command.status.did_succeed
+    assert len(command.replies) == 2
+    assert command.replies[1].message["text"] == "Pong."
 
 
-# 20210916 changgon working on unit testing for shutter.
-# need to add more unit tests. Don't use JsonActor -> Jose's comment..
+@pytest.mark.asyncio
+async def test_actor_no_config():
+
+    with pytest.raises(RuntimeError):
+        IebActor.from_config(None)

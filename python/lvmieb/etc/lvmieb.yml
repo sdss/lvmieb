@@ -139,4 +139,4 @@ actor:
     name: lvmieb
     host: localhost
     port: 5672
-    log_dir: '~/data/logs/lvmnps'
+    log_dir: '~/data/logs/lvmieb'
