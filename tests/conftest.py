@@ -221,13 +221,176 @@ async def shutter(request, unused_tcp_port_factory: int):
 
 
 @pytest.fixture
+async def depth(request, unused_tcp_port_factory: int):
+    async def handle_connection(
+        reader: asyncio.StreamReader,
+        writer: asyncio.StreamWriter,
+    ) -> None:
+        while True:
+            data = await reader.readuntil(b"\n")
+            print(data)
+            matched = re.search(b"(A|B|C)", data)
+            print(matched)
+            if not matched:
+                continue
+            else:
+                com = matched.group()
+                cmd = com.decode()
+                print(f"command is now {cmd}!")
+
+                if cmd == "A":
+                    writer.write(b"A -60.195 mm \n")
+                elif cmd == "B":
+                    writer.write(b"\rB -60.875 mm \n")
+                elif cmd == "C":
+                    writer.write(b"\rC -60.711 mm \n")
+                await writer.drain()
+
+    port_depth = unused_tcp_port_factory()
+    server = await asyncio.start_server(handle_connection, "localhost", port_depth)
+    async with server:
+        sh = IebController("localhost", port_depth, name="sp1", spec="sp1")
+        yield sh
+    server.close()
+
+
+@pytest.fixture
+async def transducer_r1(request, unused_tcp_port_factory: int):
+    async def handle_connection(
+        reader: asyncio.StreamReader,
+        writer: asyncio.StreamWriter,
+    ) -> None:
+        while True:
+            data = await reader.readuntil(b"?\\")
+            print(data)
+            matched = re.search(b"(P|T)", data)
+            print(matched)
+            if not matched:
+                continue
+            else:
+                com = matched.group()
+                cmd = com.decode()
+                print(f"command is now {cmd}!")
+
+                if cmd == "P":
+                    writer.write(b"@253ACK1.7380E-04\\")
+                elif cmd == "T":
+                    writer.write(b"@253ACK23.15\\")
+                await writer.drain()
+
+    port_trans = unused_tcp_port_factory()
+    server = await asyncio.start_server(handle_connection, "localhost", port_trans)
+    async with server:
+        sh = IebController("localhost", port_trans, name="r1", spec="sp1")
+        yield sh
+    server.close()
+
+
+@pytest.fixture
+async def transducer_b1(request, unused_tcp_port_factory: int):
+    async def handle_connection(
+        reader: asyncio.StreamReader,
+        writer: asyncio.StreamWriter,
+    ) -> None:
+        while True:
+            data = await reader.readuntil(b"?\\")
+            print(data)
+            matched = re.search(b"(P|T)", data)
+            print(matched)
+            if not matched:
+                continue
+            else:
+                com = matched.group()
+                cmd = com.decode()
+                print(f"command is now {cmd}!")
+
+                if cmd == "P":
+                    writer.write(b"@253ACK2.4180E-04\\")
+                elif cmd == "T":
+                    writer.write(b"@253ACK23.09\\")
+                await writer.drain()
+
+    port_trans_b1 = unused_tcp_port_factory()
+    server = await asyncio.start_server(handle_connection, "localhost", port_trans_b1)
+    async with server:
+        sh = IebController("localhost", port_trans_b1, name="b1", spec="sp1")
+        yield sh
+    server.close()
+
+
+@pytest.fixture
+async def transducer_z1(request, unused_tcp_port_factory: int):
+    async def handle_connection(
+        reader: asyncio.StreamReader,
+        writer: asyncio.StreamWriter,
+    ) -> None:
+        while True:
+            data = await reader.readuntil(b"?\\")
+            print(data)
+            matched = re.search(b"(P|T)", data)
+            print(matched)
+            if not matched:
+                continue
+            else:
+                com = matched.group()
+                cmd = com.decode()
+                print(f"command is now {cmd}!")
+
+                if cmd == "P":
+                    writer.write(b"@253ACK1.7420E-04\\")
+                elif cmd == "T":
+                    writer.write(b"@253ACK22.03\\")
+                await writer.drain()
+
+    port_trans = unused_tcp_port_factory()
+    server = await asyncio.start_server(handle_connection, "localhost", port_trans)
+    async with server:
+        sh = IebController("localhost", port_trans, name="z1", spec="sp1")
+        yield sh
+    server.close()
+
+
+@pytest.fixture
+async def labsensor(request, unused_tcp_port_factory: int):
+    async def handle_connection(
+        reader: asyncio.StreamReader,
+        writer: asyncio.StreamWriter,
+    ) -> None:
+        while True:
+            data = await reader.readuntil(b"\n")
+            print(data)
+            writer.write(b"E0:13:D5:71:D0:66 23.0 42.6 0 2022-04-10T07:32:16.078590\n")
+            await writer.drain()
+
+    port_lab = unused_tcp_port_factory()
+    server = await asyncio.start_server(handle_connection, "localhost", port_lab)
+    async with server:
+        sh = IebController("localhost", port_lab, name="sensor", spec="sp1")
+        yield sh
+    server.close()
+
+
+@pytest.fixture
 def controllers(
-    shutter: IebController, hartmann_left: IebController, hartmann_right: IebController
+    shutter: IebController,
+    hartmann_left: IebController,
+    hartmann_right: IebController,
+    depth: IebController,
+    transducer_r1: IebController,
+    transducer_b1: IebController,
+    transducer_z1: IebController,
+    labsensor: IebController,
 ):
     controllers = {}
     controllers.update({shutter.name: shutter})
     controllers.update({hartmann_right.name: hartmann_right})
     controllers.update({hartmann_left.name: hartmann_left})
+    controllers.update({depth.name: depth})
+    controllers.update({transducer_r1.name: transducer_r1})
+    controllers.update({transducer_b1.name: transducer_b1})
+    controllers.update({transducer_z1.name: transducer_z1})
+    controllers.update({labsensor.name: labsensor})
+
     print(f"spec is {shutter.spec}")
 
     # print(hartmann_left)

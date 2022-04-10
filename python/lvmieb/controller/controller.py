@@ -79,6 +79,7 @@ class IebController:
         self.hartmann_right_status = None
         self.hartmann_left_status = None
         self.shutter_status = None
+        self.depth = {"A": -999.0, "B": -999.0, "C": -999.0}
         self.lock = asyncio.Lock()
         self.host = host
         self.port = port
@@ -86,6 +87,8 @@ class IebController:
         self.spec = spec
         self.trans_temp = -1.0
         self.trans_pressure = -1.0
+        self.labtemp = -999
+        self.labhum = -1
 
     async def initialize(self):
         r, w = await asyncio.open_connection(self.host, self.port)
@@ -523,10 +526,12 @@ class IebController:
             return False
 
         w.write(b"@" + str(self.pres_id).encode() + b"P?\\")
+        print(self.pres_id)
         await w.drain()
         finder = ccdname + "_pressure"
         try:
             reply = await asyncio.wait_for(r.readuntil(b"\\"), 1)
+            print(reply)
             match = re.search(r"@[0-9]{1,3}ACK([0-9.E+-]+)\\$".encode(), reply)
 
             if not match:
@@ -554,6 +559,7 @@ class IebController:
         finder = ccdname + "_temperature"
         try:
             reply = await asyncio.wait_for(r.readuntil(b"\\"), 1)
+            print(f"temp reply is {reply}")
             match = re.search(r"@[0-9]{1,3}ACK([0-9.E+-]+)\\$".encode(), reply)
 
             if not match:
@@ -592,12 +598,59 @@ class IebController:
                 raise ValueError("Failed retrieving data from depth probes.")
             if match := re.match(f"\r{channel} ([+\\-0-9\\.]+) mm".encode(), reply):
                 if match:
+                    print(f"channel  is here {channel}")
                     depth[channel] = float(match.group(1).decode())
+                    print(depth[channel])
                 else:
                     raise ValueError(
                         f"Failed parting depth probe for channel {channel}"
                     )
+            elif match := re.match(f"{channel} ([+\\-0-9\\.]+) mm".encode(), reply):
+                if match:
+                    print(f"channel  is here {channel}")
+                    depth[channel] = float(match.group(1).decode())
+                    print(depth[channel])
+                else:
+                    raise ValueError(
+                        f"Failed parting depth probe for channel {channel}"
+                    )
+        self.depth = depth
         return depth
+
+    async def labstatus(self):
+        """_summary_"""
+
+        reader, writer = await asyncio.wait_for(
+            asyncio.open_connection(self.host, self.port),
+            timeout=2,
+        )
+        writer.write(b"status\n")
+        await writer.drain()
+
+        data = await asyncio.wait_for(reader.readline(), timeout=1)
+        print(data)
+        lines = data.decode().strip().splitlines()
+
+        writer.close()
+        await writer.wait_closed()
+
+        temp = hum = last = None
+        for line in lines:
+            name, temp, hum, __, last = line.split()
+            if name == "H5179":
+                break
+
+        if temp is None or hum is None or last is None:
+            self.labtemp = -999
+            self.labhum = -1
+            # raise ValueError("Did not get a measurement for H5179.")
+
+        self.labtemp = round(float(temp), 2)
+        self.labhum = round(float(hum), 2)
+
+        lab_dict = {"labtemp": self.labtemp, "labhum": self.labhum}
+        print(self.labhum, self.labtemp)
+        return lab_dict
 
 
 def ptRTD2C(rawRTD):
