@@ -124,7 +124,20 @@ class lvmieb(AMQPActor):
                 ].items()
             )
             instance.controllers.update({c.name: c for c in controllers})
-            # print(f"instance is {instance.controllers}")
+
+        if "sensor" in instance.config["devices"]["lab"]:
+            controllers = (
+                IebController(
+                    host=ctr["host"],
+                    port=ctr["port"],
+                    name=ctrname,
+                    spec="sp1",
+                )
+                for (ctrname, ctr) in instance.config["devices"]["lab"].items()
+            )
+            instance.controllers.update({c.name: c for c in controllers})
+
+            print(f"instance is {instance.controllers}")
             instance.parser_args = [instance.controllers]
 
         return instance

@@ -87,7 +87,7 @@ addopts = "--cov lvmieb --cov-report xml --cov-report html --cov-report term"
 branch = true
 include = ["python/lvmieb/*"]
 omit = [
-    "*/__init__.py",
+    "python/lvmieb/__main__.py",
 ]
 
 [tool.coverage.report]

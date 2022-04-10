@@ -32,24 +32,33 @@ devices:
     sp1:        
       r1:
         name: "sp1.r1.transducer"
+        id: 253
       b1:
         name: "sp1.b1.transducer"
+        id: 253
       z1:
         name: "sp1.z1.transducer"
+        id: 253
     sp2:
       r1:
         name: "sp2.r1.transducer"
+        id: 253
       b1:
         name: "sp2.b1.transducer"
+        id: 253
       z1:
         name: "sp2.z1.transducer"
+        id: 253
     sp3:
       r1:
         name: "sp3.r1.transducer"
+        id: 253
       b1:
         name: "sp3.b1.transducer"
+        id: 253
       z1:
         name: "sp3.z1.transducer"
+        id: 253
   wago:
     controllers:
       sp1:

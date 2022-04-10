@@ -36,6 +36,10 @@ devices:
       host: 10.7.45.30
       port: 1116
       channel: null
+  lab:
+    sensor:
+      host: 10.7.45.30
+      port: 1111
   modules:
     controllers:
       sp1:

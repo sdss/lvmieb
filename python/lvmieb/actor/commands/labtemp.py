@@ -3,6 +3,7 @@ import asyncio
 from clu.command import Command
 
 from lvmieb.controller.controller import IebController
+from lvmieb.exceptions import LvmIebError
 
 from . import parser
 
@@ -18,32 +19,19 @@ async def labtemp(command: Command, controllers: dict[str, IebController]):
         [type]: command.finish()
     """
 
-    reader, writer = await asyncio.wait_for(
-        asyncio.open_connection("10.7.45.30", 1111),
-        timeout=2,
-    )
-    writer.write(b"status\n")
-    await writer.drain()
+    tasks = []
 
-    data = await asyncio.wait_for(reader.readline(), timeout=1)
-    print(data)
-    lines = data.decode().strip().splitlines()
+    for lab in controllers:
+        if controllers[lab].name == "sensor":
+            print("in here")
+            try:
+                tasks.append(controllers[lab].labstatus())
 
-    writer.close()
-    await writer.wait_closed()
+            except LvmIebError as err:
+                return command.fail(error=str(err))
 
-    temp = hum = last = None
-    for line in lines:
-        name, temp, hum, __, last = line.split()
-        if name == "H5179":
-            break
-
-    if temp is None or hum is None or last is None:
-        labtemp = -999
-        labhum = -1
-        # raise ValueError("Did not get a measurement for H5179.")
-
-    labtemp = round(float(temp), 2)
-    labhum = round(float(hum), 2)
-    command.info({"labtemp": labtemp, "labhum": labhum})
+    lab_dict = await asyncio.gather(*tasks)
+    print(lab_dict[0])
+    if lab_dict[0]:
+        command.info(lab_dict[0])
     return command.finish()
