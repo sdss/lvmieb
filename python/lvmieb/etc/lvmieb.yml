@@ -17,6 +17,16 @@ devices:
       hartmann_right:
         host: 10.7.45.28
         port: 7778
+    sp2:
+      shutter:
+        host: 10.7.45.27
+        port: 7776
+      hartmann_left:
+        host: 10.7.45.27
+        port: 7777
+      hartmann_right:
+        host: 10.7.45.27
+        port: 7778
   pressure:
     sp1:        
       r1:
@@ -31,8 +41,25 @@ devices:
         host: 10.7.45.30
         port: 1115
         id: 253
+    sp2:        
+      r1:
+        host: 10.7.45.33
+        port: 1112
+        id: 253
+      b1:
+        host: 10.7.45.33
+        port: 1114
+        id: 253
+      z1:
+        host: 10.7.45.33
+        port: 1115
+        id: 253
   depth:
     sp1:
+      host: 10.7.45.30
+      port: 1116
+      channel: null
+    sp2:
       host: 10.7.45.30
       port: 1116
       channel: null
@@ -45,6 +72,10 @@ devices:
       sp1:
         wago:
           address: 10.7.45.28
+          port: 502
+      sp2:
+        wago:
+          address: 10.7.45.27
           port: 502
     modules:
       ANALOG1:
