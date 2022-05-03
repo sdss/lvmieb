@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "sdss-lvmieb"
-version = "0.2.0"
+version = "0.3.0-alpha.0"
 
-description = "Simple Template package for creating SDSS Python projects"
+description = "Control software for the Local Volume Mapper Instrument Electronics Box"
 authors = ["Changgon Kim <changgonkim@khu.ac.kr>"]
 license = "BSD-3-Clause"
 readme = "README.md"
@@ -31,23 +31,13 @@ generate-setup-file = false
 lvmieb = "lvmieb.__main__:lvmieb"
 
 [tool.poetry.dependencies]
-python = "^3.7"
-sdss-tree = ">=2.15.2"
-sdss-access = ">=0.2.3"
+python = "^3.7,<4.0"
 sdsstools = ">=0.4.0"
-Sphinx = {version="^3.0.0", optional=true}
-sphinx_bootstrap_theme = { version=">=0.4.12", optional=true}
 sdss-clu = "^1.2.1"
 click-default-group = "^1.2.2"
-twine = "^3.4.1"
 numpy = "^1.20.3"
 sphinx-click = "^3.0.0"
-daemonocle = "^1.2.3"
 pymodbus = "^2.5.2"
-tornado = "^6.1"
-pytest = "^6.2.4"
-black = "^21.7b0"
-myst-parser = "^0.15.1"
 sdss-drift = "^0.2.5"
 
 [tool.poetry.dev-dependencies]
@@ -65,9 +55,11 @@ codecov = ">=2.0.15"
 coverage = {version = ">=5.0", extras = ["toml"]}
 ipdb = ">=0.12.3"
 rstcheck = "^3.3.1"
-
-[tool.poetry.extras]
-docs = ["Sphinx", "sphinx_bootstrap_theme"]
+Sphinx = ">=3.0.0"
+sphinx_bootstrap_theme = ">=0.4.12"
+twine = "^3.4.1"
+black = ">=21.7b0"
+myst-parser = ">=0.15.1"
 
 [tool.isort]
 line_length = 79
@@ -83,6 +75,11 @@ use_parentheses = true
 [tool.pytest.ini_options]
 addopts = "--cov lvmieb --cov-report xml --cov-report html --cov-report term"
 
+[tool.black]
+line-length = 88
+target-version = ['py39']
+fast = true
+
 [tool.coverage.run]
 branch = true
 include = ["python/lvmieb/*"]
@@ -95,5 +92,5 @@ exclude_lines = [
 ]
 
 [build-system]
-requires = ["poetry-core>=1.0.0", "setuptools>=49.6.0"]
+requires = ["poetry-core>=1.1.0a7"]
 build-backend = "poetry.core.masonry.api"

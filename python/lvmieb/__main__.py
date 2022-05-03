@@ -32,7 +32,8 @@ from lvmieb.actor.actor import lvmieb as lvmiebInstance
 )
 @click.pass_context
 def lvmieb(ctx, config_file, verbose):
-    """lvm controller"""
+    """LVM Electronics Box Controller."""
+
     ctx.obj = {"verbose": verbose, "config_file": config_file}
 
 
@@ -41,12 +42,16 @@ def lvmieb(ctx, config_file, verbose):
 @cli_coro_lvm
 async def actor(ctx):
     """Runs the actor."""
+
     default_config_file = os.path.join(os.path.dirname(__file__), "etc/lvmieb.yml")
     config_file = ctx.obj["config_file"] or default_config_file
+
     lvmieb_obj = lvmiebInstance.from_config(config_file)
+
     if ctx.obj["verbose"]:
         lvmieb_obj.log.fh.setLevel(0)
         lvmieb_obj.log.sh.setLevel(0)
+
     await lvmieb_obj.start()
     await lvmieb_obj.run_forever()
 

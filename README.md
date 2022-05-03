@@ -7,80 +7,55 @@
 [![Docker](https://github.com/sdss/lvmieb/actions/workflows/docker.yml/badge.svg)](https://github.com/sdss/lvmieb/actions/workflows/docker.yml)
 [![codecov](https://codecov.io/gh/sdss/lvmieb/branch/master/graph/badge.svg?token=IyQglaQYSF)](https://codecov.io/gh/sdss/lvmieb)
 
-SDSS-V LVM(Local Volume Mapper) IEB(Integrated Electronics Box) control software for the Spectrograpgh
+Control software for the SDSS-V LVM (Local Volume Mapper) spectrograph Instrument Electronics Box (IEB).
 
 ## Quick Start
 
-### Prerequisite
+### Installation
 
-Install [CLU](https://clu.readthedocs.io/en/latest/) by using PyPI.
-```
-$ pip install sdss-clu
-```
+`lvmieb` uses the [CLU](https://clu.readthedocs.io/en/latest/) framework and requires a RabbitMQ instance running in the background.
 
-Install [RabbitMQ](https://www.rabbitmq.com/) by using apt-get.
+`lvmieb` can be installed using `pip`
 
-```
-$ sudo apt-get install -y erlang
-$ sudo apt-get install -y rabbitmq-server
-$ sudo systemctl enable rabbitmq-server
-$ sudo systemctl start rabbitmq-server
+```console
+pip install sdss-lvmieb
 ```
 
-Install [pyenv](https://github.com/pyenv/pyenv) by using [pyenv installer](https://github.com/pyenv/pyenv-installer).
+or by cloning this repository
 
-```
-$ curl https://pyenv.run | bash
-```
-
-You should add the code below to `~/.bashrc` by using your preferred editor.
-```
-# pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv init --path)"
-eval "$(pyenv virtualenv-init -)"
+```console
+git clone https://github.com/sdss/lvmieb
 ```
 
-### Ping-pong test
+The preferred installation for development is using [poetry](https://python-poetry.org/)
 
-Clone this repository.
-```
-$ git clone https://github.com/sdss/lvmieb
-$ cd lvmieb
-```
-
-Set the python 3.9.1 virtual environment.
-```
-$ pyenv install 3.9.1
-$ pyenv virtualenv 3.9.1 lvmieb-with-3.9.1
-$ pyenv local lvmieb-with-3.9.1
+```console
+cd lvmieb
+poetry install
 ```
 
-Install [poetry](https://python-poetry.org/) and dependencies. For more information, check [sdss/archon](https://github.com/sdss/archon).
-```
-$ pip install poetry
-$ python create_setup.py
-$ pip install -e .
-```
 
-Start `lvmieb` actor.
-```
-$ lvmieb start
+### Basic ping-pong test
+
+Start the `lvmieb` actor.
+
+```console
+lvmieb start
 ```
 
 In another terminal, type `clu` and `lvmieb ping` for test.
-```
+
+```console
 $ clu
 lvmieb ping
-07:41:22.636 lvmieb > 
+07:41:22.636 lvmieb >
 07:41:22.645 lvmieb : {
     "text": "Pong."
 }
 ```
 
 Stop `lvmieb` actor.
-```
-$ lvmieb stop
+
+```console
+lvmieb stop
 ```

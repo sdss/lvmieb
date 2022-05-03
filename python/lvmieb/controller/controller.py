@@ -14,7 +14,7 @@ import warnings
 
 from pymodbus.client.asynchronous.async_io import (
     AsyncioModbusTcpClient as ModbusClient,
-)  # isort:skip
+)
 
 from lvmieb.exceptions import LvmIebError, LvmIebWarning
 
