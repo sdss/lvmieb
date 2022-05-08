@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 import click
@@ -12,6 +14,9 @@ from . import parser
 
 if TYPE_CHECKING:
     from lvmieb.actor import ControllersType, IEBCommand
+
+
+__all__ = ["depth"]
 
 
 @parser.group()
@@ -39,8 +44,8 @@ async def status(
 
     try:
         depth = await depth_gauges.read()
-    except LvmIebError as err:
-        return command.fail(error=str(err))
+    except Exception as err:
+        return command.fail(error=err)
 
     camera = camera or depth_gauges.camera or "?"
     return command.finish({"depth": {"camera": camera, **depth}})

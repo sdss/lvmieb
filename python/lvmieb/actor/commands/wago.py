@@ -5,15 +5,18 @@
 # @Filename: telemetry.py
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 
-from __future__ import absolute_import, annotations, division, print_function
+from __future__ import annotations
 
 import asyncio
+from typing import TYPE_CHECKING
 
 import click
 
-from lvmieb.actor.actor import ControllersType, IEBCommand
-
 from . import parser
+
+
+if TYPE_CHECKING:
+    from lvmieb.actor.actor import ControllersType, IEBCommand
 
 
 @parser.group()
@@ -44,9 +47,11 @@ async def status(
             continue
 
         controller = controllers[spectro_name]
-        tasks.append(await controller.wago.read_sensors())
+        tasks.append(controller.wago.read_sensors())
 
     results = await asyncio.gather(*tasks, return_exceptions=True)
+    if len(results) == 0:
+        return command.fail("No data received.")
 
     sensors = {}
     for ii, spectro_name in enumerate(spectro_list):
@@ -54,7 +59,7 @@ async def status(
         if isinstance(result, Exception):
             command.warning(f"Failed to read {spectro_name} sensors.")
             continue
-        sensors[f"{spectro_name}_sensors"] = {k.lower(): v for k, v in result.items()}
+        sensors[f"{spectro_name}_sensors"] = result
 
     return command.finish(**sensors)
 
@@ -81,9 +86,11 @@ async def getpower(
             continue
 
         controller = controllers[spectro_name]
-        tasks.append(await controller.wago.read_relays())
+        tasks.append(controller.wago.read_relays())
 
     results = await asyncio.gather(*tasks, return_exceptions=True)
+    if len(results) == 0:
+        return command.fail("No data received.")
 
     relays = {}
     for ii, spectro_name in enumerate(spectro_list):
@@ -91,7 +98,7 @@ async def getpower(
         if isinstance(result, Exception):
             command.warning(f"Failed to read {spectro_name} relays.")
             continue
-        relays[f"{spectro_name}_relays"] = {k.lower(): v for k, v in result.items()}
+        relays[f"{spectro_name}_relays"] = result
 
     return command.finish(**relays)
 
@@ -136,6 +143,6 @@ async def setpower(
     except NameError:
         return command.fail(error=f"Cannot find device {device!r}.")
 
-    await command.send_command("lvmieb", f"wago getpower {spectro}")
+    await (await command.send_command("lvmieb", f"wago getpower {spectro}"))
 
     return command.finish()

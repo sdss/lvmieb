@@ -52,7 +52,7 @@ async def open(command: IEBCommand, controllers: ControllersType, spectro: str):
     except MotorControllerError as err:
         return command.fail(error=err)
 
-    await command.send_command("lvmieb", f"shutter status {spectro}")
+    await (await command.send_command("lvmieb", f"shutter status {spectro}"))
 
     return command.finish()
 
@@ -77,7 +77,7 @@ async def close(command: IEBCommand, controllers: ControllersType, spectro: str)
     except MotorControllerError as err:
         return command.fail(error=err)
 
-    await command.send_command("lvmieb", f"shutter status {spectro}")
+    await (await command.send_command("lvmieb", f"shutter status {spectro}"))
 
     return command.finish()
 
@@ -87,12 +87,12 @@ async def close(command: IEBCommand, controllers: ControllersType, spectro: str)
 async def status(command: IEBCommand, controllers: ControllersType, spectro: str):
     """Reports the position of the shutter."""
 
-    command.info(text="Checking all shutters")
-
     if spectro not in controllers:
         return command.fail(error=f"Spectrograph {spectro!r} is not available.")
 
     controller = controllers[spectro]
+
+    command.info(text="Checking all shutters")
 
     tasks = []
     tasks.append(controller.motors["shutter"].get_status())
@@ -111,10 +111,10 @@ async def status(command: IEBCommand, controllers: ControllersType, spectro: str
     )
 
     shutter_status = {
-        "power": int(power) > 0,
-        "open": int(open) > 0,
-        "invalid": int(invalid) > 0,
-        "bits": bits,
+        "power": power.value > 0,
+        "open": open.value > 0,
+        "invalid": invalid.value > 0,
+        "bits": bits or "?",
     }
 
     return command.finish({f"{spectro}_shutter": shutter_status})
@@ -125,12 +125,12 @@ async def status(command: IEBCommand, controllers: ControllersType, spectro: str
 async def init(command: IEBCommand, controllers: ControllersType, spectro: str):
     """Initialise the shutter."""
 
-    command.info(text="Initializing shutter")
-
     if spectro not in controllers:
         return command.fail(error=f"Spectrograph {spectro!r} is not available.")
 
     controller = controllers[spectro]
+
+    command.info(text="Initializing shutter")
 
     tasks = []
     tasks.append(controller.motors["shutter"].send_command("init"))
@@ -148,12 +148,12 @@ async def init(command: IEBCommand, controllers: ControllersType, spectro: str):
 async def home(command: IEBCommand, controllers: ControllersType, spectro: str):
     """Home the shutter."""
 
-    command.info(text="Home shutter")
-
     if spectro not in controllers:
         return command.fail(error=f"Spectrograph {spectro!r} is not available.")
 
     controller = controllers[spectro]
+
+    command.info(text="Homing shutter")
 
     tasks = []
     tasks.append(controller.motors["shutter"].send_command("home"))

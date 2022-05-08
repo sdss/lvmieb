@@ -39,13 +39,14 @@ class IEBWAGO(Drift):
         rhs = await self.read_category("humidity")
 
         sensors.update(rhs)
+        sensors = {k.split(".")[1].lower(): v for k, v in sensors.items()}
 
         if units:
             return sensors
 
         sensors_no_unit = {}
         for k, v in sensors.items():
-            sensors_no_unit[k] = v[0]
+            sensors_no_unit[k] = round(v[0], 2)
 
         return sensors_no_unit
 
@@ -60,7 +61,12 @@ class IEBWAGO(Drift):
 
         """
 
-        return await self.read_category("relays", adapt=False)
+        relays = await self.read_category("relays")
+
+        return {
+            k.split(".")[1].lower(): True if v[0] == "closed" else False
+            for k, v in relays.items()
+        }
 
     async def set_relay(self, relay: str, closed: bool = True):
         """Sets the status of a power relay."""
@@ -72,8 +78,10 @@ class IEBWAGO(Drift):
 
         assert isinstance(device, Relay)
 
-        status = await device.read(adapt=False)
-        if status == closed:
+        status = await device.read()
+        if status[0] == "closed" and closed is True:
+            return None
+        elif status[0] == "open" and closed is False:
             return None
 
         if closed:

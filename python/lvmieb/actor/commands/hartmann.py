@@ -66,7 +66,7 @@ async def open(
     except MotorControllerError as err:
         return command.fail(error=err)
 
-    await command.send_command("lvmieb", f"hartmann status {spectro}")
+    await (await command.send_command("lvmieb", f"hartmann status {spectro}"))
 
     return command.finish()
 
@@ -99,13 +99,13 @@ async def close(
     if side == "all" or side == "right":
         tasks.append(controller.motors["hartmann_right"].move(open=False))
 
-    command.info(text=f"Opening {side} hartmanns")
+    command.info(text=f"Closing {side} hartmanns")
     try:
         await asyncio.gather(*tasks)
     except MotorControllerError as err:
         return command.fail(error=err)
 
-    await command.send_command("lvmieb", f"hartmann status {spectro}")
+    await (await command.send_command("lvmieb", f"hartmann status {spectro}"))
 
     return command.finish()
 
@@ -141,10 +141,10 @@ async def status(command: IEBCommand, controllers: ControllersType, spectro: str
         )
 
         hd_status[name] = {
-            "power": int(power) > 0,
-            "open": int(open) > 0,
-            "invalid": int(invalid) > 0,
-            "bits": bits,
+            "power": power.value > 0,
+            "open": open.value > 0,
+            "invalid": invalid.value > 0,
+            "bits": bits or "?",
         }
 
     command.info({f"{spectro}_hartmann_left": hd_status["left"]})
@@ -158,12 +158,12 @@ async def status(command: IEBCommand, controllers: ControllersType, spectro: str
 async def init(command: IEBCommand, controllers: ControllersType, spectro: str):
     """Initialise the hartmanns."""
 
-    command.info(text="Initializing all hartmanns")
-
     if spectro not in controllers:
         return command.fail(error=f"Spectrograph {spectro!r} is not available.")
 
     controller = controllers[spectro]
+
+    command.info(text="Initializing all hartmanns")
 
     tasks = []
     for hd in ["hartmann_left", "hartmann_right"]:
@@ -182,12 +182,12 @@ async def init(command: IEBCommand, controllers: ControllersType, spectro: str):
 async def home(command: IEBCommand, controllers: ControllersType, spectro: str):
     """Home the hartmann doors."""
 
-    command.info(text="Home all hartmanns")
-
     if spectro not in controllers:
         return command.fail(error=f"Spectrograph {spectro!r} is not available.")
 
     controller = controllers[spectro]
+
+    command.info(text="Home all hartmanns")
 
     tasks = []
     for hd in ["hartmann_left", "hartmann_right"]:

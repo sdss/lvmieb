@@ -1,4 +1,4 @@
-from __future__ import absolute_import, annotations, division, print_function
+from __future__ import annotations
 
 import asyncio
 from typing import TYPE_CHECKING

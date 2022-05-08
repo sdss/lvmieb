@@ -40,11 +40,11 @@ class IEBController:
         wago = IEBWAGO.from_config(wago_config, name=spec)
 
         motors = []
-        for motor, motor_config in config.get("motor_controllers", {}).copy():
+        for motor, motor_config in config.get("motor_controllers", {}).copy().items():
             motors.append(MotorController(spec, motor, **motor_config, wago=wago))
 
         pressure = []
-        for camera, pressure_config in config.get("pressure", {}).copy():
+        for camera, pressure_config in config.get("pressure", {}).copy().items():
             pressure.append(PressureTransducer(spec, camera, **pressure_config))
 
         return cls(spec, wago, pressure=pressure, motors=motors)

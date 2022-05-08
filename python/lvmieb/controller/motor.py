@@ -70,7 +70,7 @@ class MotorController:
             raise RuntimeError("WAGO module not specified.")
 
         device = self.wago.get_device(self.type)
-        return await device.read(adapt=False)
+        return (await device.read())[0] == "closed"
 
     async def send_command(self, command: str, timeout: float = 1) -> bytes:
         """Sends a command to the device."""
@@ -93,8 +93,14 @@ class MotorController:
         w.write((f"\00\07{command}\r").encode())
         await w.drain()
 
+        reply = b""
         try:
-            return await asyncio.wait_for(r.readuntil(b"\r"), timeout)
+            while True:
+                reply += await asyncio.wait_for(r.readuntil(b"\r"), timeout)
+                if command == "IS":
+                    return reply
+                if b"ERR" in reply or b"DONE" in reply:
+                    return reply
         except asyncio.TimeoutError:
             raise MotorControllerError(
                 f"{self.type} ({self.spec}): timed out waiting for "
@@ -199,6 +205,7 @@ class MotorController:
             return True
 
         reply = await self.send_command(command, timeout=3.0)
+
         if b"DONE" in reply:
             return True
         elif b"ERR" in reply:

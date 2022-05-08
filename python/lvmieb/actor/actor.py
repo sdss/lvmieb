@@ -8,6 +8,7 @@
 
 from __future__ import annotations
 
+import os
 import pathlib
 from typing import ClassVar
 
@@ -77,10 +78,19 @@ class IEBActor(AMQPActor):
                 raise RuntimeError("The class does not have a base configuration.")
             config = cls.BASE_CONFIG
 
-        instance = cls.from_config(config)
-
         if isinstance(config, (str, pathlib.Path)):
             config = dict(read_yaml_file(str(config)))
+
+        if "schema" in config["actor"]:
+            schema = config["actor"]["schema"]
+            if not os.path.isabs(schema):
+                schema = os.path.join(
+                    os.path.abspath(os.path.join(os.path.dirname(__file__), "../")),
+                    schema,
+                )
+            config["actor"]["schema"] = schema
+
+        instance = super().from_config(config["actor"])
 
         controllers: list[IEBController] = []
 
@@ -102,7 +112,7 @@ class IEBActor(AMQPActor):
             )
             controllers.append(controller)
 
-        instance.controllers = controllers
+        instance.controllers = {contr.spec: contr for contr in controllers}
 
         if (depth_gauges := config.get("depth_gauges", None)) is not None:
             instance.depth_gauges = DepthGauges(**depth_gauges.copy())

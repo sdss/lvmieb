@@ -1,32 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "definitions": {
-    "environmental_props": {
-      "type": "object",
-      "properties": {
-        "rh1": { "type": "number" },
-        "rh2": { "type": "number" },
-        "rh3": { "type": "number" },
-        "t1": { "type": "number" },
-        "t2": { "type": "number" },
-        "t3": { "type": "number" },
-        "rtd1": { "type": "number" },
-        "rtd2": { "type": "number" },
-        "rtd3": { "type": "number" },
-        "rtd4": { "type": "number" }
-      },
-      "additionalProperties": false
-    },
-    "motor_props": {
-      "type": "object",
-      "properties": {
-        "power": { "type": "boolean" },
-        "status": { "enum": ["closed", "open", "?"] },
-        "bits": { "type": "string" }
-      },
-      "additionalProperties": false
-    }
-  },
   "type": "object",
   "properties": {
     "depth": {
@@ -36,6 +9,12 @@
         "A": { "type": "number" },
         "B": { "type": "number" },
         "C": { "type": "number" }
+      }
+    },
+    "transducer": {
+      "type": "object",
+      "patternProperties": {
+        "[b|z|r][0-9]_[pressure|temperature]": { "type": "number" }
       }
     }
   },
