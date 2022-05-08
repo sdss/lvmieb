@@ -7,8 +7,6 @@ from typing import TYPE_CHECKING
 
 import click
 
-from lvmieb.exceptions import LvmIebError
-
 from . import parser
 
 
