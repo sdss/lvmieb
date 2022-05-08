@@ -54,7 +54,7 @@ async def status(
         if isinstance(result, Exception):
             command.warning(f"Failed to read {spectro_name} sensors.")
             continue
-        sensors[f"{spectro_name}_sensors"] = result
+        sensors[f"{spectro_name}_sensors"] = {k.lower(): v for k, v in result.items()}
 
     return command.finish(**sensors)
 
@@ -91,7 +91,7 @@ async def getpower(
         if isinstance(result, Exception):
             command.warning(f"Failed to read {spectro_name} relays.")
             continue
-        relays[f"{spectro_name}_relays"] = result
+        relays[f"{spectro_name}_relays"] = {k.lower(): v for k, v in result.items()}
 
     return command.finish(**relays)
 
