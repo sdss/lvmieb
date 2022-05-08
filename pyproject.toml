@@ -4,6 +4,7 @@ version = "0.3.0-alpha.0"
 
 description = "Control software for the Local Volume Mapper Instrument Electronics Box"
 authors = ["Changgon Kim <changgonkim@khu.ac.kr>"]
+maintainers = ["José Sánchez-Gallego <gallegoj@uw.edu>"]
 license = "BSD-3-Clause"
 readme = "README.md"
 homepage = "https://github.com/sdss/lvmieb"
@@ -66,7 +67,7 @@ line_length = 79
 sections = ["FUTURE", "STDLIB", "THIRDPARTY", "SDSS", "FIRSTPARTY", "LOCALFOLDER"]
 default_section = "THIRDPARTY"
 known_first_party = "lvmieb"
-known_sdss = ["sdsstools"]
+known_sdss = ["sdsstools", "clu", "drift"]
 balanced_wrapping = true
 include_trailing_comma = false
 lines_after_imports = 2
