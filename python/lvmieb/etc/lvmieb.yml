@@ -1,13 +1,11 @@
-# A dictionary of controller name to OSU Spectrograph controller connection parameters.
-# Osu Controller host : 10.7.45.27
-# exp_shutter port : 7776
-# hartman_door_left port : 7777
-# hartman_door_right port : 7778
-# WAGO(temperature & humidity sensor connectted) : 502
+enabled_specs: [sp2]
 
-devices:
-  motor_controllers:
-    sp1:
+specs:
+  sp1:
+    wago:
+      address: 10.7.45.28
+        port: 502
+    motor_controllers:
       shutter:
         host: 10.7.45.28
         port: 7776
@@ -17,7 +15,24 @@ devices:
       hartmann_right:
         host: 10.7.45.28
         port: 7778
-    sp2:
+    pressure:
+      r1:
+        host: 10.7.45.30
+        port: 1112
+        device_id: 253
+      b1:
+        host: 10.7.45.30
+        port: 1114
+        device_id: 253
+      z1:
+        host: 10.7.45.30
+        port: 1115
+        device_id: 253
+  sp2:
+    wago:
+      address: 10.7.45.27
+      port: 502
+    motor_controllers:
       shutter:
         host: 10.7.45.27
         port: 7776
@@ -27,151 +42,120 @@ devices:
       hartmann_right:
         host: 10.7.45.27
         port: 7778
-  pressure:
-    sp1:        
-      r1:
-        host: 10.7.45.30
-        port: 1112
-        id: 253
-      b1:
-        host: 10.7.45.30
-        port: 1114
-        id: 253
-      z1:
-        host: 10.7.45.30
-        port: 1115
-        id: 253
-    sp2:        
+    pressure:
       r1:
         host: 10.7.45.33
         port: 1112
-        id: 253
+        device_id: 253
       b1:
         host: 10.7.45.33
         port: 1114
-        id: 253
+        device_id: 253
       z1:
         host: 10.7.45.33
         port: 1115
-        id: 253
-  depth:
-    sp1:
-      host: 10.7.45.30
-      port: 1116
-      channel: null
-    sp2:
-      host: 10.7.45.30
-      port: 1116
-      channel: null
-  lab:
-    sensor:
-      host: 10.7.45.30
-      port: 1111
-  modules:
-    controllers:
-      sp1:
-        wago:
-          address: 10.7.45.28
-          port: 502
-      sp2:
-        wago:
-          address: 10.7.45.27
-          port: 502
-    modules:
-      ANALOG1:
-        model: 750-497
-        mode: input_register
-        channels: 8
-        description: E+E temperature and humidity sensors
-        devices:
-          RH1:
-            address: 40001
-            category: humidity
-            adaptor: rh_dwyer
-            units: percent
-          T1:
-            address: 40002
-            category: temperature
-            adaptor: t_dwyer
-            units: degC
-          RH2:
-            address: 40003
-            category: humidity
-            adaptor: rh_dwyer
-            units: percent
-          T2:
-            address: 40004
-            category: temperature
-            adaptor: t_dwyer
-            units: degC
-          RH3:
-            address: 40005
-            category: humidity
-            adaptor: rh_dwyer
-            units: percent
-          T3:
-            address: 40006
-            category: temperature
-            adaptor: t_dwyer
-            units: degC
-      ANALOG2:
-        model: 750-450
-        mode: input_register
-        channels: 4
-        description: Pt RTD sensors
-        devices:
-          RTD1:
-            address: 40009
-            category: temperature
-            adaptor: rtd
-            units: degC
-            description: Inside the controller box
-          RTD2:
-            address: 40010
-            category: temperature
-            adaptor: rtd
-            units: degC
-            description:
-          RTD3:
-            address: 40011
-            category: temperature
-            adaptor: rtd
-            units: degC
-            description:
-          RTD4:
-            address: 40012
-            category: temperature
-            adaptor: rtd
-            units: degC
-            description:
-      DO:
-        model: 750-530
-        mode: coil
-        channels: 8
-        description: Power relays
-        devices:
-          shutter:
-            address: 40513
-            type: relay
-            category: relays
-            relay_type: NC
-          hartmann_left:
-            address: 40515
-            type: relay
-            category: relays
-            relay_type: NO
-          hartmann_right:
-            address: 40516
-            type: relay
-            category: relays
-            relay_type: NO
-#added by CK 2021/03/30
+        device_id: 253
+
+wago_modules:
+  ANALOG1:
+    model: 750-497
+    mode: input_register
+    channels: 8
+    description: E+E temperature and humidity sensors
+    devices:
+      RH1:
+        address: 40001
+        category: humidity
+        adaptor: rh_dwyer
+        units: percent
+      T1:
+        address: 40002
+        category: temperature
+        adaptor: t_dwyer
+        units: degC
+      RH2:
+        address: 40003
+        category: humidity
+        adaptor: rh_dwyer
+        units: percent
+      T2:
+        address: 40004
+        category: temperature
+        adaptor: t_dwyer
+        units: degC
+      RH3:
+        address: 40005
+        category: humidity
+        adaptor: rh_dwyer
+        units: percent
+      T3:
+        address: 40006
+        category: temperature
+        adaptor: t_dwyer
+        units: degC
+  ANALOG2:
+    model: 750-450
+    mode: input_register
+    channels: 4
+    description: Pt RTD sensors
+    devices:
+      RTD1:
+        address: 40009
+        category: temperature
+        adaptor: rtd
+        units: degC
+        description: Inside the controller box
+      RTD2:
+        address: 40010
+        category: temperature
+        adaptor: rtd
+        units: degC
+        description:
+      RTD3:
+        address: 40011
+        category: temperature
+        adaptor: rtd
+        units: degC
+        description:
+      RTD4:
+        address: 40012
+        category: temperature
+        adaptor: rtd
+        units: degC
+        description:
+  DO:
+    model: 750-530
+    mode: coil
+    channels: 8
+    description: Power relays
+    devices:
+      shutter:
+        address: 40513
+        type: relay
+        category: relays
+        relay_type: NC
+      hartmann_left:
+        address: 40515
+        type: relay
+        category: relays
+        relay_type: NO
+      hartmann_right:
+        address: 40516
+        type: relay
+        category: relays
+        relay_type: NO
+
+depth_gauges:
+  host: 10.7.45.30
+  port: 1116
+  camera: null
+
 timeouts:
-    controller_connect: 1
+  controller_connect: 1
 
 # Actor configuration for the AMQPActor class
 actor:
-    name: lvmieb
-    host: localhost
-    port: 5672
-    log_dir: '~/data/logs/lvmieb'
+  name: lvmieb
+  host: localhost
+  port: 5672
+  log_dir: '/data/logs/lvmieb'

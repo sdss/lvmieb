@@ -1,52 +1,60 @@
-import asyncio
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from typing import TYPE_CHECKING
 
 import click
-from clu.command import Command
 
-from lvmieb.controller.controller import IebController
 from lvmieb.exceptions import LvmIebError
 
 from . import parser
 
 
+if TYPE_CHECKING:
+    from lvmieb.actor import ControllersType, IEBCommand
+
+
 @parser.group()
 def depth(*args):
-    """control the linear gauge depth."""
+    """Controls the linear gauge depth."""
     pass
 
 
 @depth.command()
-@click.argument(
-    "spectro",
-    type=click.Choice(["sp1", "sp2", "sp3"]),
-    default="sp1",
-    required=False,
-)
-@click.argument(
-    "ccd",
-    type=click.Choice(["r1", "b1", "z1"]),
-    default="z1",
-    required=False,
+@click.option(
+    "--camera",
+    type=str,
+    help="Temporarily sets the camera to which the probes are connected.",
 )
 async def status(
-    command: Command, controllers: dict[str, IebController], spectro: str, ccd: str
+    command: IEBCommand,
+    controllers: ControllersType,
+    camera: str | None = None,
 ):
-    """Returns the status of transducer."""
-    tasks = []
-    for depth in controllers:
-        if controllers[depth].spec == spectro:
-            if controllers[depth].name == "sp1":
-                try:
-                    tasks.append(controllers[depth].read_depth_probes())
+    """Returns the measurements from the depth probes."""
 
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
-
-    depth = await asyncio.gather(*tasks)
-    print(depth)
+    depth_gauges = command.actor.depth_gauges
+    if depth_gauges is None:
+        return command.fail(error="Depth gauge configuration not defined.")
 
     try:
-        command.info({spectro: {ccd: depth[0]}})
+        depth = await depth_gauges.read()
     except LvmIebError as err:
         return command.fail(error=str(err))
+
+    camera = camera or depth_gauges.camera or "?"
+    return command.finish({"depth": {"camera": camera, **depth}})
+
+
+@depth.command(name="set-camera")
+@click.argument("CAMERA", type=str)
+async def set_camera(command: IEBCommand, controllers: ControllersType, camera: str):
+    """Sets the camera to which the probes are connected."""
+
+    depth_gauges = command.actor.depth_gauges
+    if depth_gauges is None:
+        return command.fail(error="Depth gauge configuration not defined.")
+
+    depth_gauges.camera = camera
+
     return command.finish()

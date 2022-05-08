@@ -5,15 +5,17 @@
 # @Filename: __main__.py
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 
+from __future__ import annotations
+
 import os
 
 import click
 from click_default_group import DefaultGroup
-from clu.tools import cli_coro as cli_coro_lvm
 
+from clu.tools import cli_coro as cli_coro_lvm
 from sdsstools.daemonizer import DaemonGroup
 
-from lvmieb.actor.actor import lvmieb as lvmiebInstance
+from lvmieb.actor.actor import IEBActor
 
 
 @click.group(cls=DefaultGroup, default="actor", default_if_no_args=True)
@@ -46,7 +48,7 @@ async def actor(ctx):
     default_config_file = os.path.join(os.path.dirname(__file__), "etc/lvmieb.yml")
     config_file = ctx.obj["config_file"] or default_config_file
 
-    lvmieb_obj = lvmiebInstance.from_config(config_file)
+    lvmieb_obj = IEBActor.from_config(config_file)
 
     if ctx.obj["verbose"]:
         lvmieb_obj.log.fh.setLevel(0)

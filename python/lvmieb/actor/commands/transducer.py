@@ -1,75 +1,55 @@
 from __future__ import absolute_import, annotations, division, print_function
 
 import asyncio
+from typing import TYPE_CHECKING
 
 import click
-from clu.command import Command
-
-from lvmieb.controller.controller import IebController
-from lvmieb.exceptions import LvmIebError
 
 from . import parser
 
 
-CCDLIST = ["r1", "b1", "z1"]
+if TYPE_CHECKING:
+    from lvmieb.actor.actor import ControllersType, IEBCommand
 
 
 @parser.group()
 def transducer(*args):
-    """control the wago IOModule."""
+    """Reports pressure transducer values.."""
     pass
 
 
 @transducer.command()
-@click.argument(
-    "spectro",
-    type=click.Choice(["sp1", "sp2", "sp3"]),
-    default="sp1",
-    required=False,
-)
-async def status(command: Command, controllers: dict[str, IebController], spectro: str):
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+async def status(
+    command: IEBCommand,
+    controllers: ControllersType,
+    spectro: str | None = None,
+):
     """Returns the status of transducer."""
 
     tasks = []
-    pres_result = {
-        "r1_pressure": -1.0,
-        "b1_pressure": -1.0,
-        "z1_pressure": -1.0,
-        "r1_temperature": -1.0,
-        "b1_temperature": -1.0,
-        "z1_temperature": -1.0,
-    }
 
-    for pres in controllers:
-        if controllers[pres].spec == spectro:
-            if controllers[pres].name in CCDLIST:
-                try:
-                    tasks.append(controllers[pres].read_temp(controllers[pres].name))
-                    tasks.append(
-                        controllers[pres].read_pressure(controllers[pres].name)
-                    )
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
+    pres_result = {}
+    camera_order = []
 
-    pres_list = await asyncio.gather(*tasks)
-    print(pres_list)
-    for i in pres_list:
-        if i:
-            pres_result.update(i)
+    for controller_name in controllers:
+        if spectro is not None and controller_name != spectro:
+            continue
+        controller = controllers[controller_name]
+        for camera, pressure_transducer in controller.pressure.items():
+            tasks.append(pressure_transducer.read_pressure())
+            tasks.append(pressure_transducer.read_temperature())
+            camera_order.append(camera)
 
-    try:
-        command.info(
-            {
-                spectro: {
-                    "r1_pressure": pres_result["r1_pressure"],
-                    "b1_pressure": pres_result["b1_pressure"],
-                    "z1_pressure": pres_result["z1_pressure"],
-                    "r1_temperature": pres_result["r1_temperature"],
-                    "b1_temperature": pres_result["b1_temperature"],
-                    "z1_temperature": pres_result["z1_temperature"],
-                }
-            }
-        )
-    except LvmIebError as err:
-        return command.fail(error=str(err))
-    return command.finish()
+    pres_list = await asyncio.gather(*tasks, return_exceptions=True)
+
+    for ii, camera in enumerate(camera_order):
+        camera_results = pres_list[2 * ii : 2 * ii + 2]
+        for jj, measurement in enumerate(["pressure", "temperature"]):
+            camera_result = camera_results[jj]
+            if isinstance(camera_result, Exception):
+                command.warning(f"Failed getting {camera} {measurement}.")
+                camera_result = -999.0
+            pres_result[f"{camera}_{measurement}"] = camera_result
+
+    command.finish(transducer=pres_result)

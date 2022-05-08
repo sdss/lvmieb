@@ -13,10 +13,10 @@ import asyncio
 import os
 import re
 
-import clu.testing
 import pytest as pytest
-from clu.actor import AMQPBaseActor
 
+import clu.testing
+from clu.actor import AMQPBaseActor
 from sdsstools import merge_config, read_yaml_file
 
 from lvmieb import config

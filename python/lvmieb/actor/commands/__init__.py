@@ -11,6 +11,7 @@ import importlib
 import os
 
 import click
+
 from clu.command import Command
 from clu.parsers.click import CluGroup, command_parser, help_, ping, version
 
@@ -30,7 +31,8 @@ parser.add_command(help_)
 def __commands(ctx, command: Command, *args):
     # Returns all commands.
 
-    # we have to use the help key for the command list, dont want to change the standard model.
+    # we have to use the help key for the command list,
+    # dont want to change the standard model.
     command.finish(help=[k for k in ctx.command.commands.keys() if k[:2] != "__"])
 
 
