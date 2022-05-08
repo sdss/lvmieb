@@ -9,9 +9,6 @@ NAME = "sdss-lvmieb"
 # Loads config. config name is the package name.
 config = get_config("lvmieb")
 
-# Inits the logging system as NAME. Only shell logging, and exception and warning catching.
-# File logging can be started by calling log.start_file_logger(path).  Filename can be different
-# than NAME.
 log = get_logger(NAME)
 
 # package name should be pip package name

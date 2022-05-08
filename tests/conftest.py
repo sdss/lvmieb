@@ -57,7 +57,7 @@ def test_config():
 
 @pytest.fixture
 async def hartmann_right(request, unused_tcp_port_factory: int):
-    """Mocks a 'hartmann door right' that replies to commands with predefined replies."""
+    """Mocks a hartmann door right that replies to commands with predefined replies."""
 
     async def handle_connection(
         reader: asyncio.StreamReader,
