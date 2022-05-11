@@ -143,6 +143,6 @@ async def setpower(
     except NameError:
         return command.fail(error=f"Cannot find device {device!r}.")
 
-    await (await command.send_command("lvmieb", f"wago getpower {spectro}"))
+    await (await command.child_command(f"wago getpower {spectro}"))
 
     return command.finish()

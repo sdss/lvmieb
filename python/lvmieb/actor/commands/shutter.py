@@ -52,7 +52,7 @@ async def open(command: IEBCommand, controllers: ControllersType, spectro: str):
     except MotorControllerError as err:
         return command.fail(error=err)
 
-    await (await command.send_command("lvmieb", f"shutter status {spectro}"))
+    await (await command.child_command(f"shutter status {spectro}"))
 
     return command.finish()
 
@@ -77,7 +77,7 @@ async def close(command: IEBCommand, controllers: ControllersType, spectro: str)
     except MotorControllerError as err:
         return command.fail(error=err)
 
-    await (await command.send_command("lvmieb", f"shutter status {spectro}"))
+    await (await command.child_command(f"shutter status {spectro}"))
 
     return command.finish()
 

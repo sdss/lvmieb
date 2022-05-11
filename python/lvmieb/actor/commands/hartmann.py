@@ -12,6 +12,8 @@ from typing import TYPE_CHECKING
 
 import click
 
+from clu.command import Command
+
 from lvmieb.controller.maskbits import MotorStatus
 from lvmieb.exceptions import MotorControllerError
 
@@ -66,7 +68,7 @@ async def open(
     except MotorControllerError as err:
         return command.fail(error=err)
 
-    await (await command.send_command("lvmieb", f"hartmann status {spectro}"))
+    await (await command.child_command(f"hartmann status {spectro}"))
 
     return command.finish()
 
@@ -105,7 +107,7 @@ async def close(
     except MotorControllerError as err:
         return command.fail(error=err)
 
-    await (await command.send_command("lvmieb", f"hartmann status {spectro}"))
+    await (await command.child_command(f"hartmann status {spectro}"))
 
     return command.finish()
 
