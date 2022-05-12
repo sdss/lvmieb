@@ -21,7 +21,7 @@ classifiers = [
 packages = [
     { include = "lvmieb", from = "python" }
 ]
-include = ["python/lvmieb/etc/*", "cextern/**/*", "LICENSE.md"]
+include = ["python/lvmieb/etc/*"]
 
 [tool.poetry.scripts]
 lvmieb = "lvmieb.__main__:lvmieb"
