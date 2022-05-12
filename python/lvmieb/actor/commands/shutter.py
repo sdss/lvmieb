@@ -91,8 +91,6 @@ async def status(command: IEBCommand, controllers: ControllersType, spectro: str
 
     controller = controllers[spectro]
 
-    command.info(text="Checking all shutters")
-
     tasks = []
     tasks.append(controller.motors["shutter"].get_status())
 

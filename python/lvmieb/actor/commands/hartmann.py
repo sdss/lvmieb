@@ -12,8 +12,6 @@ from typing import TYPE_CHECKING
 
 import click
 
-from clu.command import Command
-
 from lvmieb.controller.maskbits import MotorStatus
 from lvmieb.exceptions import MotorControllerError
 
@@ -116,8 +114,6 @@ async def close(
 @click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
 async def status(command: IEBCommand, controllers: ControllersType, spectro: str):
     """Reports the position of the Hartmann doors."""
-
-    command.info(text="Checking all hartmanns")
 
     if spectro not in controllers:
         return command.fail(error=f"Spectrograph {spectro!r} is not available.")
