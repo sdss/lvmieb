@@ -58,7 +58,6 @@ async def open(command: IEBCommand, controllers: ControllersType, spectro: str):
 
 
 @shutter.command()
-@click.option("-s", "--side", type=click.Choice(["all", "right", "left"]))
 @click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
 async def close(command: IEBCommand, controllers: ControllersType, spectro: str):
     """Close the shutter."""
