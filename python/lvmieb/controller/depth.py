@@ -31,8 +31,7 @@ class DepthGauges:
                 r, w = await asyncio.wait_for(conn, 1)
                 w.write(("SEND " + channel + "\n").encode())
                 await w.drain()
-                delimeter = b"\n"
-                reply = await asyncio.wait_for(r.readuntil(delimeter), 1)
+                reply = await asyncio.wait_for(r.readline(), 1)
             except Exception:
                 raise ValueError("Failed retrieving data from depth probes.")
             finally:
@@ -40,21 +39,10 @@ class DepthGauges:
                     w.close()
                     await w.wait_closed()
 
-            if reply is False:
-                raise ValueError("Failed retrieving data from depth probes.")
-            if match := re.match(f"\r{channel} ([+\\-0-9\\.]+) mm".encode(), reply):
-                if match:
-                    depth[channel] = float(match.group(1).decode())
-                else:
-                    raise ValueError(
-                        f"Failed parsing depth probe for channel {channel}"
-                    )
-            elif match := re.match(f"{channel} ([+\\-0-9\\.]+) mm".encode(), reply):
-                if match:
-                    depth[channel] = float(match.group(1).decode())
-                else:
-                    raise ValueError(
-                        f"Failed parsing depth probe for channel {channel}"
-                    )
+            match = re.match(f"\r?{channel} ([+\\-0-9\\.]+) mm".encode(), reply)
+            if match:
+                depth[channel] = float(match.group(1).decode())
+            else:
+                raise ValueError(f"Failed parsing depth probe for channel {channel}")
 
         return depth

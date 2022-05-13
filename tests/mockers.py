@@ -68,8 +68,14 @@ class WAGOMocker(IEBWAGO):
 class MotorMocker:
     """Mocks a hartmann door right that replies to commands with predefined replies."""
 
-    def __init__(self, current_status: str = "closed", motor_type: str = "shutter"):
+    def __init__(
+        self,
+        spectro: str = "sp1",
+        current_status: str = "closed",
+        motor_type: str = "shutter",
+    ):
 
+        self.spectro = spectro
         self.current_status = current_status
         self.motor_type = motor_type
 
@@ -115,6 +121,92 @@ class MotorMocker:
                     else:
                         writer.write(b"\x00\x07IS=01111111\r")
                 await writer.drain()
+
+    async def start(self):
+        self.server = await asyncio.start_server(self.handle_connection, "localhost", 0)
+        await self.server.start_serving()
+        self.port = self.server.sockets[0].getsockname()[1]
+
+
+class PressureMocker:
+    """Mocks a pressure transducer."""
+
+    def __init__(
+        self,
+        camera: str = "b1",
+        pressure: float = 1e-6,
+        temperature: float = 20,
+    ):
+
+        self.camera = camera
+        self.pressure = pressure
+        self.temperature = temperature
+
+        self.server = None
+        self.port = None
+
+    async def handle_connection(
+        self,
+        reader: asyncio.StreamReader,
+        writer: asyncio.StreamWriter,
+    ) -> None:
+
+        while True:
+            data = await reader.readuntil(b"\\")
+            matched = re.search(b"([PT])", data)
+
+            if not matched:
+                continue
+            else:
+                com = matched.group()
+                cmd = com.decode()
+
+                if cmd == "P":
+                    writer.write((f"@253ACK{self.pressure:.1E}\\").encode())
+                elif cmd == "T":
+                    writer.write((f"@253ACK{self.temperature:.1E}\\").encode())
+                await writer.drain()
+
+    async def start(self):
+        self.server = await asyncio.start_server(self.handle_connection, "localhost", 0)
+        await self.server.start_serving()
+        self.port = self.server.sockets[0].getsockname()[1]
+
+
+class DepthMocker:
+    """Mocks a depth probe server."""
+
+    def __init__(self):
+
+        self.server = None
+        self.port = None
+
+        self.use_r = False
+        self.custom_reply = None
+
+    async def handle_connection(
+        self,
+        reader: asyncio.StreamReader,
+        writer: asyncio.StreamWriter,
+    ) -> None:
+
+        while True:
+            data = await reader.readuntil(b"\n")
+            matched = re.search(b"SEND ([ABC])\n", data)
+
+            if self.custom_reply is not None:
+                writer.write(self.custom_reply)
+                await writer.drain()
+            else:
+                if not matched:
+                    continue
+                else:
+                    com = matched.groups()[0]
+                    cmd = com.decode()
+
+                    prefix = "\r" if self.use_r else ""
+                    writer.write((f"{prefix}{cmd} 1.5 mm\n").encode())
+                    await writer.drain()
 
     async def start(self):
         self.server = await asyncio.start_server(self.handle_connection, "localhost", 0)
