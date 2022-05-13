@@ -1,0 +1,162 @@
+enabled_specs: [sp1, sp2]
+
+specs:
+  sp1:
+    wago:
+      address: 10.7.45.28
+      port: 502
+    motor_controllers:
+      shutter:
+        host: 10.7.45.28
+        port: 7776
+      hartmann_left:
+        host: 10.7.45.28
+        port: 7777
+      hartmann_right:
+        host: 10.7.45.28
+        port: 7778
+    pressure:
+      r1:
+        host: 10.7.45.30
+        port: 1112
+        device_id: 253
+      b1:
+        host: 10.7.45.30
+        port: 1114
+        device_id: 253
+      z1:
+        host: 10.7.45.30
+        port: 1115
+        device_id: 253
+  sp2:
+    wago:
+      address: 10.7.45.27
+      port: 502
+    motor_controllers:
+      shutter:
+        host: 10.7.45.27
+        port: 7776
+      hartmann_left:
+        host: 10.7.45.27
+        port: 7777
+      hartmann_right:
+        host: 10.7.45.27
+        port: 7778
+    pressure:
+      r2:
+        host: 10.7.45.33
+        port: 1112
+        device_id: 253
+      b2:
+        host: 10.7.45.33
+        port: 1114
+        device_id: 253
+      z2:
+        host: 10.7.45.33
+        port: 1115
+        device_id: 253
+
+wago_modules:
+  ANALOG1:
+    model: 750-497
+    mode: input_register
+    channels: 8
+    description: E+E temperature and humidity sensors
+    devices:
+      RH1:
+        address: 0
+        category: humidity
+        adaptor: rh_dwyer
+        units: percent
+      T1:
+        address: 1
+        category: temperature
+        adaptor: t_dwyer
+        units: degC
+      RH2:
+        address: 2
+        category: humidity
+        adaptor: rh_dwyer
+        units: percent
+      T2:
+        address: 3
+        category: temperature
+        adaptor: t_dwyer
+        units: degC
+      RH3:
+        address: 4
+        category: humidity
+        adaptor: rh_dwyer
+        units: percent
+      T3:
+        address: 5
+        category: temperature
+        adaptor: t_dwyer
+        units: degC
+  ANALOG2:
+    model: 750-450
+    mode: input_register
+    channels: 4
+    description: Pt RTD sensors
+    devices:
+      RTD1:
+        address: 8
+        category: temperature
+        adaptor: rtd
+        units: degC
+        description: Inside the controller box
+      RTD2:
+        address: 9
+        category: temperature
+        adaptor: rtd
+        units: degC
+        description:
+      RTD3:
+        address: 10
+        category: temperature
+        adaptor: rtd
+        units: degC
+        description:
+      RTD4:
+        address: 11
+        category: temperature
+        adaptor: rtd
+        units: degC
+        description:
+  DO:
+    model: 750-530
+    mode: coil
+    channels: 8
+    description: Power relays
+    devices:
+      shutter:
+        address: 512
+        type: relay
+        category: relays
+        relay_type: NC
+      hartmann_left:
+        address: 514
+        type: relay
+        category: relays
+        relay_type: NO
+      hartmann_right:
+        address: 515
+        type: relay
+        category: relays
+        relay_type: NO
+
+depth_gauges:
+  host: 10.7.45.30
+  port: 1116
+  camera: null
+
+timeouts:
+  controller_connect: 1
+
+# Actor configuration for the AMQPActor class
+actor:
+  name: lvmieb
+  host: localhost
+  port: 5672
+  log_dir: '/data/logs/lvmieb'
+  schema: etc/schema.json
