@@ -5,10 +5,9 @@ from __future__ import annotations
 
 import asyncio
 import re
+import warnings
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Optional
-
-from yaml import warnings
 
 from lvmieb.controller.maskbits import MotorStatus
 from lvmieb.exceptions import LvmIebUserWarning, MotorControllerError
@@ -138,7 +137,7 @@ class MotorController:
         try:
             reply = await self.send_command("status")
         except MotorControllerError as err:
-            warnings.warn(err, LvmIebUserWarning)
+            warnings.warn(str(err), LvmIebUserWarning)
             motor_status |= MotorStatus.POSITION_UNKNOWN
             return (motor_status, None)
 
