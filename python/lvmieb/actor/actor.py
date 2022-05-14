@@ -94,8 +94,6 @@ class IEBActor(AMQPActor):
 
         controllers: list[IEBController] = []
 
-        wago_modules = config.get("wago_modules", {}).copy()
-
         for spec in config.get("enabled_specs", []):
             if "specs" not in config or spec not in config["specs"]:
                 warnings.warn(
@@ -105,6 +103,8 @@ class IEBActor(AMQPActor):
                 continue
 
             spec_config = config["specs"][spec].copy()
+            wago_modules = deepcopy(config.get("wago_modules", {}))
+
             controller = IEBController.from_config(
                 spec,
                 spec_config,

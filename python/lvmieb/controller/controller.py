@@ -35,7 +35,7 @@ class IEBController:
         """Creates an instance of `.IEBController` from a configuration file."""
 
         wago_config = config["wago"].copy()
-        wago_config["modules"] = wago_modules
+        wago_config["modules"] = wago_modules.copy()
 
         wago = IEBWAGO.from_config(wago_config, name=spec)
 
