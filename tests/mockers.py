@@ -89,7 +89,11 @@ class MotorMocker:
     ) -> None:
 
         while True:
-            data = await reader.readuntil(b"\r")
+            try:
+                data = await reader.readuntil(b"\r")
+            except asyncio.IncompleteReadError:
+                break
+
             matched = re.search(b"(QX1|QX2|QX3|QX4|IS)", data)
 
             if not matched:
@@ -108,7 +112,7 @@ class MotorMocker:
                     writer.write(b"\x00\x07%DONE\r")
                 elif cmd == "QX2":  # home
                     writer.write(b"\x00\x07%DONE\r")
-                    self.current_status = "open"
+                    self.current_status = "closed"
                 elif cmd == "IS":  # status
                     if (
                         self.motor_type in ["shutter", "hartmann_right"]
@@ -137,11 +141,13 @@ class PressureMocker:
 
     def __init__(
         self,
+        spec: str = "sp1",
         camera: str = "b1",
         pressure: float = 1e-6,
         temperature: float = 20,
     ):
 
+        self.spec = spec
         self.camera = camera
         self.pressure = pressure
         self.temperature = temperature
@@ -156,7 +162,11 @@ class PressureMocker:
     ) -> None:
 
         while True:
-            data = await reader.readuntil(b"\\")
+            try:
+                data = await reader.readuntil(b"\\")
+            except asyncio.IncompleteReadError:
+                break
+
             matched = re.search(b"([PT])", data)
 
             if not matched:
@@ -199,7 +209,11 @@ class DepthMocker:
     ) -> None:
 
         while True:
-            data = await reader.readuntil(b"\n")
+            try:
+                data = await reader.readuntil(b"\n")
+            except asyncio.IncompleteReadError:
+                break
+
             matched = re.search(b"SEND ([ABC])\n", data)
 
             if self.custom_reply is not None:

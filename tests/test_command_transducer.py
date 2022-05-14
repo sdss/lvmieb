@@ -1,39 +1,46 @@
-import pytest
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# @Author: José Sánchez-Gallego (gallegoj@uw.edu)
+# @Date: 2022-05-13
+# @Filename: test_command_transducer.py
+# @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 
-from lvmieb.actor.actor import lvmieb as IebActor
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 
-@pytest.mark.asyncio
-async def test_transducer_status(actor: IebActor):
+if TYPE_CHECKING:
+    from lvmieb.actor import IEBActor
 
-    # initial state with the linear gauges are not initialized
-    print(actor.parser_args[0])
-    assert actor.parser_args[0]["r1"].pres_id == 253
-    assert actor.parser_args[0]["r1"].trans_pressure == -1.0
-    assert actor.parser_args[0]["r1"].trans_temp == -1.0
 
-    assert actor.parser_args[0]["b1"].pres_id == 253
-    assert actor.parser_args[0]["b1"].trans_pressure == -1.0
-    assert actor.parser_args[0]["b1"].trans_temp == -1.0
-
-    assert actor.parser_args[0]["z1"].pres_id == 253
-    assert actor.parser_args[0]["z1"].trans_pressure == -1.0
-    assert actor.parser_args[0]["z1"].trans_temp == -1.0
+async def test_command_transducer_status(actor: IEBActor):
 
     command = await actor.invoke_mock_command("transducer status")
     await command
     assert command.status.did_succeed
 
-    assert actor.parser_args[0]["r1"].trans_pressure == 0.0001738
-    assert actor.parser_args[0]["r1"].trans_temp == 23.15
-    assert actor.parser_args[0]["b1"].trans_pressure == 0.0002418
-    assert actor.parser_args[0]["b1"].trans_temp == 23.09
-    assert actor.parser_args[0]["z1"].trans_pressure == 0.0001742
-    assert actor.parser_args[0]["z1"].trans_temp == 22.03
+    reply = command.replies.get("transducer")
+    assert isinstance(reply, dict)
 
-    assert command.replies[-2].message["sp1"]["r1_pressure"] == 0.0001738
-    assert command.replies[-2].message["sp1"]["r1_temperature"] == 23.15
-    assert command.replies[-2].message["sp1"]["b1_pressure"] == 0.0002418
-    assert command.replies[-2].message["sp1"]["b1_temperature"] == 23.09
-    assert command.replies[-2].message["sp1"]["z1_pressure"] == 0.0001742
-    assert command.replies[-2].message["sp1"]["z1_temperature"] == 22.03
+    assert reply["r1_temperature"] == 20.0
+    assert reply["b2_pressure"] == 1e-6
+
+
+async def test_command_transducer_fails(actor: IEBActor, mocker):
+
+    mocker.patch.object(
+        actor.controllers["sp1"].pressure["b1"],
+        "read_pressure",
+        side_effect=ValueError,
+    )
+
+    command = await actor.invoke_mock_command("transducer status sp1")
+    await command
+    assert command.status.did_succeed
+
+    reply = command.replies.get("transducer")
+
+    assert reply["r1_temperature"] == 20.0
+    assert reply["b1_pressure"] == -999.0

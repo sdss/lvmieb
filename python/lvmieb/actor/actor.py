@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import os
 import pathlib
+from copy import deepcopy
 from typing import ClassVar
 
 from yaml import warnings
@@ -60,7 +61,7 @@ class IEBActor(AMQPActor):
 
         super().__init__(*args, **kwargs)
 
-    async def start(self, **kwargs):
+    async def start(self, **kwargs):  # pragma: no cover
         """Starts the actor connection to RabbitMQ."""
 
         # We wait to set this until here to make sure all the controllers

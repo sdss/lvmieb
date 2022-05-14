@@ -23,7 +23,7 @@ async def get_motor_controller(
     current_status: str = "closed",
     motor_type: str = "shutter",
 ):
-    mock_motor = MotorMocker(current_status, motor_type)
+    mock_motor = MotorMocker("sp1", current_status, motor_type)
     await mock_motor.start()
 
     return MotorController(
@@ -109,7 +109,6 @@ async def test_motor_move(
     open: bool,
     current_status: str,
     force: bool,
-    mocker,
 ):
 
     motor_controller = await get_motor_controller(
