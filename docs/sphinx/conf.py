@@ -91,10 +91,6 @@ pygments_style = "sphinx"
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
-releases_github_path = "sdss/lvmieb"
-releases_document_name = ["changelog"]
-releases_unstable_prehistory = True
-
 # Intersphinx mappings
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
