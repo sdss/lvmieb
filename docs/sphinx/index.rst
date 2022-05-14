@@ -10,8 +10,18 @@ Contents
 --------
 
 .. toctree::
+  :caption: Contents
 
   commands
+  changelog
+
+.. toctree::
+  :caption: Development
+  :maxdepth: 2
+
+  Changelog <changelog>
+  GitHub Repository <https://github.com/sdss/lvmieb>
+  Issues  <https://github.com/sdss/lvmieb/issues>
 
 Indices and tables
 ------------------
