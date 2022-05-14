@@ -32,8 +32,6 @@ sdsstools = ">=0.4.0"
 sdss-clu = "^1.6.1"
 click-default-group = "^1.2.2"
 numpy = "^1.20.3"
-sphinx-click = "^3.0.0"
-pymodbus = "^2.5.2"
 sdss-drift = "^0.4.2"
 
 [tool.poetry.dev-dependencies]
@@ -55,7 +53,13 @@ Sphinx = ">=3.0.0"
 sphinx_bootstrap_theme = ">=0.4.12"
 twine = "^3.4.1"
 black = ">=21.7b0"
-myst-parser = ">=0.15.1"
+sphinx-click = ">=2.6.0"
+sphinx-jsonschema = ">=1.16.7"
+myst-parser = ">=0.14.0"
+furo = "^2021.6.18-beta.36"
+nox = "^2021.6.12"
+sphinx-autobuild = "^2021.3.14"
+sphinx-copybutton = "^0.3.3"
 
 [tool.isort]
 line_length = 79

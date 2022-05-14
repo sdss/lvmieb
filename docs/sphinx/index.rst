@@ -4,22 +4,14 @@
    contain the root `toctree` directive.
 
 lvmieb's documentation
-=========================
-
-.. include:: ../../README.rst
-  :start-line: 2
-
-
+======================
 
 Contents
 --------
 
 .. toctree::
 
-  lvmieb
-  Controller
-  Commands
-  Exceptions
+  commands
 
 Indices and tables
 ------------------

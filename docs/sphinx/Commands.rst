@@ -1,7 +1,7 @@
-.. _Commands:
+.. _commands:
 
 Commands
-=============
+========
 
 The ``lvmieb`` replies to the follwing commands.
 

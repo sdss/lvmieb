@@ -9,21 +9,19 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#
+
+# type: ignore
+
 import os
 
+# import matplotlib
 from pkg_resources import parse_version
 
+from lvmieb import __version__
 
-# sys.path.insert(0, os.path.abspath('.'))
 
-
-try:
-    from lvmieb import __version__
-except ModuleNotFoundError:
-    from sdsstools import get_package_version
-
-    __version__ = get_package_version(__file__, "lvmieb") or "dev"
+# Are we building in RTD?
+on_rtd = os.environ.get("READTHEDOCS") == "True"
 
 
 # -- Project information -----------------------------------------------------
@@ -39,9 +37,6 @@ release = __version__
 # Are we building in RTD?
 on_rtd = os.environ.get("READTHEDOCS") == "True"
 
-# Sphinc template selected in cookiecutter
-sphinx_template = "alabaster"
-
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -55,10 +50,10 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.mathjax",
     "sphinx.ext.intersphinx",
-    "sdsstools.releases",
     "sphinx.ext.inheritance_diagram",
-    "sphinx_click",
     "myst_parser",
+    "sphinx_copybutton",
+    "sphinx_click",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -103,44 +98,31 @@ releases_unstable_prehistory = True
 # Intersphinx mappings
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
-    "numpy": ("http://docs.scipy.org/doc/numpy/", None),
-    "click": ("https://click.palletsprojects.com/en/7.x/", None),
-    "aio_pika": ("https://aio-pika.readthedocs.io/en/latest/", None),
 }
 # 'astropy': ('http://docs.astropy.org/en/latest', None),
 # 'matplotlib': ('https://matplotlib.org/', None),
 # 'scipy': ('https://docs.scipy.org/doc/scipy/reference', None)}
 
-autodoc_mock_imports = ["_tkinter", "asynctest", "numpy", "pymodbus"]
+autodoc_mock_imports = ["_tkinter", "asynctest"]
 autodoc_member_order = "groupwise"
-# autodoc_default_options = {"members": None, "show-inheritance": None}
+autodoc_default_options = {"members": None, "show-inheritance": None}
 autodoc_typehints = "description"
 
 napoleon_use_rtype = False
 napoleon_use_ivar = True
-napoleon_numpy_docstring = True
+
+copybutton_prompt_text = r">>> |\$ "
+copybutton_prompt_is_regexp = True
 
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "alabaster"
 
-# Theme options are theme-specific and customize the look and feel of a theme
-# further.  For a list of options available for each theme, see the
-# documentation.
-html_theme_options = {
-    "logo": "sdssv_logo.png",
-    "github_user": "sdss",
-    "github_repo": "lvmieb",
-    "github_button": True,
-    "github_type": "star",
-    "sidebar_collapse": True,
-    "github_banner": True,
-    "page_width": "80%",
-}
-
+html_theme = "furo"
+html_logo = "_static/sdssv_logo.png"
+html_title = "lvmieb"
 html_favicon = "./_static/favicon.ico"
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -152,13 +134,3 @@ if on_rtd:
     html_static_path = []
 else:
     html_static_path = ["_static"]
-
-# Sidebar templates
-html_sidebars = {
-    "**": [
-        "about.html",
-        "navigation.html",
-        "relations.html",
-        "searchbox.html",
-    ]
-}
