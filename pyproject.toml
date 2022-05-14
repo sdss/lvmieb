@@ -27,7 +27,7 @@ include = ["python/lvmieb/etc/*"]
 lvmieb = "lvmieb.__main__:lvmieb"
 
 [tool.poetry.dependencies]
-python = "^3.7,<4.0"
+python = "^3.9,<3.11"
 sdsstools = ">=0.4.0"
 sdss-clu = "^1.6.1"
 click-default-group = "^1.2.2"
