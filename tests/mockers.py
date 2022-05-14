@@ -127,6 +127,10 @@ class MotorMocker:
         await self.server.start_serving()
         self.port = self.server.sockets[0].getsockname()[1]
 
+    def stop(self):
+        if self.server:
+            self.server.close()
+
 
 class PressureMocker:
     """Mocks a pressure transducer."""
@@ -172,6 +176,10 @@ class PressureMocker:
         await self.server.start_serving()
         self.port = self.server.sockets[0].getsockname()[1]
 
+    def stop(self):
+        if self.server:
+            self.server.close()
+
 
 class DepthMocker:
     """Mocks a depth probe server."""
@@ -212,3 +220,7 @@ class DepthMocker:
         self.server = await asyncio.start_server(self.handle_connection, "localhost", 0)
         await self.server.start_serving()
         self.port = self.server.sockets[0].getsockname()[1]
+
+    def stop(self):
+        if self.server:
+            self.server.close()
