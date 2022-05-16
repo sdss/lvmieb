@@ -5,7 +5,7 @@
 [![Documentation Status](https://readthedocs.org/projects/lvmieb/badge/?version=latest)](https://lvmieb.readthedocs.io/en/latest/?badge=latest)
 [![Test](https://github.com/sdss/lvmieb/actions/workflows/test.yml/badge.svg)](https://github.com/sdss/lvmieb/actions/workflows/test.yml)
 [![Docker](https://github.com/sdss/lvmieb/actions/workflows/docker.yml/badge.svg)](https://github.com/sdss/lvmieb/actions/workflows/docker.yml)
-[![codecov](https://codecov.io/gh/sdss/lvmieb/branch/master/graph/badge.svg?token=IyQglaQYSF)](https://codecov.io/gh/sdss/lvmieb)
+[![codecov](https://codecov.io/gh/sdss/lvmieb/branch/main/graph/badge.svg?token=IyQglaQYSF)](https://codecov.io/gh/sdss/lvmieb)
 
 Control software for the SDSS-V LVM (Local Volume Mapper) spectrograph Instrument Electronics Box (IEB).
 
