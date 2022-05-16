@@ -1,4 +1,4 @@
-enabled_specs: [sp2]
+enabled_specs: [sp1, sp2]
 
 specs:
   sp1:

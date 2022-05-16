@@ -1,16 +1,17 @@
-import pytest
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-from lvmieb.actor.actor import lvmieb as IebActor
+from __future__ import annotations
+
+from lvmieb.actor import IEBActor
 
 
-@pytest.mark.asyncio
-async def test_actor(actor: IebActor):
+async def test_actor(actor: IEBActor):
 
     assert actor
 
 
-@pytest.mark.asyncio
-async def test_ping(actor: IebActor):
+async def test_ping(actor: IEBActor):
 
     command = await actor.invoke_mock_command("ping")
     await command
@@ -18,10 +19,3 @@ async def test_ping(actor: IebActor):
     assert command.status.did_succeed
     assert len(command.replies) == 2
     assert command.replies[1].message["text"] == "Pong."
-
-
-@pytest.mark.asyncio
-async def test_actor_no_config():
-
-    with pytest.raises(RuntimeError):
-        IebActor.from_config(None)

@@ -5,17 +5,21 @@
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 # added by CK 2021/03/30
 
-from __future__ import absolute_import, annotations, division, print_function
+from __future__ import annotations
 
 import asyncio
+from typing import TYPE_CHECKING
 
 import click
-from clu.command import Command
 
-from lvmieb.controller.controller import IebController
-from lvmieb.exceptions import LvmIebError
+from lvmieb.controller.maskbits import MotorStatus
+from lvmieb.exceptions import MotorControllerError
 
 from . import parser
+
+
+if TYPE_CHECKING:
+    from lvmieb.actor import ControllersType, IEBCommand
 
 
 __all__ = ["hartmann"]
@@ -23,7 +27,7 @@ __all__ = ["hartmann"]
 
 @parser.group()
 def hartmann(*args):
-    """control the hartmann door."""
+    """Control the hartmann doors."""
 
     pass
 
@@ -36,43 +40,33 @@ def hartmann(*args):
     default="all",
     help="all, right, or left",
 )
-@click.argument(
-    "spectro",
-    type=click.Choice(["sp1", "sp2", "sp3"]),
-    default="sp1",
-    required=False,
-)
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
 async def open(
-    command: Command, controllers: dict[str, IebController], side: str, spectro: str
+    command: IEBCommand,
+    controllers: ControllersType,
+    side: str,
+    spectro: str,
 ):
-    """open the hartmann"""
+    """Open the Hartmann doors."""
+
+    if spectro not in controllers:
+        return command.fail(error=f"Spectrograph {spectro!r} is not available.")
+
+    controller = controllers[spectro]
 
     tasks = []
-
-    for hartmann in controllers:
-        if controllers[hartmann].spec == spectro:
-            if side == "all" or side == "left":
-                if controllers[hartmann].name == "hartmann_left":
-                    try:
-                        tasks.append(controllers[hartmann].send_command("open"))
-                    except LvmIebError as err:
-                        return command.fail(error=str(err))
-
-            if side == "all" or side == "right":
-                if controllers[hartmann].name == "hartmann_right":
-                    try:
-                        tasks.append(controllers[hartmann].send_command("open"))
-                    except LvmIebError as err:
-                        return command.fail(error=str(err))
+    if side == "all" or side == "left":
+        tasks.append(controller.motors["hartmann_left"].move(open=True))
+    if side == "all" or side == "right":
+        tasks.append(controller.motors["hartmann_right"].move(open=True))
 
     command.info(text=f"Opening {side} hartmanns")
-    await asyncio.gather(*tasks)
-    if side == "all":
-        command.info({spectro: {"hartmann_left": "opened", "hartmann_right": "opened"}})
-    elif side == "right":
-        command.info({spectro: {"hartmann_right": "opened"}})
-    elif side == "left":
-        command.info({spectro: {"hartmann_left": "opened"}})
+    try:
+        await asyncio.gather(*tasks)
+    except MotorControllerError as err:
+        return command.fail(error=err)
+
+    await (await command.child_command(f"hartmann status {spectro}"))
 
     return command.finish()
 
@@ -85,137 +79,121 @@ async def open(
     default="all",
     help="all, right, or left",
 )
-@click.argument(
-    "spectro",
-    type=click.Choice(["sp1", "sp2", "sp3"]),
-    default="sp1",
-    required=False,
-)
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
 async def close(
-    command: Command, controllers: dict[str, IebController], side: str, spectro: str
+    command: IEBCommand,
+    controllers: ControllersType,
+    side: str,
+    spectro: str,
 ):
-    """close the hartmann"""
+    """Close the Hartmann doors."""
+
+    if spectro not in controllers:
+        return command.fail(error=f"Spectrograph {spectro!r} is not available.")
+
+    controller = controllers[spectro]
+
     tasks = []
-
-    for hartmann in controllers:
-        if controllers[hartmann].spec == spectro:
-            if side == "all" or side == "right":
-                if controllers[hartmann].name == "hartmann_right":
-                    try:
-                        tasks.append(controllers[hartmann].send_command("close"))
-                    except LvmIebError as err:
-                        return command.fail(error=str(err))
-
-            if side == "all" or side == "left":
-                if controllers[hartmann].name == "hartmann_left":
-                    try:
-                        tasks.append(controllers[hartmann].send_command("close"))
-                    except LvmIebError as err:
-                        return command.fail(error=str(err))
+    if side == "all" or side == "left":
+        tasks.append(controller.motors["hartmann_left"].move(open=False))
+    if side == "all" or side == "right":
+        tasks.append(controller.motors["hartmann_right"].move(open=False))
 
     command.info(text=f"Closing {side} hartmanns")
-    await asyncio.gather(*tasks)
-
-    if side == "all":
-        command.info({spectro: {"hartmann_left": "closed", "hartmann_right": "closed"}})
-    elif side == "right":
-        command.info({spectro: {"hartmann_right": "closed"}})
-    elif side == "left":
-        command.info({spectro: {"hartmann_left": "closed"}})
-
-    return command.finish()
-
-
-@hartmann.command()
-@click.argument(
-    "spectro",
-    type=click.Choice(["sp1", "sp2", "sp3"]),
-    default="sp1",
-    required=False,
-)
-async def status(command: Command, controllers: dict[str, IebController], spectro: str):
-    command.info(text="Checking all hartmanns")
-    tasks = []
-    print(controllers)
-    for h in controllers:
-        print(controllers[h].name)
-        if controllers[h].spec == spectro:
-            if controllers[h].name == "hartmann_right":
-                print(controllers[h].name, controllers[h].host, controllers[h].port)
-                try:
-                    tasks.append(controllers[h].get_status())
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
-            if controllers[h].name == "hartmann_left":
-                print(controllers[h].name, controllers[h].host, controllers[h].port)
-                try:
-                    tasks.append(controllers[h].get_status())
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
-    result_hartmann = await asyncio.gather(*tasks)
     try:
-        command.info(
-            {
-                spectro: {
-                    "hartmann_left": result_hartmann[0],
-                    "hartmann_right": result_hartmann[1],
-                }
-            }
+        await asyncio.gather(*tasks)
+    except MotorControllerError as err:
+        return command.fail(error=err)
+
+    await (await command.child_command(f"hartmann status {spectro}"))
+
+    return command.finish()
+
+
+@hartmann.command()
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
+async def status(command: IEBCommand, controllers: ControllersType, spectro: str):
+    """Reports the position of the Hartmann doors."""
+
+    if spectro not in controllers:
+        return command.fail(error=f"Spectrograph {spectro!r} is not available.")
+
+    controller = controllers[spectro]
+
+    tasks = []
+    tasks.append(controller.motors["hartmann_left"].get_status())
+    tasks.append(controller.motors["hartmann_right"].get_status())
+
+    result_hartmann = await asyncio.gather(*tasks)
+
+    hd_status = {}
+    for i, name in enumerate(["left", "right"]):
+        motor_status, bits = result_hartmann[i]
+
+        power = motor_status & MotorStatus.POWER_ON
+        open = motor_status & MotorStatus.OPEN
+        invalid = motor_status & (
+            MotorStatus.POSITION_INVALID
+            | MotorStatus.POSITION_UNKNOWN
+            | MotorStatus.POWER_UNKNOWN
         )
-    except LvmIebError as err:
-        return command.fail(error=str(err))
+
+        hd_status[name] = {
+            "power": power.value > 0,
+            "open": open.value > 0,
+            "invalid": invalid.value > 0,
+            "bits": bits or "?",
+        }
+
+    command.info({f"{spectro}_hartmann_left": hd_status["left"]})
+    command.info({f"{spectro}_hartmann_right": hd_status["right"]})
+
     return command.finish()
 
 
 @hartmann.command()
-@click.argument(
-    "spectro",
-    type=click.Choice(["sp1", "sp2", "sp3"]),
-    default="sp1",
-    required=False,
-)
-async def init(command: Command, controllers: dict[str, IebController], spectro: str):
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
+async def init(command: IEBCommand, controllers: ControllersType, spectro: str):
+    """Initialise the hartmanns."""
+
+    if spectro not in controllers:
+        return command.fail(error=f"Spectrograph {spectro!r} is not available.")
+
+    controller = controllers[spectro]
+
     command.info(text="Initializing all hartmanns")
+
     tasks = []
-    for h in controllers:
-        if controllers[h].spec == spectro:
-            if controllers[h].name == "hartmann_right":
-                try:
-                    tasks.append(controllers[h].initialize())
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
-            if controllers[h].name == "hartmann_left":
-                try:
-                    tasks.append(controllers[h].initialize())
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
-    await asyncio.gather(*tasks)
-    command.info(text="done")
+    for hd in ["hartmann_left", "hartmann_right"]:
+        tasks.append(controller.motors[hd].send_command("init"))
+
+    try:
+        await asyncio.gather(*tasks)
+    except MotorControllerError as err:
+        return command.fail(error=err)
+
     return command.finish()
 
 
 @hartmann.command()
-@click.argument(
-    "spectro",
-    type=click.Choice(["sp1", "sp2", "sp3"]),
-    default="sp1",
-    required=False,
-)
-async def home(command: Command, controllers: dict[str, IebController], spectro: str):
-    command.info(text="Homing all hartmanns")
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
+async def home(command: IEBCommand, controllers: ControllersType, spectro: str):
+    """Home the hartmann doors."""
+
+    if spectro not in controllers:
+        return command.fail(error=f"Spectrograph {spectro!r} is not available.")
+
+    controller = controllers[spectro]
+
+    command.info(text="Home all hartmanns")
+
     tasks = []
-    for h in controllers:
-        if controllers[h].spec == spectro:
-            if controllers[h].name == "hartmann_right":
-                try:
-                    tasks.append(controllers[h].set_home())
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
-            if controllers[h].name == "hartmann_left":
-                try:
-                    tasks.append(controllers[h].set_home())
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
-    await asyncio.gather(*tasks)
-    command.info(text="done")
+    for hd in ["hartmann_left", "hartmann_right"]:
+        tasks.append(controller.motors[hd].send_command("home"))
+
+    try:
+        await asyncio.gather(*tasks)
+    except MotorControllerError as err:
+        return command.fail(error=err)
+
     return command.finish()

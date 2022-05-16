@@ -6,18 +6,21 @@
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 # added by CK 2021/03/30
 
-from __future__ import absolute_import, annotations, division, print_function
+from __future__ import annotations
 
 import asyncio
-import datetime
+from typing import TYPE_CHECKING
 
 import click
-from clu.command import Command
 
-from lvmieb.controller.controller import IebController
-from lvmieb.exceptions import LvmIebError
+from lvmieb.controller.maskbits import MotorStatus
+from lvmieb.exceptions import MotorControllerError
 
 from . import parser
+
+
+if TYPE_CHECKING:
+    from lvmieb.actor import ControllersType, IEBCommand
 
 
 __all__ = ["shutter"]
@@ -25,132 +28,136 @@ __all__ = ["shutter"]
 
 @parser.group()
 def shutter(*args):
-    """control the shutter."""
+    """Control the shutter."""
 
     pass
 
 
-@click.argument(
-    "spectro",
-    type=click.Choice(["sp1", "sp2", "sp3"]),
-    default="sp1",
-    required=False,
-)
 @shutter.command()
-async def open(command: Command, controllers: dict[str, IebController], spectro: str):
-    """open the shutter"""
-    tasks = []
-    for shutter in controllers:
-        if controllers[shutter].spec == spectro:
-            if controllers[shutter].name == "shutter":
-                try:
-                    tasks.append(controllers[shutter].send_command("open"))
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
-    command.info(text="Opening all shutters")
-    print("----open----")
-    current_time = datetime.datetime.now()
-    print("before command gathered        : %s", current_time)
-    result = await asyncio.gather(*tasks)
-    print(result)
-    current_time = datetime.datetime.now()
-    print("after command gathered         : %s", current_time)
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
+async def open(command: IEBCommand, controllers: ControllersType, spectro: str):
+    """Open the shutter."""
 
-    command.info({spectro: {"shutter": "opened"}})
+    if spectro not in controllers:
+        return command.fail(error=f"Spectrograph {spectro!r} is not available.")
+
+    controller = controllers[spectro]
+
+    tasks = []
+    tasks.append(controller.motors["shutter"].move(open=True))
+
+    command.info(text="Opening shutter")
+    try:
+        await asyncio.gather(*tasks)
+    except MotorControllerError as err:
+        return command.fail(error=err)
+
+    await (await command.child_command(f"shutter status {spectro}"))
+
     return command.finish()
 
 
-@click.argument(
-    "spectro",
-    type=click.Choice(["sp1", "sp2", "sp3"]),
-    default="sp1",
-    required=False,
-)
 @shutter.command()
-async def close(command: Command, controllers: dict[str, IebController], spectro: str):
-    """close the shutter"""
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
+async def close(command: IEBCommand, controllers: ControllersType, spectro: str):
+    """Close the shutter."""
+
+    if spectro not in controllers:
+        return command.fail(error=f"Spectrograph {spectro!r} is not available.")
+
+    controller = controllers[spectro]
+
     tasks = []
-    for shutter in controllers:
-        if controllers[shutter].spec == spectro:
-            if controllers[shutter].name == "shutter":
-                try:
-                    tasks.append(controllers[shutter].send_command("close"))
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
-    command.info(text="Closing all shutters")
-    print("----close----")
-    current_time = datetime.datetime.now()
-    print("before command gathered        : %s", current_time)
-    await asyncio.gather(*tasks)
-    current_time = datetime.datetime.now()
-    print("after command gathered         : %s", current_time)
-    command.info({spectro: {"shutter": "closed"}})
+    tasks.append(controller.motors["shutter"].move(open=False))
+
+    command.info(text="Closing shutter")
+    try:
+        await asyncio.gather(*tasks)
+    except MotorControllerError as err:
+        return command.fail(error=err)
+
+    await (await command.child_command(f"shutter status {spectro}"))
+
     return command.finish()
 
 
-@click.argument(
-    "spectro",
-    type=click.Choice(["sp1", "sp2", "sp3"]),
-    default="sp1",
-    required=False,
-)
 @shutter.command()
-async def status(command: Command, controllers: dict[str, IebController], spectro: str):
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
+async def status(command: IEBCommand, controllers: ControllersType, spectro: str):
+    """Reports the position of the shutter."""
 
-    command.info(text="Checking all shutters")
+    if spectro not in controllers:
+        return command.fail(error=f"Spectrograph {spectro!r} is not available.")
+
+    controller = controllers[spectro]
+
     tasks = []
-    print(spectro)
-    for shutter in controllers:
-        print(controllers[shutter].spec)
-        if controllers[shutter].spec == spectro:
-            print(controllers[shutter].name)
-            if controllers[shutter].name == "shutter":
-                print("in here")
-                try:
-                    tasks.append(controllers[shutter].send_command("status"))
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
+    tasks.append(controller.motors["shutter"].get_status())
 
     result_shutter = await asyncio.gather(*tasks)
-    print(result_shutter)
-    for n in result_shutter:
-        print(f"status is {n}")
-        try:
-            if n == "opened":
-                command.info({spectro: {"shutter": n}})
-            elif n == "closed":
-                command.info({spectro: {"shutter": n}})
-            else:
-                return command.fail(test="shutter is in a bad state")
-        except LvmIebError as err:
-            return command.fail(error=str(err))
+
+    shutter_status = {}
+    motor_status, bits = result_shutter[0]
+
+    power = motor_status & MotorStatus.POWER_ON
+    open = motor_status & MotorStatus.OPEN
+    invalid = motor_status & (
+        MotorStatus.POSITION_INVALID
+        | MotorStatus.POSITION_UNKNOWN
+        | MotorStatus.POWER_UNKNOWN
+    )
+
+    shutter_status = {
+        "power": power.value > 0,
+        "open": open.value > 0,
+        "invalid": invalid.value > 0,
+        "bits": bits or "?",
+    }
+
+    return command.finish({f"{spectro}_shutter": shutter_status})
+
+
+@shutter.command()
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
+async def init(command: IEBCommand, controllers: ControllersType, spectro: str):
+    """Initialise the shutter."""
+
+    if spectro not in controllers:
+        return command.fail(error=f"Spectrograph {spectro!r} is not available.")
+
+    controller = controllers[spectro]
+
+    command.info(text="Initializing shutter")
+
+    tasks = []
+    tasks.append(controller.motors["shutter"].send_command("init"))
+
+    try:
+        await asyncio.gather(*tasks)
+    except MotorControllerError as err:
+        return command.fail(error=err)
 
     return command.finish()
 
 
-@click.argument(
-    "spectro",
-    type=click.Choice(["sp1", "sp2", "sp3"]),
-    default="sp1",
-    required=False,
-)
 @shutter.command()
-async def init(command: Command, controllers: dict[str, IebController], spectro: str):
-    """initialize the shutter"""
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
+async def home(command: IEBCommand, controllers: ControllersType, spectro: str):
+    """Home the shutter."""
+
+    if spectro not in controllers:
+        return command.fail(error=f"Spectrograph {spectro!r} is not available.")
+
+    controller = controllers[spectro]
+
+    command.info(text="Homing shutter")
+
     tasks = []
-    for shutter in controllers:
-        if controllers[shutter].spec == spectro:
-            if controllers[shutter].name == "shutter":
-                try:
-                    tasks.append(controllers[shutter].send_command("init"))
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
-    command.info(text="initializing all shutters")
-    print("----open----")
-    current_time = datetime.datetime.now()
-    print("before command gathered        : %s", current_time)
-    await asyncio.gather(*tasks)
-    current_time = datetime.datetime.now()
-    print("after command gathered         : %s", current_time)
-    command.info(text="shutters all initialized")
+    tasks.append(controller.motors["shutter"].send_command("home"))
+
+    try:
+        await asyncio.gather(*tasks)
+    except MotorControllerError as err:
+        return command.fail(error=err)
+
     return command.finish()

@@ -5,105 +5,102 @@
 # @Filename: telemetry.py
 # @License: BSD 3-clause (http://www.opensource.org/licenses/BSD-3-Clause)
 
-from __future__ import absolute_import, annotations, division, print_function
+from __future__ import annotations
+
+import asyncio
+from typing import TYPE_CHECKING
 
 import click
-from clu.command import Command
-
-from lvmieb.controller.controller import IebController
-from lvmieb.exceptions import LvmIebError
 
 from . import parser
 
 
+if TYPE_CHECKING:
+    from lvmieb.actor.actor import ControllersType, IEBCommand
+
+
 @parser.group()
 def wago(*args):
-    """control the wago IOModule."""
+    """Controls the WAGO IOModule."""
     pass
 
 
 @wago.command()
-@click.argument(
-    "spectro",
-    type=click.Choice(["sp1", "sp2", "sp3"]),
-    default="sp1",
-    required=False,
-)
-async def status(command: Command, controllers: dict[str, IebController], spectro: str):
-    """Returns the status of wago sensor."""
+@click.argument("SPECTRO", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+async def status(
+    command: IEBCommand,
+    controllers: ControllersType,
+    spectro: str | None = None,
+):
+    """Returns the status of WAGO sensors."""
 
-    for wago in controllers:
-        if controllers[wago].spec == spectro:
-            if controllers[wago].name == "wago":
-                try:
-                    wago_status1 = await controllers[wago].getWAGOEnv()
-                    if wago_status1:
-                        command.info(
-                            {
-                                spectro: {
-                                    "rhtRH1": controllers[wago].sensors[
-                                        "rhtRH1(40001)"
-                                    ],
-                                    "rhtT1": controllers[wago].sensors["rhtT1(40002)"],
-                                    "rhtRH2": controllers[wago].sensors[
-                                        "rhtRH2(40003)"
-                                    ],
-                                    "rhtT2": controllers[wago].sensors["rhtT2(40004)"],
-                                    "rhtRH3": controllers[wago].sensors[
-                                        "rhtRH3(40005)"
-                                    ],
-                                    "rhtT3": controllers[wago].sensors["rhtT3(40006)"],
-                                    "rtd1": controllers[wago].sensors["rtd1(40009)"],
-                                    "rtd2": controllers[wago].sensors["rtd2(40010)"],
-                                    "rtd3": controllers[wago].sensors["rtd3(40011)"],
-                                    "rtd4": controllers[wago].sensors["rtd4(40012)"],
-                                }
-                            }
-                        )
-                    else:
-                        return command.fail(text="ERROR: Did not read sensors/powers")
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
-    return command.finish()
+    spectro_list: list[str] = []
+    if spectro is None:
+        spectro_list = [controller_name for controller_name in controllers]
+    else:
+        spectro_list = [spectro]
+
+    tasks = []
+    for spectro_name in spectro_list:
+        if spectro_name not in controllers:
+            command.warning(error=f"Spectrograph {spectro!r} is not available.")
+            continue
+
+        controller = controllers[spectro_name]
+        tasks.append(controller.wago.read_sensors())
+
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+    if len(results) == 0:
+        return command.fail("No data received.")
+
+    sensors = {}
+    for ii, spectro_name in enumerate(spectro_list):
+        result = results[ii]
+        if isinstance(result, Exception):
+            command.warning(f"Failed to read {spectro_name} sensors.")
+            continue
+        sensors[f"{spectro_name}_sensors"] = result
+
+    return command.finish(**sensors)
 
 
 @wago.command()
-@click.argument(
-    "spectro",
-    type=click.Choice(["sp1", "sp2", "sp3"]),
-    default="sp1",
-    required=False,
-)
+@click.argument("SPECTRO", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
 async def getpower(
-    command: Command, controllers: dict[str, IebController], spectro: str
+    command: IEBCommand,
+    controllers: ControllersType,
+    spectro: str | None = None,
 ):
-    """Returns the status of wago sensor."""
-    for wago in controllers:
-        if controllers[wago].spec == spectro:
-            if controllers[wago].name == "wago":
-                try:
-                    wago_status1 = await controllers[wago].getWAGOPower()
-                    if wago_status1:
-                        command.info(
-                            {
-                                spectro: {
-                                    "shutter_power": controllers[wago].power[
-                                        "shutter_power"
-                                    ],
-                                    "hartmann_right_power": controllers[wago].power[
-                                        "hartmann_right_power"
-                                    ],
-                                    "hartmann_left_power": controllers[wago].power[
-                                        "hartmann_left_power"
-                                    ],
-                                }
-                            }
-                        )
-                    else:
-                        return command.fail(text="ERROR: Did not read sensors/powers")
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
-    return command.finish()
+    """Returns the status of the power relays."""
+
+    spectro_list: list[str] = []
+    if spectro is None:
+        spectro_list = [controller_name for controller_name in controllers]
+    else:
+        spectro_list = [spectro]
+
+    tasks = []
+    for spectro_name in spectro_list:
+        if spectro_name not in controllers:
+            command.warning(error=f"Spectrograph {spectro!r} is not available.")
+            continue
+
+        controller = controllers[spectro_name]
+        tasks.append(controller.wago.read_relays())
+
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+    if len(results) == 0:
+        return command.fail("No data received.")
+
+    relays = {}
+    for ii, spectro_name in enumerate(spectro_list):
+        result = results[ii]
+        if isinstance(result, Exception):
+            command.warning(f"Failed to read {spectro_name} relays.")
+            continue
+        relays[f"{spectro_name}_relays"] = result
+
+    return command.finish(**relays)
 
 
 @wago.command()
@@ -111,6 +108,7 @@ async def getpower(
     "DEVICE",
     type=click.Choice(["shutter", "hartmann_left", "hartmann_right"]),
 )
+@click.argument("SPECTRO", type=click.Choice(["sp1", "sp2", "sp3"]))
 @click.option(
     "--on",
     "action",
@@ -125,46 +123,26 @@ async def getpower(
     required=True,
     help="Turn off device",
 )
-@click.argument(
-    "spectro",
-    type=click.Choice(["sp1", "sp2", "sp3"]),
-    default="sp1",
-    required=False,
-)
 async def setpower(
-    command: Command,
-    controllers: dict[str, IebController],
+    command: IEBCommand,
+    controllers: ControllersType,
     device: str,
     action: str,
     spectro: str,
 ):
-    """Returns the status of wago sensor."""
-    device_string = device + "_power"
-    for wago in controllers:
-        if controllers[wago].spec == spectro:
-            if controllers[wago].name == "wago":
-                try:
-                    wago_status1 = await controllers[wago].setWAGOPower(
-                        device_string, action
-                    )
-                    if wago_status1:
-                        command.info(
-                            {
-                                spectro: {
-                                    "shutter_power": controllers[wago].power[
-                                        "shutter_power"
-                                    ],
-                                    "hartmann_right_power": controllers[wago].power[
-                                        "hartmann_right_power"
-                                    ],
-                                    "hartmann_left_power": controllers[wago].power[
-                                        "hartmann_left_power"
-                                    ],
-                                }
-                            }
-                        )
-                    else:
-                        return command.fail(text="ERROR: Did not read sensors/powers")
-                except LvmIebError as err:
-                    return command.fail(error=str(err))
+    """Switches power on/off to a device."""
+
+    if spectro not in controllers:
+        return command.fail(error=f"Spectrograph {spectro!r} is not available.")
+
+    controller = controllers[spectro]
+
+    try:
+        closed = True if action == "ON" else False
+        await controller.wago.set_relay(device, closed=closed)
+    except NameError:
+        return command.fail(error=f"Cannot find device {device!r}.")
+
+    await (await command.child_command(f"wago getpower {spectro}"))
+
     return command.finish()
