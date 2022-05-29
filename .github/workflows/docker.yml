@@ -2,6 +2,8 @@ name: Docker
 
 on:
   push:
+    branches:
+      - main
     tags:
       - '*'
     paths-ignore:
@@ -27,6 +29,10 @@ jobs:
           else
             echo ::set-output name=TAGS::$USER/$APP:${GITHUB_REF#refs/tags/}
           fi
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
       - name: Show tags
         run: echo ${{ steps.set-tags.outputs.TAGS }}
       - name: Set up QEMU
