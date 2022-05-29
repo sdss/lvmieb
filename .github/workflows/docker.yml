@@ -46,11 +46,6 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }} # from Secrets
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v3
