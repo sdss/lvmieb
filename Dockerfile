@@ -16,7 +16,7 @@ RUN add-apt-repository -y ppa:deadsnakes/ppa
 RUN apt-get install -y python3.9 python3-pip
 
 
-RUN pip3.9 install -U pip3.0 setuptools wheel
+RUN pip3.9 install -U pip3.9 setuptools wheel
 RUN cd lvmieb && pip3.9 install .
 
 # Connect repo to package
