@@ -10,6 +10,7 @@ RUN apt-get -y update
 RUN apt-get -y install build-essential libbz2-dev
 
 # Install Python 3.9
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get install -y software-properties-common
 RUN add-apt-repository -y ppa:deadsnakes/ppa
 RUN apt-get install -y python3.9 python3-pip
