@@ -91,7 +91,7 @@ class IEBActor(AMQPActor):
                 )
             config["actor"]["schema"] = schema
 
-        instance = super().from_config(config["actor"])
+        instance = super().from_config(config["actor"], *args, **kwargs)
 
         controllers: list[IEBController] = []
 
