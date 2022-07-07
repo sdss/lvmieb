@@ -27,16 +27,24 @@ from lvmieb.actor.actor import IEBActor
     help="Path to the user configuration file.",
 )
 @click.option(
+    "-r",
+    "--rmq_url",
+    "rmq_url",
+    default=None,
+    type=str,
+    help="rabbitmq url, eg: amqp://guest:guest@localhost:5672/",
+)
+@click.option(
     "-v",
     "--verbose",
     count=True,
     help="Debug mode. Use additional v for more details.",
 )
 @click.pass_context
-def lvmieb(ctx, config_file, verbose):
+def lvmieb(ctx, config_file, rmq_url, verbose):
     """LVM Electronics Box Controller."""
 
-    ctx.obj = {"verbose": verbose, "config_file": config_file}
+    ctx.obj = {"verbose": verbose, "config_file": config_file, "rmq_url": rmq_url}
 
 
 @lvmieb.group(cls=DaemonGroup, prog="lvmieb_actor", workdir=os.getcwd())
@@ -48,7 +56,7 @@ async def actor(ctx):
     default_config_file = os.path.join(os.path.dirname(__file__), "etc/lvmieb.yml")
     config_file = ctx.obj["config_file"] or default_config_file
 
-    lvmieb_obj = IEBActor.from_config(config_file)
+    lvmieb_obj = IEBActor.from_config(config_file, url=ctx.obj["rmq_url"])
 
     if ctx.obj["verbose"]:
         lvmieb_obj.log.fh.setLevel(0)
