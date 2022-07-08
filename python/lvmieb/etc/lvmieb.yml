@@ -1,4 +1,4 @@
-enabled_specs: [sp2]
+enabled_specs: [sp2, sp3]
 
 specs:
   sp1:
@@ -44,7 +44,7 @@ specs:
         port: 7778
     pressure:
       r2:
-        host: 10.7.45.33
+        host: 10.7.45.30
         port: 1112
         device_id: 253
       b2:
@@ -53,6 +53,33 @@ specs:
         device_id: 253
       z2:
         host: 10.7.45.33
+        port: 1115
+        device_id: 253
+  sp3:
+    wago:
+      address: 10.7.45.37
+      port: 502
+    motor_controllers:
+      shutter:
+        host: 10.7.45.37
+        port: 7776
+      hartmann_left:
+        host: 10.7.45.37
+        port: 7777
+      hartmann_right:
+        host: 10.7.45.37
+        port: 7778
+    pressure:
+      r2:
+        host: 10.7.45.30
+        port: 1112
+        device_id: 253
+      b2:
+        host: 10.7.45.30
+        port: 1114
+        device_id: 253
+      z2:
+        host: 10.7.45.30
         port: 1115
         device_id: 253
 

@@ -47,7 +47,7 @@ async def status(
         camera_results = pres_list[2 * ii : 2 * ii + 2]
         for jj, measurement in enumerate(["pressure", "temperature"]):
             camera_result = camera_results[jj]
-            if isinstance(camera_result, Exception):
+            if camera_result is False or isinstance(camera_result, Exception):
                 command.warning(f"Failed getting {camera} {measurement}.")
                 camera_result = -999.0
             pres_result[f"{camera}_{measurement}"] = camera_result
