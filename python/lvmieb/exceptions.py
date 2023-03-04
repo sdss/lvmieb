@@ -13,7 +13,6 @@ class LvmIebError(Exception):
     """A custom core LvmIeb exception"""
 
     def __init__(self, message=None):
-
         message = "There has been an error" if not message else message
 
         super(LvmIebError, self).__init__(message)

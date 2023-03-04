@@ -16,7 +16,6 @@ if TYPE_CHECKING:
 
 
 async def test_command_transducer_status(actor: IEBActor):
-
     command = await actor.invoke_mock_command("transducer status")
     await command
     assert command.status.did_succeed
@@ -29,7 +28,6 @@ async def test_command_transducer_status(actor: IEBActor):
 
 
 async def test_command_transducer_fails(actor: IEBActor, mocker):
-
     mocker.patch.object(
         actor.controllers["sp1"].pressure["b1"],
         "read_pressure",

@@ -11,7 +11,6 @@ if TYPE_CHECKING:
 
 
 async def test_shutter_status(actor: IEBActor, setup_servers):
-
     shutter = setup_servers["sp1_shutter"]
     shutter.current_status = "open"
 
@@ -40,7 +39,6 @@ async def test_shutter_status(actor: IEBActor, setup_servers):
 
 
 async def test_shutter_open_and_close(actor: IEBActor, setup_servers):
-
     shutter = setup_servers["sp1_shutter"]
     assert shutter.current_status == "closed"
 

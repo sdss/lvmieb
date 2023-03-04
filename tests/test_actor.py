@@ -7,12 +7,10 @@ from lvmieb.actor import IEBActor
 
 
 async def test_actor(actor: IEBActor):
-
     assert actor
 
 
 async def test_ping(actor: IEBActor):
-
     command = await actor.invoke_mock_command("ping")
     await command
 

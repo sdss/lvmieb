@@ -19,7 +19,6 @@ if TYPE_CHECKING:
 
 @pytest.mark.parametrize("camera", [None, "b1"])
 async def test_command_depth_status(actor: IEBActor, camera):
-
     if camera is not None:
         await (await actor.invoke_mock_command(f"depth set-camera {camera}"))
 
@@ -37,7 +36,6 @@ async def test_command_depth_status(actor: IEBActor, camera):
 
 
 async def test_command_depth_status_no_gauges(actor: IEBActor):
-
     actor.depth_gauges = None
 
     command = await actor.invoke_mock_command("depth status")
@@ -46,7 +44,6 @@ async def test_command_depth_status_no_gauges(actor: IEBActor):
 
 
 async def test_command_depth_set_camera_no_gauges(actor: IEBActor):
-
     actor.depth_gauges = None
 
     command = await actor.invoke_mock_command("depth set-camera b1")
@@ -55,7 +52,6 @@ async def test_command_depth_set_camera_no_gauges(actor: IEBActor):
 
 
 async def test_command_depth_status_fails_reading(actor: IEBActor, mocker):
-
     mocker.patch.object(actor.depth_gauges, "read", side_effect=ValueError)
 
     command = await actor.invoke_mock_command("depth status")

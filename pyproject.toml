@@ -75,7 +75,7 @@ asyncio_mode = "auto"
 
 [tool.black]
 line-length = 88
-target-version = ['py39']
+target-version = ['py311']
 fast = true
 
 [tool.coverage.run]

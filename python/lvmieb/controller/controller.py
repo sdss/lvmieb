@@ -23,7 +23,6 @@ class IEBController:
         pressure: list[PressureTransducer] = [],
         motors: list[MotorController] = [],
     ):
-
         self.spec = spec
 
         self.wago = wago

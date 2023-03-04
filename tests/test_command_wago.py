@@ -18,7 +18,6 @@ if TYPE_CHECKING:
 
 
 async def test_command_wago_status(actor: IEBActor):
-
     command = await actor.invoke_mock_command("wago status")
     await command
     assert command.status.did_succeed
@@ -28,7 +27,6 @@ async def test_command_wago_status(actor: IEBActor):
 
 
 async def test_command_wago_status_one_fails(actor: IEBActor, mocker):
-
     mocker.patch.object(
         actor.controllers["sp1"].wago,
         "read_sensors",
@@ -50,7 +48,6 @@ async def test_command_wago_status_one_fails(actor: IEBActor, mocker):
 
 
 async def test_command_wago_status_missing_controller(actor: IEBActor):
-
     actor.controllers.pop("sp2")
 
     command = await actor.invoke_mock_command("wago status sp2")
@@ -59,7 +56,6 @@ async def test_command_wago_status_missing_controller(actor: IEBActor):
 
 
 async def test_command_wago_getpower(actor: IEBActor):
-
     command = await actor.invoke_mock_command("wago getpower")
     await command
     assert command.status.did_succeed
@@ -69,7 +65,6 @@ async def test_command_wago_getpower(actor: IEBActor):
 
 
 async def test_command_wago_getpower_one_fails(actor: IEBActor, mocker):
-
     mocker.patch.object(
         actor.controllers["sp1"].wago,
         "read_relays",
@@ -91,7 +86,6 @@ async def test_command_wago_getpower_one_fails(actor: IEBActor, mocker):
 
 
 async def test_command_wago_getpower_missing_controller(actor: IEBActor):
-
     actor.controllers.pop("sp2")
 
     command = await actor.invoke_mock_command("wago getpower sp2")
@@ -100,7 +94,6 @@ async def test_command_wago_getpower_missing_controller(actor: IEBActor):
 
 
 async def test_command_wago_setpower(actor: IEBActor):
-
     command = await actor.invoke_mock_command("wago setpower --off shutter sp1")
     await command
     assert command.status.did_succeed
@@ -110,7 +103,6 @@ async def test_command_wago_setpower(actor: IEBActor):
 
 
 async def test_command_wago_setpower_missing_controller(actor: IEBActor):
-
     actor.controllers.pop("sp2")
 
     command = await actor.invoke_mock_command("wago setpower --off shutter sp2")
@@ -121,7 +113,6 @@ async def test_command_wago_setpower_missing_controller(actor: IEBActor):
 
 
 async def test_command_wago_setpower_bad_device(actor: IEBActor):
-
     actor.controllers["sp2"].wago.modules["DO"].devices.pop("shutter")
 
     command = await actor.invoke_mock_command("wago setpower --off shutter sp2")

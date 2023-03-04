@@ -19,14 +19,12 @@ from .mockers import DepthMocker, MotorMocker, PressureMocker, WAGOMocker
 
 @pytest.fixture
 def config():
-
     config_file = pathlib.Path(__file__).parent / "./test_lvmieb.yml"
     yield read_yaml_file(str(config_file))
 
 
 @pytest.fixture
 async def setup_servers(config, mocker):
-
     mocker.patch("lvmieb.controller.controller.IEBWAGO", WAGOMocker)
 
     servers = {}
@@ -58,7 +56,6 @@ async def setup_servers(config, mocker):
 
 @pytest.fixture
 async def controllers(setup_servers, config):
-
     _controllers = []
 
     for spec_name, spec_config in config["specs"].items():
@@ -75,7 +72,6 @@ async def controllers(setup_servers, config):
 
 @pytest.fixture()
 async def actor(config, setup_servers):
-
     _actor = IEBActor.from_config(config)
     _actor.parser_args = [_actor.controllers]
 

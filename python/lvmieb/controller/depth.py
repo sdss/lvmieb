@@ -14,7 +14,6 @@ class DepthGauges:
     """Reads the value of Heidenhain depth gauges."""
 
     def __init__(self, host: str, port: int, camera: str | None = None):
-
         self.host = host
         self.port = port
         self.camera = camera

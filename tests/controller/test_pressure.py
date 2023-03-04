@@ -21,7 +21,6 @@ async def get_pressure_controller():
 
 
 async def test_read_pressure():
-
     pressure_controller = await get_pressure_controller()
     pressure = await pressure_controller.read_pressure()
 
@@ -29,7 +28,6 @@ async def test_read_pressure():
 
 
 async def test_read_temperature():
-
     pressure_controller = await get_pressure_controller()
     temperature = await pressure_controller.read_temperature()
 
@@ -37,7 +35,6 @@ async def test_read_temperature():
 
 
 async def test_read_temperature_connection_fails(mocker):
-
     mocker.patch("asyncio.open_connection", side_effect=OSError)
 
     pressure_controller = await get_pressure_controller()

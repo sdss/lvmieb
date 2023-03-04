@@ -16,7 +16,6 @@ from ..mockers import DepthMocker
 
 
 async def get_depth_controller(use_r=False, custom_reply=None):
-
     mock_depth = DepthMocker()
     mock_depth.use_r = use_r
     mock_depth.custom_reply = custom_reply
@@ -28,7 +27,6 @@ async def get_depth_controller(use_r=False, custom_reply=None):
 
 @pytest.mark.parametrize("use_r", [True, False])
 async def test_read(use_r: bool):
-
     depth_controller = await get_depth_controller(use_r=use_r)
     depth = await depth_controller.read()
 
@@ -36,7 +34,6 @@ async def test_read(use_r: bool):
 
 
 async def test_read_fails():
-
     depth_controller = DepthGauges("localhost", 123456)
 
     with pytest.raises(ValueError):
@@ -45,7 +42,6 @@ async def test_read_fails():
 
 @pytest.mark.parametrize("use_r", [True, False])
 async def test_read_bad_reply(use_r: bool):
-
     prefix = b"\r" if use_r else b""
     depth_controller = await get_depth_controller(
         use_r=use_r,

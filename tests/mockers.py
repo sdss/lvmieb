@@ -19,7 +19,6 @@ from lvmieb.controller.wago import IEBWAGO
 
 
 async def _read_device(self, *args, **kwargs):
-
     if self.name in self.module.drift.overrides:
         value = self.module.drift.overrides[self.name]
     else:
@@ -47,14 +46,12 @@ drift.Relay.close = _close
 
 class WAGOMocker(IEBWAGO):
     def __init__(self, *args, **kwargs):
-
         super().__init__(*args, **kwargs)
 
         self.overrides = {}
 
     @classmethod
     def from_config(cls, config_data: str | dict | None = None, **kwargs):
-
         if config_data is not None:
             return super().from_config(config_data, **kwargs)
 
@@ -76,7 +73,6 @@ class MotorMocker:
         current_status: str = "closed",
         motor_type: str = "shutter",
     ):
-
         self.spectro = spectro
         self.current_status = current_status
         self.motor_type = motor_type
@@ -89,7 +85,6 @@ class MotorMocker:
         reader: asyncio.StreamReader,
         writer: asyncio.StreamWriter,
     ) -> None:
-
         while True:
             try:
                 data = await reader.readuntil(b"\r")
@@ -148,7 +143,6 @@ class PressureMocker:
         pressure: float = 1e-6,
         temperature: float = 20,
     ):
-
         self.spec = spec
         self.camera = camera
         self.pressure = pressure
@@ -162,7 +156,6 @@ class PressureMocker:
         reader: asyncio.StreamReader,
         writer: asyncio.StreamWriter,
     ) -> None:
-
         while True:
             try:
                 data = await reader.readuntil(b"\\")
@@ -197,7 +190,6 @@ class DepthMocker:
     """Mocks a depth probe server."""
 
     def __init__(self):
-
         self.server = None
         self.port = None
 
@@ -209,7 +201,6 @@ class DepthMocker:
         reader: asyncio.StreamReader,
         writer: asyncio.StreamWriter,
     ) -> None:
-
         while True:
             try:
                 data = await reader.readuntil(b"\n")

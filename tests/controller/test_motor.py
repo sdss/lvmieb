@@ -37,7 +37,6 @@ async def get_motor_controller(
 
 @pytest.mark.parametrize("motor_type", ["shutter", "hartmann_left", "hartmann_right"])
 async def test_motor_get_status(motor_type: str):
-
     motor_controller = await get_motor_controller(motor_type=motor_type)
     status, bits = await motor_controller.get_status()
 
@@ -47,7 +46,6 @@ async def test_motor_get_status(motor_type: str):
 
 @pytest.mark.parametrize("motor_type", ["shutter", "hartmann_left", "hartmann_right"])
 async def test_motor_get_status_no_wago(motor_type: str):
-
     motor_controller = await get_motor_controller(motor_type=motor_type)
     motor_controller.wago = None
 
@@ -61,7 +59,6 @@ async def test_motor_get_status_no_wago(motor_type: str):
 
 
 async def test_motor_get_status_no_power(mocker):
-
     motor_controller = await get_motor_controller()
     motor_controller.get_power_status = mocker.AsyncMock(return_value=False)
 
@@ -71,7 +68,6 @@ async def test_motor_get_status_no_power(mocker):
 
 
 async def test_motor_controller_get_status_send_command_fails(mocker):
-
     motor_controller = await get_motor_controller()
     motor_controller.send_command = mocker.MagicMock(side_effect=MotorControllerError)
 
@@ -81,7 +77,6 @@ async def test_motor_controller_get_status_send_command_fails(mocker):
 
 
 async def test_motor_controller_get_status_invalid(mocker):
-
     motor_controller = await get_motor_controller()
     motor_controller.send_command = mocker.AsyncMock(return_value=b"????")
 
@@ -91,7 +86,6 @@ async def test_motor_controller_get_status_invalid(mocker):
 
 
 async def test_motor_controller_get_status_parse_invalid(mocker):
-
     motor_controller = await get_motor_controller()
     mocker.patch("lvmieb.controller.motor.parse_IS", return_value=None)
 
@@ -110,7 +104,6 @@ async def test_motor_move(
     current_status: str,
     force: bool,
 ):
-
     motor_controller = await get_motor_controller(
         current_status=current_status,
         motor_type=motor_type,
@@ -131,7 +124,6 @@ async def test_motor_move(
     [MotorStatus.POSITION_INVALID, MotorStatus.POSITION_UNKNOWN],
 )
 async def test_motor_move_fails_position_invalid(status: MotorStatus, mocker):
-
     status |= MotorStatus.POWER_ON
 
     motor_controller = await get_motor_controller()
@@ -142,7 +134,6 @@ async def test_motor_move_fails_position_invalid(status: MotorStatus, mocker):
 
 
 async def test_motor_move_fails_invalid_argument():
-
     motor_controller = await get_motor_controller()
 
     with pytest.raises(ValueError):
@@ -150,7 +141,6 @@ async def test_motor_move_fails_invalid_argument():
 
 
 async def test_motor_send_command_connection_error(mocker):
-
     motor_controller = await get_motor_controller()
     mocker.patch("asyncio.open_connection", side_effect=OSError)
 
@@ -159,7 +149,6 @@ async def test_motor_send_command_connection_error(mocker):
 
 
 async def test_motor_send_command_connection_timeout(mocker):
-
     motor_controller = await get_motor_controller()
     mocker.patch("asyncio.wait_for", side_effect=asyncio.TimeoutError)
 

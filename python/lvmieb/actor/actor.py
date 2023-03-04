@@ -53,7 +53,6 @@ class IEBActor(AMQPActor):
         depth_gauges: DepthGauges | None = None,
         **kwargs,
     ):
-
         self.controllers = {c.spec: c for c in controllers}
         self.depth_gauges = depth_gauges
 

@@ -11,7 +11,6 @@ if TYPE_CHECKING:
 
 
 async def test_hartmann_init_and_home(actor: IEBActor, setup_servers):
-
     hleft = setup_servers["sp1_hartmann_left"]
     hright = setup_servers["sp1_hartmann_right"]
 
@@ -48,7 +47,6 @@ async def test_hartmann_init_and_home(actor: IEBActor, setup_servers):
 
 
 async def test_shutter_open_and_close(actor: IEBActor, setup_servers):
-
     hleft = setup_servers["sp1_hartmann_left"]
     hright = setup_servers["sp1_hartmann_right"]
 

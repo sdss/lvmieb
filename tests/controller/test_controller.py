@@ -18,7 +18,6 @@ if TYPE_CHECKING:
 
 
 async def test_controller(controllers: list[IEBController]):
-
     assert len(controllers) == 2
 
     controller = controllers[0]

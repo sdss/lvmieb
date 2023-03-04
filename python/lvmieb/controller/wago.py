@@ -24,7 +24,6 @@ class IEBWAGO(Drift):
     """
 
     def __init__(self, host: str, port: int = 502, name: str = ""):
-
         super().__init__(host, port)
 
         self.name = name
