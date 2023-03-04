@@ -74,7 +74,7 @@ async def actor(ctx):
 
 
 def main():
-    lvmieb(auto_env_var="LVMIEB")
+    lvmieb(auto_envvar_prefix="LVMIEB")
 
 
 if __name__ == "__main__":
