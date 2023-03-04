@@ -60,13 +60,18 @@ async def open(
     if side == "all" or side == "right":
         tasks.append(controller.motors["hartmann_right"].move(open=True))
 
-    command.info(text=f"Opening {side} hartmanns")
+    command.info(text=f"Opening {side} hartmann(s)")
+
+    results = []
     try:
-        await asyncio.gather(*tasks)
+        results = await asyncio.gather(*tasks)
     except MotorControllerError as err:
         return command.fail(error=err)
 
     await (await command.child_command(f"hartmann status {spectro}"))
+
+    if False in results:
+        return command.fail("Failed executing command.")
 
     return command.finish()
 
@@ -99,13 +104,18 @@ async def close(
     if side == "all" or side == "right":
         tasks.append(controller.motors["hartmann_right"].move(open=False))
 
-    command.info(text=f"Closing {side} hartmanns")
+    command.info(text=f"Closing {side} hartmann(s)")
+
+    results = []
     try:
-        await asyncio.gather(*tasks)
+        results = await asyncio.gather(*tasks)
     except MotorControllerError as err:
         return command.fail(error=err)
 
     await (await command.child_command(f"hartmann status {spectro}"))
+
+    if False in results:
+        return command.fail("Failed executing command.")
 
     return command.finish()
 
@@ -185,7 +195,7 @@ async def home(command: IEBCommand, controllers: ControllersType, spectro: str):
 
     controller = controllers[spectro]
 
-    command.info(text="Home all hartmanns")
+    command.info(text="Homing all hartmanns")
 
     tasks = []
     for hd in ["hartmann_left", "hartmann_right"]:
