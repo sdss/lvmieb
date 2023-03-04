@@ -24,7 +24,7 @@ packages = [
 include = ["python/lvmieb/etc/*"]
 
 [tool.poetry.scripts]
-lvmieb = "lvmieb.__main__:lvmieb"
+lvmieb = "lvmieb.__main__:main"
 
 [tool.poetry.dependencies]
 python = "^3.9,<3.12"

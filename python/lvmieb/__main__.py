@@ -73,5 +73,9 @@ async def actor(ctx):
     await lvmieb_obj.run_forever()
 
 
+def main():
+    lvmieb(auto_env_var="LVMIEB")
+
+
 if __name__ == "__main__":
-    lvmieb()
+    main()
