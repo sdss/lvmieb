@@ -11,7 +11,6 @@ import asyncio
 from typing import TYPE_CHECKING
 
 import click
-from requests import request
 
 from lvmieb.controller.maskbits import MotorStatus
 from lvmieb.exceptions import MotorControllerError
