@@ -100,7 +100,7 @@ async def close(
 
 
 @shutter.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), requried=False)
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
 async def status(
     command: IEBCommand,
     controllers: ControllersType,
