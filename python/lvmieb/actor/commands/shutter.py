@@ -34,9 +34,18 @@ def shutter(*args):
 
 
 @shutter.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
-async def open(command: IEBCommand, controllers: ControllersType, spectro: str):
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+async def open(
+    command: IEBCommand,
+    controllers: ControllersType,
+    spectro: str | None = None,
+):
     """Open the shutter."""
+
+    if spectro is None:
+        if len(controllers) > 1:
+            return command.fail("Multiple controllers present, SPECTRO is required.")
+        spectro = list(controllers.keys())[0]
 
     if spectro not in controllers:
         return command.fail(error=f"Spectrograph {spectro!r} is not available.")
@@ -58,9 +67,18 @@ async def open(command: IEBCommand, controllers: ControllersType, spectro: str):
 
 
 @shutter.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
-async def close(command: IEBCommand, controllers: ControllersType, spectro: str):
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=None)
+async def close(
+    command: IEBCommand,
+    controllers: ControllersType,
+    spectro: str | None = None,
+):
     """Close the shutter."""
+
+    if spectro is None:
+        if len(controllers) > 1:
+            return command.fail("Multiple controllers present, SPECTRO is required.")
+        spectro = list(controllers.keys())[0]
 
     if spectro not in controllers:
         return command.fail(error=f"Spectrograph {spectro!r} is not available.")
@@ -82,9 +100,18 @@ async def close(command: IEBCommand, controllers: ControllersType, spectro: str)
 
 
 @shutter.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
-async def status(command: IEBCommand, controllers: ControllersType, spectro: str):
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), requried=False)
+async def status(
+    command: IEBCommand,
+    controllers: ControllersType,
+    spectro: str | None = None,
+):
     """Reports the position of the shutter."""
+
+    if spectro is None:
+        if len(controllers) > 1:
+            return command.fail("Multiple controllers present, SPECTRO is required.")
+        spectro = list(controllers.keys())[0]
 
     if spectro not in controllers:
         return command.fail(error=f"Spectrograph {spectro!r} is not available.")
@@ -118,9 +145,18 @@ async def status(command: IEBCommand, controllers: ControllersType, spectro: str
 
 
 @shutter.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
-async def init(command: IEBCommand, controllers: ControllersType, spectro: str):
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=None)
+async def init(
+    command: IEBCommand,
+    controllers: ControllersType,
+    spectro: str | None = None,
+):
     """Initialise the shutter."""
+
+    if spectro is None:
+        if len(controllers) > 1:
+            return command.fail("Multiple controllers present, SPECTRO is required.")
+        spectro = list(controllers.keys())[0]
 
     if spectro not in controllers:
         return command.fail(error=f"Spectrograph {spectro!r} is not available.")
@@ -141,9 +177,18 @@ async def init(command: IEBCommand, controllers: ControllersType, spectro: str):
 
 
 @shutter.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
-async def home(command: IEBCommand, controllers: ControllersType, spectro: str):
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=None)
+async def home(
+    command: IEBCommand,
+    controllers: ControllersType,
+    spectro: str | None = None,
+):
     """Home the shutter."""
+
+    if spectro is None:
+        if len(controllers) > 1:
+            return command.fail("Multiple controllers present, SPECTRO is required.")
+        spectro = list(controllers.keys())[0]
 
     if spectro not in controllers:
         return command.fail(error=f"Spectrograph {spectro!r} is not available.")

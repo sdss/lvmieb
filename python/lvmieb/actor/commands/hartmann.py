@@ -11,6 +11,7 @@ import asyncio
 from typing import TYPE_CHECKING
 
 import click
+from requests import request
 
 from lvmieb.controller.maskbits import MotorStatus
 from lvmieb.exceptions import MotorControllerError
@@ -40,14 +41,19 @@ def hartmann(*args):
     default="all",
     help="all, right, or left",
 )
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
 async def open(
     command: IEBCommand,
     controllers: ControllersType,
-    side: str,
-    spectro: str,
+    side: str = "all",
+    spectro: str | None = None,
 ):
     """Open the Hartmann doors."""
+
+    if spectro is None:
+        if len(controllers) > 1:
+            return command.fail("Multiple controllers present, SPECTRO is required.")
+        spectro = list(controllers.keys())[0]
 
     if spectro not in controllers:
         return command.fail(error=f"Spectrograph {spectro!r} is not available.")
@@ -84,14 +90,19 @@ async def open(
     default="all",
     help="all, right, or left",
 )
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
 async def close(
     command: IEBCommand,
     controllers: ControllersType,
-    side: str,
-    spectro: str,
+    side: str = "all",
+    spectro: str | None = None,
 ):
     """Close the Hartmann doors."""
+
+    if spectro is None:
+        if len(controllers) > 1:
+            return command.fail("Multiple controllers present, SPECTRO is required.")
+        spectro = list(controllers.keys())[0]
 
     if spectro not in controllers:
         return command.fail(error=f"Spectrograph {spectro!r} is not available.")
@@ -121,9 +132,18 @@ async def close(
 
 
 @hartmann.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
-async def status(command: IEBCommand, controllers: ControllersType, spectro: str):
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+async def status(
+    command: IEBCommand,
+    controllers: ControllersType,
+    spectro: str | None = None,
+):
     """Reports the position of the Hartmann doors."""
+
+    if spectro is None:
+        if len(controllers) > 1:
+            return command.fail("Multiple controllers present, SPECTRO is required.")
+        spectro = list(controllers.keys())[0]
 
     if spectro not in controllers:
         return command.fail(error=f"Spectrograph {spectro!r} is not available.")
@@ -162,9 +182,18 @@ async def status(command: IEBCommand, controllers: ControllersType, spectro: str
 
 
 @hartmann.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
-async def init(command: IEBCommand, controllers: ControllersType, spectro: str):
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+async def init(
+    command: IEBCommand,
+    controllers: ControllersType,
+    spectro: str | None = None,
+):
     """Initialise the hartmanns."""
+
+    if spectro is None:
+        if len(controllers) > 1:
+            return command.fail("Multiple controllers present, SPECTRO is required.")
+        spectro = list(controllers.keys())[0]
 
     if spectro not in controllers:
         return command.fail(error=f"Spectrograph {spectro!r} is not available.")
@@ -186,9 +215,18 @@ async def init(command: IEBCommand, controllers: ControllersType, spectro: str):
 
 
 @hartmann.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]))
-async def home(command: IEBCommand, controllers: ControllersType, spectro: str):
+@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+async def home(
+    command: IEBCommand,
+    controllers: ControllersType,
+    spectro: str | None = None,
+):
     """Home the hartmann doors."""
+
+    if spectro is None:
+        if len(controllers) > 1:
+            return command.fail("Multiple controllers present, SPECTRO is required.")
+        spectro = list(controllers.keys())[0]
 
     if spectro not in controllers:
         return command.fail(error=f"Spectrograph {spectro!r} is not available.")

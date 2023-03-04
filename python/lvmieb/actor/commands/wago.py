@@ -108,7 +108,11 @@ async def getpower(
     "DEVICE",
     type=click.Choice(["shutter", "hartmann_left", "hartmann_right"]),
 )
-@click.argument("SPECTRO", type=click.Choice(["sp1", "sp2", "sp3"]))
+@click.argument(
+    "SPECTRO",
+    type=click.Choice(["sp1", "sp2", "sp3"]),
+    required=False,
+)
 @click.option(
     "--on",
     "action",
@@ -128,9 +132,14 @@ async def setpower(
     controllers: ControllersType,
     device: str,
     action: str,
-    spectro: str,
+    spectro: str | None = None,
 ):
     """Switches power on/off to a device."""
+
+    if spectro is None:
+        if len(controllers) > 1:
+            return command.fail("Multiple controllers present, SPECTRO is required.")
+        spectro = list(controllers.keys())[0]
 
     if spectro not in controllers:
         return command.fail(error=f"Spectrograph {spectro!r} is not available.")
