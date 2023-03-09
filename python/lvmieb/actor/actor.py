@@ -10,10 +10,9 @@ from __future__ import annotations
 
 import os
 import pathlib
+import warnings
 from copy import deepcopy
 from typing import ClassVar
-
-from yaml import warnings
 
 from clu import Command
 from clu.actor import AMQPActor
