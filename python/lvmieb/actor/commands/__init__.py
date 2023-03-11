@@ -19,7 +19,7 @@ from clu.parsers.click import (
     get_command_model,
     help_,
     ping,
-    version
+    version,
 )
 
 
