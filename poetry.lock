@@ -1412,24 +1412,21 @@ plugins = ["importlib-metadata"]
 
 [[package]]
 name = "pymodbus"
-version = "3.2.0"
+version = "3.1.3"
 description = "A fully featured modbus protocol stack in python"
 category = "main"
 optional = false
 python-versions = ">=3.8.0"
 files = [
-    {file = "pymodbus-3.2.0-py2.py3-none-any.whl", hash = "sha256:ca954cf0c7e88e7cfc0d273960919b68090e72e2a88f39d2a3b50f4ab8eaf2a9"},
-    {file = "pymodbus-3.2.0.tar.gz", hash = "sha256:5769ac9a00ffc154e1761c69299c1968dcab1c2a61741b1caff89c4aea81dbcf"},
+    {file = "pymodbus-3.1.3-py2.py3-none-any.whl", hash = "sha256:38a224f82cefe644fc7de51410e2fc3d48e96c764682608e13d89f039171267c"},
+    {file = "pymodbus-3.1.3.tar.gz", hash = "sha256:714e5d6b7e28c4016a94346e73033aff276b6ce8bd22e470ba4fd8b982e08a98"},
 ]
-
-[package.dependencies]
-setuptools = "<66.0.0"
 
 [package.extras]
 datastore = ["redis (>=2.10.6)", "sqlalchemy (>=1.1.15)"]
-development = ["bandit (==1.7.4)", "codespell (==2.2.2)", "coverage (==7.1.0)", "flake8 (==6.0.0)", "flake8-comprehensions (==3.10.1)", "flake8-docstrings (==1.7.0)", "flake8-noqa (==1.3.0)", "mypy (==1.0.1)", "pre-commit (==3.1.1)", "pycodestyle (==2.10.0)", "pydocstyle (==6.3.0)", "pyflakes (==3.0.1)", "pylint (==2.15.10)", "pytest (==7.2.1)", "pytest-asyncio (==0.20.3)", "pytest-cov (==4.0.0)", "pytest-timeout (==2.1.0)", "pytest-xdist (==3.1.0)", "types-Pygments", "types-pyserial", "types-redis"]
+development- = ["bandit (==1.7.4)", "black (==22.12.0)", "codespell (==2.2.2)", "coverage (==7.1.0)", "flake8 (==6.0.0)", "flake8-comprehensions (==3.10.1)", "flake8-docstrings (==1.7.0)", "flake8-noqa (==1.3.0)", "isort (==5.11.4)", "pep8 (==1.7.1)", "pycodestyle (==2.10.0)", "pydocstyle (==6.3.0)", "pyflakes (==3.0.1)", "pylint (==2.15.10)", "pytest (==7.2.1)", "pytest-asyncio (==0.20.3)", "pytest-cov (==4.0.0)", "pytest-timeout (==2.1.0)", "pytest-xdist (==3.1.0)"]
 documentation = ["Sphinx (==5.3.0)", "recommonmark (==0.7.1)", "sphinx-rtd-theme (==1.1.1)"]
-repl = ["aiohttp (==3.8.3)", "click (>=8.0.0)", "prompt-toolkit (==3.0.36)", "pygments (==2.14.0)", "typer[all] (==0.7.0)"]
+repl = ["aiohttp (==3.8.3)", "prompt-toolkit (==3.0.36)", "pygments (==2.14.0)", "typer[all] (==0.7.0)"]
 serial = ["pyserial (>=3.5)"]
 
 [[package]]
@@ -1690,18 +1687,18 @@ unclick = ">=0.1.0b3,<0.2.0"
 
 [[package]]
 name = "sdss-drift"
-version = "1.0.1"
+version = "1.0.2"
 description = "Modbus PLC control library"
 category = "main"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "sdss_drift-1.0.1-py3-none-any.whl", hash = "sha256:085119eabce60ae5a848d01c9b9180b29988f857c17f454a6ab04aed146fe95a"},
-    {file = "sdss_drift-1.0.1.tar.gz", hash = "sha256:90b093b80cb59041ff19875aa0f503efef5c068117d40d484dcb687ccb84e4e5"},
+    {file = "sdss_drift-1.0.2-py3-none-any.whl", hash = "sha256:e419f741536e8d75d251f1f31273cbcbdab9d12aca9d38709621051450350b80"},
+    {file = "sdss_drift-1.0.2.tar.gz", hash = "sha256:7feb5a16a91a1bb6e82d5feb6fe74777eeb467c7dcdd60dd4b71a206f0837357"},
 ]
 
 [package.dependencies]
-pymodbus = ">=3.0.0,<4.0.0"
+pymodbus = ">3.0.0,<3.2.0"
 sdsstools = ">=0.4.1"
 
 [[package]]
@@ -1722,23 +1719,6 @@ invoke = ">=1.3.0,<2.0.0"
 packaging = ">=20.4"
 pygments = ">=2.5.2,<3.0.0"
 pyyaml = ">=4.0"
-
-[[package]]
-name = "setuptools"
-version = "65.7.0"
-description = "Easily download, build, install, upgrade, and uninstall Python packages"
-category = "main"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "setuptools-65.7.0-py3-none-any.whl", hash = "sha256:8ab4f1dbf2b4a65f7eec5ad0c620e84c34111a68d3349833494b9088212214dd"},
-    {file = "setuptools-65.7.0.tar.gz", hash = "sha256:4d3c92fac8f1118bb77a22181355e29c239cabfe2b9effdaa665c66b711136d7"},
-]
-
-[package.extras]
-docs = ["furo", "jaraco.packaging (>=9)", "jaraco.tidelift (>=1.4)", "pygments-github-lexers (==0.0.5)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-favicon", "sphinx-hoverxref (<2)", "sphinx-inline-tabs", "sphinx-lint", "sphinx-notfound-page (==0.8.3)", "sphinx-reredirects", "sphinxcontrib-towncrier"]
-testing = ["build[virtualenv]", "filelock (>=3.4.0)", "flake8 (<5)", "flake8-2020", "ini2toml[lite] (>=0.9)", "jaraco.envs (>=2.2)", "jaraco.path (>=3.2.0)", "pip (>=19.1)", "pip-run (>=8.8)", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.3)", "pytest-flake8", "pytest-mypy (>=0.9.1)", "pytest-perf", "pytest-timeout", "pytest-xdist", "tomli-w (>=1.0.0)", "virtualenv (>=13.0.0)", "wheel"]
-testing-integration = ["build[virtualenv]", "filelock (>=3.4.0)", "jaraco.envs (>=2.2)", "jaraco.path (>=3.2.0)", "pytest", "pytest-enabler", "pytest-xdist", "tomli", "virtualenv (>=13.0.0)", "wheel"]
 
 [[package]]
 name = "six"
@@ -2263,4 +2243,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9,<3.12"
-content-hash = "a5b070684ce17645ce1235b899bb5206b4e03e4eccfcb7314ccdbbf6f6d6a0c8"
+content-hash = "3c800720df5bc3d1b6bcb4c016015016635474daf2c178c4ac750334ac6d2ab8"
