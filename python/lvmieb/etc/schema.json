@@ -53,7 +53,7 @@
         "rtd3": { "type": "number" },
         "rtd4": { "type": "number" }
       },
-      "additionalProperties": false
+      "additionalProperties": true
     },
     "sp[0-9]_relays": {
       "type": "object",
