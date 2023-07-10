@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sdss-lvmieb"
-version = "0.4.1a0"
+version = "0.5.0"
 description = "Control software for the Local Volume Mapper Instrument Electronics Box"
 authors = ["Changgon Kim <changgonkim@khu.ac.kr>"]
 maintainers = ["José Sánchez-Gallego <gallegoj@uw.edu>"]
@@ -29,7 +29,7 @@ lvmieb = "lvmieb.__main__:main"
 [tool.poetry.dependencies]
 python = "^3.9,<3.12"
 sdsstools = ">=0.4.0"
-sdss-clu = "^2.0.0b2"
+sdss-clu = "^2.0.0"
 click-default-group = "^1.2.2"
 numpy = "^1.20.3"
 sdss-drift = "1.0.2"

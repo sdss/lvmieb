@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.0 - July 10, 2023
+
+### ✨ Improved
+
+* Bump `CLU` to 2.1.0.
+* Do not make `SPECTRO` required if only one controller is present.
+* Various Docker image and build modifications for deployment in Kubernetes.
+
+
 ## 0.4.0 - May 28, 2022
 
 ### 💥 Breaking changes
