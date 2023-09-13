@@ -53,27 +53,37 @@ sphinx-click = ">=2.6.0"
 sphinx-jsonschema = ">=1.16.7"
 myst-parser = ">=0.14.0"
 furo = "^2021.6.18-beta.36"
-nox = "^2021.6.12"
-sphinx-autobuild = "^2021.3.14"
-sphinx-copybutton = "^0.3.3"
-
-[tool.isort]
-profile = "black"
-sections = ["FUTURE", "STDLIB", "TYPING", "THIRDPARTY", "SDSS", "FIRSTPARTY", "LOCALFOLDER"]
-default_section = "THIRDPARTY"
-known_first_party = "lvmieb"
-known_typing = ["typing"]
-known_sdss = ["sdsstools", "clu", "drift"]
-lines_after_imports = 2
-
-[tool.pytest.ini_options]
-addopts = "--cov lvmieb --cov-report xml --cov-report html --cov-report term"
-asyncio_mode = "auto"
+nox = ">=2021.6.12"
+sphinx-autobuild = ">=2021.3.14"
+sphinx-copybutton = ">=0.3.3"
+ruff = ">=0.0.289"
 
 [tool.black]
 line-length = 88
 target-version = ['py311']
 fast = true
+
+[tool.ruff]
+line-length = 88
+target-version = 'py311'
+select = ["E", "F", "I"]
+unfixable = ["F841"]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401", "F403", "E402"]
+
+[tool.ruff.isort]
+known-first-party = ["lvmieb"]
+lines-after-imports = 2
+section-order = ["future", "standard-library", "typing", "third-party", "sdss", "first-party", "local-folder"]
+
+[tool.ruff.isort.sections]
+typing = ["typing"]
+sdss = ["sdsstools", "clu", "drift"]
+
+[tool.pytest.ini_options]
+addopts = "--cov lvmieb --cov-report xml --cov-report html --cov-report term"
+asyncio_mode = "auto"
 
 [tool.coverage.run]
 branch = true
