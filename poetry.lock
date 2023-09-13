@@ -1333,20 +1333,19 @@ plugins = ["importlib-metadata"]
 
 [[package]]
 name = "pymodbus"
-version = "3.1.3"
+version = "3.5.2"
 description = "A fully featured modbus protocol stack in python"
 optional = false
 python-versions = ">=3.8.0"
 files = [
-    {file = "pymodbus-3.1.3-py2.py3-none-any.whl", hash = "sha256:38a224f82cefe644fc7de51410e2fc3d48e96c764682608e13d89f039171267c"},
-    {file = "pymodbus-3.1.3.tar.gz", hash = "sha256:714e5d6b7e28c4016a94346e73033aff276b6ce8bd22e470ba4fd8b982e08a98"},
+    {file = "pymodbus-3.5.2-py3-none-any.whl", hash = "sha256:c861d30390d7b7cd0bca7b529392fc58fc35b63947d6ef574192b8026180f1c7"},
+    {file = "pymodbus-3.5.2.tar.gz", hash = "sha256:26c1aa9919b24f2247794d5d9d80f65ec06fdfd9bd6b76b81d446b55335cabf3"},
 ]
 
 [package.extras]
-datastore = ["redis (>=2.10.6)", "sqlalchemy (>=1.1.15)"]
-development- = ["bandit (==1.7.4)", "black (==22.12.0)", "codespell (==2.2.2)", "coverage (==7.1.0)", "flake8 (==6.0.0)", "flake8-comprehensions (==3.10.1)", "flake8-docstrings (==1.7.0)", "flake8-noqa (==1.3.0)", "isort (==5.11.4)", "pep8 (==1.7.1)", "pycodestyle (==2.10.0)", "pydocstyle (==6.3.0)", "pyflakes (==3.0.1)", "pylint (==2.15.10)", "pytest (==7.2.1)", "pytest-asyncio (==0.20.3)", "pytest-cov (==4.0.0)", "pytest-timeout (==2.1.0)", "pytest-xdist (==3.1.0)"]
-documentation = ["Sphinx (==5.3.0)", "recommonmark (==0.7.1)", "sphinx-rtd-theme (==1.1.1)"]
-repl = ["aiohttp (==3.8.3)", "prompt-toolkit (==3.0.36)", "pygments (==2.14.0)", "typer[all] (==0.7.0)"]
+development = ["codespell (>=2.2.2)", "coverage (>=7.1.0)", "mypy (>=1.3.0)", "pre-commit (>=3.1.1)", "pycodestyle (>=2.10.0)", "pydocstyle (>=6.3.0)", "pyflakes (>=3.0.1)", "pylint (>=2.17.2)", "pytest (>=7.3.1)", "pytest-asyncio (>=0.20.3)", "pytest-cov (>=4.1.0)", "pytest-timeout (>=2.1.0)", "pytest-xdist (>=3.3.1)", "ruff (>=0.0.287)", "twine (>=4.0.2)", "types-Pygments", "types-pyserial"]
+documentation = ["Sphinx (>=5.3.0)", "recommonmark (>=0.7.1)", "sphinx-rtd-theme (>=1.1.1)"]
+repl = ["aiohttp (>=3.8.5)", "click (>=8.0.0)", "prompt-toolkit (>=3.0.36)", "pygments (>=2.15.0)", "typer[all] (>=0.7.0)"]
 serial = ["pyserial (>=3.5)"]
 
 [[package]]
@@ -1731,18 +1730,18 @@ websocket = ["websockets (>=11.0.3,<12.0.0)"]
 
 [[package]]
 name = "sdss-drift"
-version = "1.0.2"
+version = "1.1.0"
 description = "Modbus PLC control library"
 optional = false
 python-versions = ">=3.8,<4.0"
 files = [
-    {file = "sdss_drift-1.0.2-py3-none-any.whl", hash = "sha256:e419f741536e8d75d251f1f31273cbcbdab9d12aca9d38709621051450350b80"},
-    {file = "sdss_drift-1.0.2.tar.gz", hash = "sha256:7feb5a16a91a1bb6e82d5feb6fe74777eeb467c7dcdd60dd4b71a206f0837357"},
+    {file = "sdss_drift-1.1.0-py3-none-any.whl", hash = "sha256:488112c3cf2ee4a88683d4d1a8019c5b8482559b82bfd3e30e33ac6487d23f2c"},
+    {file = "sdss_drift-1.1.0.tar.gz", hash = "sha256:e1e4bb071fc29510df4af1e81a07f06bd6ae073b4457ce0df09cbb3514f5f52a"},
 ]
 
 [package.dependencies]
-pymodbus = ">3.0.0,<3.2.0"
-sdsstools = ">=0.4.1"
+pymodbus = ">=3.0.0,<4.0.0"
+sdsstools = ">=1.0.0,<2.0.0"
 
 [[package]]
 name = "sdsstools"
@@ -2262,4 +2261,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9,<3.12"
-content-hash = "fa4f27db566f76a29eb81287e67038559848d490c24a425f936264ea03bb698f"
+content-hash = "96aa13f7d5fbb4782cd90ea48f5173a7c1202c8f7dfa676e94bbf35a47aa8678"
