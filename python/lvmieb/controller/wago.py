@@ -20,11 +20,19 @@ class IEBWAGO(Drift):
         The port serving the TCP modbus service.
     name
         The name associated with this WAGO controller.
+    timeout
+        Connection timeout.
 
     """
 
-    def __init__(self, host: str, port: int = 502, name: str = ""):
-        super().__init__(host, port)
+    def __init__(
+        self,
+        host: str,
+        port: int = 502,
+        name: str = "",
+        timeout: float = 3.0,
+    ):
+        super().__init__(host, port, timeout=timeout)
 
         self.name = name
 

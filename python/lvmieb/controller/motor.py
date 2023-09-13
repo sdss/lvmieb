@@ -71,7 +71,7 @@ class MotorController:
         device = self.wago.get_device(self.type)
         return (await device.read())[0] == "closed"
 
-    async def send_command(self, command: str, timeout: float = 1) -> bytes:
+    async def send_command(self, command: str, timeout: float = 3) -> bytes:
         """Sends a command to the device."""
 
         if command in COMMANDS:
