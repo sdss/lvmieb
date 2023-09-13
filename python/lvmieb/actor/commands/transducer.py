@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import asyncio
-
 from typing import TYPE_CHECKING
 
 import click
@@ -42,7 +40,22 @@ async def status(
             tasks.append(pressure_transducer.read_temperature())
             camera_order.append(camera)
 
-    pres_list = await asyncio.gather(*tasks, return_exceptions=True)
+    pres_list = []
+
+    NRETRIES = 3
+    for iretry in range(NRETRIES):
+        pres_list = []
+        for task in tasks:
+            try:
+                # We avoid doing this with a gather to prevent multiple connections to
+                # the device at the same time.
+                result = await task
+                pres_list.append(result)
+            except Exception as err:
+                if iretry < NRETRIES - 1:
+                    command.warning(f"Failed getting pressure status: {err}. Retrying.")
+                    continue
+        break
 
     for ii, camera in enumerate(camera_order):
         camera_results = pres_list[2 * ii : 2 * ii + 2]

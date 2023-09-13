@@ -42,8 +42,9 @@ class IEBWAGO(Drift):
     ) -> dict[str, float | tuple[float, str]]:
         """Read temperature and humidity sensors."""
 
-        sensors = await self.read_category("temperature")
-        rhs = await self.read_category("humidity")
+        async with self:
+            sensors = await self.read_category("temperature", connect=False)
+            rhs = await self.read_category("humidity", connect=False)
 
         sensors.update(rhs)
         sensors = {k.split(".")[1].lower(): v for k, v in sensors.items()}
@@ -68,7 +69,8 @@ class IEBWAGO(Drift):
 
         """
 
-        relays = await self.read_category("relays")
+        async with self:
+            relays = await self.read_category("relays", connect=False)
 
         return {
             k.split(".")[1].lower(): True if v[0] == "closed" else False

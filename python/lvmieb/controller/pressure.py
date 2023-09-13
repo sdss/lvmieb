@@ -5,10 +5,9 @@ from __future__ import annotations
 
 import asyncio
 import re
-import warnings
 from dataclasses import dataclass
 
-from lvmieb.exceptions import LvmIebUserWarning
+from lvmieb.exceptions import LvmIebError
 
 
 __all__ = ["PressureTransducer"]
@@ -39,36 +38,31 @@ class PressureTransducer:
     port: int
     device_id: int = 254
 
+    TIMEOUT: float = 3
+
     async def _read(self, query_string: str = "P"):
         """Queries the transducer."""
 
         try:
             r, w = await asyncio.wait_for(
-                asyncio.open_connection(self.host, self.port), 1
+                asyncio.open_connection(self.host, self.port),
+                self.TIMEOUT,
             )
         except Exception as err:
-            warnings.warn(
-                f"Transducer {self.camera}: failed connecting to host: {err}",
-                LvmIebUserWarning,
+            raise LvmIebError(
+                f"Transducer {self.camera}: failed connecting to device: {err}"
             )
-            return False
 
         command = "@" + str(self.device_id) + query_string + "?\\"
         w.write(command.encode())
         await w.drain()
 
         try:
-            reply = await asyncio.wait_for(r.readuntil(b"\\"), 1)
+            reply = await asyncio.wait_for(r.readuntil(b"\\"), self.TIMEOUT)
             match = re.search(r"@[0-9]{1,3}ACK([0-9.E+-]+)\\$".encode(), reply)
             if not match:
                 raise ValueError("Cannot parse reply.")
             return float(match.groups()[0])
-        except Exception as err:
-            warnings.warn(
-                f"Transducer {self.camera}: query {command!r} failed: {err}",
-                LvmIebUserWarning,
-            )
-            return False
         finally:
             w.close()
             await w.wait_closed()
