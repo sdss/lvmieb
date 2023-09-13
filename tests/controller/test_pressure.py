@@ -8,7 +8,10 @@
 
 from __future__ import annotations
 
+import pytest
+
 from lvmieb.controller.pressure import PressureTransducer
+from lvmieb.exceptions import LvmIebError
 
 from ..mockers import PressureMocker
 
@@ -38,6 +41,6 @@ async def test_read_temperature_connection_fails(mocker):
     mocker.patch("asyncio.open_connection", side_effect=OSError)
 
     pressure_controller = await get_pressure_controller()
-    temperature = await pressure_controller.read_temperature()
 
-    assert temperature is False
+    with pytest.raises(LvmIebError):
+        await pressure_controller.read_temperature()

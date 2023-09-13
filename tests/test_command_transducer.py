@@ -36,9 +36,4 @@ async def test_command_transducer_fails(actor: IEBActor, mocker):
 
     command = await actor.invoke_mock_command("transducer status sp1")
     await command
-    assert command.status.did_succeed
-
-    reply = command.replies.get("transducer")
-
-    assert reply["r1_temperature"] == 20.0
-    assert reply["b1_pressure"] == -999.0
+    assert command.status.did_fail

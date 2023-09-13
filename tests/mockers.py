@@ -11,6 +11,7 @@ from __future__ import annotations
 import asyncio
 import os
 import re
+from unittest import mock
 
 import drift
 from sdsstools import read_yaml_file
@@ -47,6 +48,9 @@ drift.Relay.close = _close
 class WAGOMocker(IEBWAGO):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.client.connect = mock.AsyncMock()
+        type(self.client).connected = mock.PropertyMock(return_value=True)
 
         self.overrides = {}
 
