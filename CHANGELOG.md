@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.1 - September 15, 2023
+
+### ✨ Improved
+
+* Several hotfixes, some quite hacky, to speed up requests to the WAGO module and the pressure transducers, and to better deal with failures. Connection and request timeouts have been increased and in some cases the code will retry several times if there's an error.
+* Bumped `drift` to 1.1.0.
+
+### ⚙️ Engineering
+
+* Lint using `ruff`.
+
+
 ## 0.5.0 - July 10, 2023
 
 ### ✨ Improved
