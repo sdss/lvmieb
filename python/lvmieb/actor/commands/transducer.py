@@ -56,12 +56,13 @@ async def status(
                 pres_list.append(result)
             except Exception as err:
                 error = err
+                break
 
         if error is not False and iretry < NRETRIES - 1:
             command.warning(f"Failed getting pressure status: {error}. Retrying.")
             continue
         else:
-            command.error(f"Failed getting pressure status: {error}")
+            break
 
     if len(pres_list) == 0 or error:
         return command.fail(error="Unable to retrieve any pressure data.")
