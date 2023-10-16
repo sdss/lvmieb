@@ -41,7 +41,7 @@ def hartmann(*args):
     default="all",
     help="all, right, or left",
 )
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+@click.argument("spectro", type=str, required=False)
 async def open(
     command: IEBCommand,
     controllers: ControllersType,
@@ -90,7 +90,7 @@ async def open(
     default="all",
     help="all, right, or left",
 )
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+@click.argument("spectro", type=str, required=False)
 async def close(
     command: IEBCommand,
     controllers: ControllersType,
@@ -132,7 +132,7 @@ async def close(
 
 
 @hartmann.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+@click.argument("spectro", type=str, required=False)
 async def status(
     command: IEBCommand,
     controllers: ControllersType,
@@ -182,7 +182,7 @@ async def status(
 
 
 @hartmann.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+@click.argument("spectro", type=str, required=False)
 async def init(
     command: IEBCommand,
     controllers: ControllersType,
@@ -215,7 +215,7 @@ async def init(
 
 
 @hartmann.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+@click.argument("spectro", type=str, required=False)
 async def home(
     command: IEBCommand,
     controllers: ControllersType,

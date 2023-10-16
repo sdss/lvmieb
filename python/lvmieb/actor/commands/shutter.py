@@ -35,7 +35,7 @@ def shutter(*args):
 
 
 @shutter.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+@click.argument("spectro", type=str, required=False)
 async def open(
     command: IEBCommand,
     controllers: ControllersType,
@@ -68,7 +68,7 @@ async def open(
 
 
 @shutter.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+@click.argument("spectro", type=str, required=False)
 async def close(
     command: IEBCommand,
     controllers: ControllersType,
@@ -101,7 +101,7 @@ async def close(
 
 
 @shutter.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+@click.argument("spectro", type=str, required=False)
 async def status(
     command: IEBCommand,
     controllers: ControllersType,
@@ -146,7 +146,7 @@ async def status(
 
 
 @shutter.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+@click.argument("spectro", type=str, required=False)
 async def init(
     command: IEBCommand,
     controllers: ControllersType,
@@ -178,7 +178,7 @@ async def init(
 
 
 @shutter.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+@click.argument("spectro", type=str, required=False)
 async def home(
     command: IEBCommand,
     controllers: ControllersType,

@@ -27,7 +27,7 @@ def wago(*args):
 
 
 @wago.command()
-@click.argument("SPECTRO", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+@click.argument("SPECTRO", type=str, required=False)
 async def status(
     command: IEBCommand,
     controllers: ControllersType,
@@ -66,7 +66,7 @@ async def status(
 
 
 @wago.command()
-@click.argument("SPECTRO", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+@click.argument("SPECTRO", type=str, required=False)
 async def getpower(
     command: IEBCommand,
     controllers: ControllersType,
@@ -111,7 +111,7 @@ async def getpower(
 )
 @click.argument(
     "SPECTRO",
-    type=click.Choice(["sp1", "sp2", "sp3"]),
+    type=str,
     required=False,
 )
 @click.option(

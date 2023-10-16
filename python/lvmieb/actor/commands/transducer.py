@@ -18,7 +18,7 @@ def transducer(*args):
 
 
 @transducer.command()
-@click.argument("spectro", type=click.Choice(["sp1", "sp2", "sp3"]), required=False)
+@click.argument("spectro", type=str, required=False)
 async def status(
     command: IEBCommand,
     controllers: ControllersType,
