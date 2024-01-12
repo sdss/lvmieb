@@ -10,6 +10,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import numpy
+
 
 if TYPE_CHECKING:
     from lvmieb.actor import IEBActor
@@ -36,4 +38,7 @@ async def test_command_transducer_fails(actor: IEBActor, mocker):
 
     command = await actor.invoke_mock_command("transducer status sp1")
     await command
-    assert command.status.did_fail
+    assert command.status.did_succeed
+
+    transducer_data = command.replies.get("transducer")
+    assert numpy.isnan(transducer_data["b1_pressure"])
