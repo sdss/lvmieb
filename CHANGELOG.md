@@ -1,5 +1,12 @@
 # Changelog
 
+## Next version
+
+### ✨ Improved
+
+* Improved and simplified the readout of pressure transducers. Values from transducers that fail to read are now NaNs.
+
+
 ## 0.5.1 - September 15, 2023
 
 ### ✨ Improved
