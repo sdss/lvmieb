@@ -4,7 +4,12 @@
 
 ### ✨ Improved
 
+* Support Python 3.12.
 * Improved and simplified the readout of pressure transducers. Values from transducers that fail to read are now NaNs.
+
+### ⚙️ Engineering
+
+* Updated GitHub workflows.
 
 
 ## 0.5.1 - September 15, 2023
