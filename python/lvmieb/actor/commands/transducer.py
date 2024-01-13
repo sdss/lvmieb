@@ -69,9 +69,14 @@ async def status(
         # to avoid too many concurrent accesses to the hardware. This could not matter
         # that much anymore, though.
         for cam in controller.pressure:
+            pressure_transducer = controller.pressure[cam]
+
             for measurement in ["pressure", "temperature"]:
                 try:
-                    value = await read_transducer(controller, cam, measurement)
+                    if pressure_transducer.disabled:
+                        value = numpy.nan
+                    else:
+                        value = await read_transducer(controller, cam, measurement)
                 except Exception as err:
                     command.warning(f"Failed to read {measurement} from {cam}: {err}")
                     value = numpy.nan

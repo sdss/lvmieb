@@ -29,6 +29,8 @@ class PressureTransducer:
         The port on which the TCP server is running.
     device_id
         The ID of the device.
+    disabled
+        Whether this device is disabled.
 
     """
 
@@ -36,6 +38,7 @@ class PressureTransducer:
     camera: str
     host: str
     port: int
+    disabled: bool = False
     device_id: int = 254
 
     TIMEOUT: float = 3

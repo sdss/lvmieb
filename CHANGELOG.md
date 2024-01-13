@@ -1,5 +1,12 @@
 # Changelog
 
+## Next version
+
+### ✨ Improved
+
+* Allow to disable pressure transducers.
+
+
 ## 0.5.2 - January 12, 2024
 
 ### ✨ Improved
