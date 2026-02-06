@@ -12,9 +12,9 @@ requires-python = ">=3.10,<4"
 keywords = ["astronomy", "software"]
 
 dependencies = [
-    "sdsstools>=1.0.0",
+    "sdsstools>=1.9.7",
     "sdss-clu>=2.0.0",
-    "numpy>=1.20.3",
+    "numpy>=2.0.0",
     "sdss-drift>=1.1.0"
 ]
 
