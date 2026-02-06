@@ -40,16 +40,16 @@ async def _close(self, *args, **kwargs):
 
 
 # Override read() in Device and open/close for relays.
-drift.Device.read = _read_device
-drift.Relay.open = _open
-drift.Relay.close = _close
+drift.Device.read = _read_device  # type:ignore
+drift.Relay.open = _open  # type:ignore
+drift.Relay.close = _close  # type:ignore
 
 
 class WAGOMocker(IEBWAGO):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.client.connect = mock.AsyncMock()
+        self.client.connect = mock.AsyncMock()  # type: ignore
         type(self.client).connected = mock.PropertyMock(return_value=True)
 
         self.overrides = {}
