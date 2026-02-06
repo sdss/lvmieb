@@ -55,7 +55,7 @@ class WAGOMocker(IEBWAGO):
         self.overrides = {}
 
     @classmethod
-    def from_config(cls, config_data: str | dict | None = None, **kwargs):
+    def new(cls, config_data: str | dict | None = None, **kwargs):
         if config_data is not None:
             return super().from_config(config_data, **kwargs)
 

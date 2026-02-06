@@ -31,7 +31,7 @@ async def get_motor_controller(
         motor_type,
         "localhost",
         mock_motor.port,
-        wago=WAGOMocker.from_config(),
+        wago=WAGOMocker.new(),
     )
 
 

@@ -75,7 +75,7 @@ async def actor(config, setup_servers):
     _actor = IEBActor.from_config(config)
     _actor.parser_args = [_actor.controllers]
 
-    _actor = await clu.testing.setup_test_actor(_actor)  # type: ignore
+    _actor = await clu.testing.setup_test_actor(_actor)
 
     yield _actor
 
