@@ -1,6 +1,6 @@
 # Changelog
 
-## Next release
+## 0.6.0 - February 6, 2026
 
 ### 🔥 Breaking changes
 
