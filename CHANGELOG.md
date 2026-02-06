@@ -2,6 +2,14 @@
 
 ## Next release
 
+### 🔥 Breaking changes
+
+* Drop support for Python 3.11.
+
+### ✨ Improved
+
+* Support Python 3.14.
+
 ### ⚙️ Engineering
 
 * Use `uv` for development and CI instead of `poetry`.
