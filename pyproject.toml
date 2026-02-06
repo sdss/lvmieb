@@ -1,6 +1,6 @@
 [project]
 name = "sdss-lvmieb"
-version = "0.6.0"
+version = "0.6.1a1"
 description = "Control software for the Local Volume Mapper Instrument Electronics Box"
 authors = [
     {name = "Changgon Kim", email = "changgonkim@khu.ac.kr"},
