@@ -1,5 +1,15 @@
 # Changelog
 
+## Next release
+
+### ⚙️ Engineering
+
+* Use `uv` for development and CI instead of `poetry`.
+* Update GitHub workflows for `uv` and other improvements.
+* Add `ty` for type checking.
+* Update Dockerfile.
+
+
 ## 0.5.3 - January 13, 2024
 
 ### ✨ Improved

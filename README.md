@@ -27,20 +27,19 @@ or by cloning this repository
 git clone https://github.com/sdss/lvmieb
 ```
 
-The preferred installation for development is using [poetry](https://python-poetry.org/)
+The preferred installation for development is using [uv](https://docs.astral.sh/uv/)
 
 ```console
 cd lvmieb
-poetry install
+uv sync --all-groups --all-extras
 ```
-
 
 ### Basic ping-pong test
 
 Start the `lvmieb` actor.
 
 ```console
-lvmieb start
+lvmieb start --debug
 ```
 
 In another terminal, type `clu` and `lvmieb ping` for test.
