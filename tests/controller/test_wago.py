@@ -14,8 +14,8 @@ from ..mockers import WAGOMocker
 
 
 @pytest.fixture
-def wago():
-    yield WAGOMocker.from_config()
+async def wago():
+    yield WAGOMocker.new()
 
 
 async def test_wago(wago: WAGOMocker):
